@@ -30,6 +30,7 @@ class GameEngine {
 
     startInput() {
         var that = this;
+        var c = this.entities[0];
 
         var getXandY = function (e) {
             var x = e.clientX - that.ctx.canvas.getBoundingClientRect().left;
@@ -37,6 +38,48 @@ class GameEngine {
 
             return { x: x, y: y };
         }
+
+        this.ctx.canvas.addEventListener("keydown", e => {
+            switch (e.key) {
+                case 'd':
+                    if (c.velocity.x < 1)
+                        c.velocity.x++;
+                    break;
+                case 'a':
+                    if (c.velocity.x > -1)
+                        c.velocity.x--;
+                    break;
+                case 's':
+                    if (c.velocity.y < 1)
+                        c.velocity.y++;
+                    break;
+                case 'w':
+                    if (c.velocity.y > -1)
+                        c.velocity.y--;
+                    break;
+                default:
+                    break;
+            }
+        }, false);
+
+        this.ctx.canvas.addEventListener("keyup", e => {
+            switch (e.key) {
+                case 'd':
+                    c.velocity.x = 0;
+                    break;
+                case 'a':
+                    c.velocity.x = 0;
+                    break;
+                case 's':
+                    c.velocity.y = 0;
+                    break;
+                case 'w':
+                    c.velocity.y = 0;
+                    break;
+                default:
+                    break;
+            }
+        }, false);
 
         this.ctx.canvas.addEventListener("mousemove", function (e) {
             //console.log(getXandY(e));
