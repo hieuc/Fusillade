@@ -6,7 +6,7 @@ class Rutherford {
 
         this.scale = 2;
 
-        this.action = 1; // 0 = idle, 1 = run, 2 = attack
+        this.action = 0; // 0 = idle, 1 = run, 2 = attack
 
         this.face = 0; // 0 = right, 1 = left
 
@@ -18,19 +18,21 @@ class Rutherford {
     }
 
     loadAnimations() {
-        this.animations[0] = new Animator(this.spritesheet, 0, 0, 50, 36, 4, 0.25, 0, true, true);
+        this.animations[0] = new Animator(this.spritesheet, 0, 0, 50, 36, 4, 0.25, 0, false, true);
         this.animations[1] = new Animator(this.spritesheet, 570, 0, 50, 36, 4, 0.25, 0, true, true);
         this.animations[2] = new Animator(this.spritesheet, 50, 39, 50, 36, 6, 0.15, 0, false, true);
-        this.animations[3] = new Animator(this.spritesheet, 420, 39, 50, 36, 6, 0.15, 0, false, true);
-        this.animations[4] = new Animator(this.spritesheet, 0, 222, 50, 36, 5, 0.15, 0, false, true);
-        this.animations[5] = new Animator(this.spritesheet, 520, 222, 50, 36, 5, 0.15, 0, false, true);
+        this.animations[3] = new Animator(this.spritesheet, 420, 39, 50, 36, 6, 0.15, 0, true, true);
+        this.animations[4] = new Animator(this.spritesheet, 0, 222, 50, 36, 5, 0.15, 0, false, false);
+        this.animations[5] = new Animator(this.spritesheet, 520, 222, 50, 36, 5, 0.15, 0, true, false);
     }
 
     update() {
-        if (this.velocity.x !== 0 || this.velocity.y !== 0)
-            this.action = 1;
-        else 
-            this.action = 0;    
+        if(this.action !== 2 || this.animations[this.action * 2 + this.face].isDone()) {
+            if (this.velocity.x !== 0 || this.velocity.y !== 0)
+                this.action = 1;
+            else 
+                this.action = 0;
+        }
 
         if (this.velocity.x > 0)
             this.face = 0;
@@ -43,5 +45,10 @@ class Rutherford {
 
     draw(ctx) {
         this.animations[this.action * 2 + this.face].drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
+    }
+
+    startAttack() {
+        this.action = 2;
+        this.animations[this.action * 2 + this.face].elapsedTime = 0;
     }
 }
