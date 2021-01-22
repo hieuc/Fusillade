@@ -30,7 +30,7 @@ class GameEngine {
 
     startInput() {
         var that = this;
-        var c = this.entities[0];
+        var c = that.entities[that.entities.length-1];
 
         var getXandY = function (e) {
             var x = e.clientX - that.ctx.canvas.getBoundingClientRect().left;

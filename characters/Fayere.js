@@ -14,6 +14,8 @@ class Fayere {
         this.velocity = { x : 0, y : 0};
 
         this.animations = [];
+
+        this.loadAnimations();
     }
 
     loadAnimations() {
