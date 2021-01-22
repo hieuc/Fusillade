@@ -23,7 +23,7 @@ class Rutherford {
         for (var i = 0; i < 3; i++) {
             this.animations[i] = [];
         }
-
+        
         this.animations[0][0] = new Animator(this.spritesheet, 0, 0, 50, 36, 4, 0.25, 0, false, true);
         this.animations[0][1] = new Animator(this.spritesheet, 570, 0, 50, 36, 4, 0.25, 0, true, true);
 
@@ -42,9 +42,9 @@ class Rutherford {
                 this.action = 0;
         }
 
-        if (this.velocity.x > 0)
+        if (this.velocity.x > 0 && this.action !== 2)
             this.face = 0;
-        if (this.velocity.x < 0)
+        if (this.velocity.x < 0 && this.action !== 2)
             this.face = 1;
 
         this.x += this.velocity.x * this.speed;
@@ -57,6 +57,8 @@ class Rutherford {
 
     startAttack() {
         this.action = 2;
+        var p = new Projectiles(this.game, this.x, this.y, 3, 2000);
+        this.game.entities.splice(this.game.entities.length - 1, 0, p);
         this.animations[this.action][this.face].elapsedTime = 0;
     }
 }
