@@ -52,13 +52,36 @@ class Rutherford {
     }
 
     draw(ctx) {
-        this.animations[this.action][this.face].drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
+        this.animations[this.action][this.face].drawFrame(this.game.clockTick, ctx, this.x - 25, this.y - 25, this.scale);
     }
 
-    startAttack() {
+    startAttack(click) {
         this.action = 2;
-        var p = new Projectiles(this.game, this.x, this.y, 3, 2000);
+        if (click.x - this.x < 0)
+            this.face = 1;
+        else 
+            this.face = 0;
+        var velocity = this.calculateVel(click);
+        var p = new Projectiles(this.game, this.x, this.y, velocity, 3, 2000);
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
         this.animations[this.action][this.face].elapsedTime = 0;
+    }
+
+    calculateVel(click) {
+        var dx = click.x - this.x;
+        var dy = click.y - this.y;
+        var angle = Math.atan(dy/dx);
+
+        var v = { x: Math.cos(angle),
+                 y: Math.sin(angle)};
+        
+        if (dx < 0)
+            v.x *= -1;
+
+        if ((angle > 0 && dy < 0) || (angle < 0 && dy > 0))
+            v.y *= -1;
+        
+        console.log(angle);
+        return v;
     }
 }

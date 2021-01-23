@@ -87,8 +87,8 @@ class GameEngine {
         }, false);
 
         this.ctx.canvas.addEventListener("click", function (e) {
-            c.startAttack();
             that.click = getXandY(e);
+            c.startAttack(that.click);
         }, false);
 
         this.ctx.canvas.addEventListener("wheel", function (e) {
