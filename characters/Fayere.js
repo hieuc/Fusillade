@@ -9,7 +9,7 @@ class Fayere {
 
         this.face = 0; // 0 = right, 1 = left
 
-        this.speed = 2;
+        this.speed = 1.2;
 
         this.toofarmovement = Date.now(); //We
 
