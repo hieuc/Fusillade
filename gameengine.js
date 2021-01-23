@@ -123,6 +123,10 @@ class GameEngine {
         for (var i = 0; i < entitiesCount; i++) {
             var entity = this.entities[i];
 
+            if(entity instanceof Fayere) {
+                entity.getEnemyPos(this.entities[entitiesCount-1].x, this.entities[entitiesCount-1].y)
+            }
+
             if (!entity.removeFromWorld) {
                 entity.update();
             }
