@@ -124,7 +124,12 @@ class GameEngine {
             var entity = this.entities[i];
 
             if(entity instanceof Fayere) {
-                entity.getEnemyPos(this.entities[entitiesCount-1].x, this.entities[entitiesCount-1].y)
+                for(var j = 0; i < entitiesCount; j++) {
+                    if(this.entities[j] instanceof Rutherford) {
+                        entity.getEnemyPos(this.entities[j].x, this.entities[j].y);
+                        break;
+                    }
+                }
             }
 
             if (!entity.removeFromWorld) {

@@ -11,9 +11,13 @@ class Fayere {
 
         this.speed = 1.2;
 
-        this.toofarmovement = Date.now(); //We
+        this.toofarmovement = Date.now(); //We want to give a behavior pattern when enemy is too far.
 
-        this.velocity = { x : 0, y : 0};
+        this.attackpatterntime = Date.now(); //When are in attack range, do time interval patterns.
+
+        this.attackbuffer = Date.now(); //Used to calculate when the last shot was fired.
+
+        this.fireRate = 200; //in milliseconds.
 
         this.enemypos = { enemyX: 0, enemyY: 0};
 
@@ -53,10 +57,10 @@ class Fayere {
 
         //die animation for state = 3
         //facing right = 0
-        this.animations[3][0] = new Animator(this.spritesheet, 7, 146, 16, 16, 6, 0.1, 16, false, true);
+        this.animations[3][0] = new Animator(this.spritesheet, 7, 146, 16, 16, 6, 0.1, 16, false, false);
 
         //facing left = 1
-        this.animations[3][1] = new Animator(this.spritesheet, 8, 339, 16, 16, 6, 0.1, 16, false, true);
+        this.animations[3][1] = new Animator(this.spritesheet, 8, 339, 16, 16, 6, 0.1, 16, false, false);
 
     }
 
@@ -95,9 +99,31 @@ class Fayere {
             } else {
                 this.y += 1 * this.speed;
             }
-        //TO-DO: Once we are in a decent attack range, Do something now. 
+        //Once we are in a decent attack range, Do something now. 
         } else {
-            this.state = 0;
+            this.attackbehavior = Date.now() - this.attackpatterntime;
+            if(this.attackbehavior < 1500) {
+                this.state = 0;
+                if(this.x - this.enemyX > 0) {
+                    this.face = 1;
+                } else {
+                    this.face = 0;
+                }
+            } else if (this.attackbehavior >= 1500 && this.attackbehavior < 4200) {
+                this.state = 2;
+                if(this.x - this.enemyX > 0) {
+                    this.face = 1;
+                } else {
+                    this.face = 0;
+                }
+                var timepassed = Date.now() - this.attackbuffer;
+                if(timepassed > this.fireRate) {
+                    this.attack();
+                    this.attackbuffer = Date.now();
+                }
+            } else {
+                this.attackpatterntime = Date.now();
+            }
         }
     }
 
@@ -108,5 +134,29 @@ class Fayere {
     getEnemyPos(eneX, eneY) {
         this.enemyX = eneX;
         this.enemyY = eneY;
+    }
+
+    calculateVel() {
+        var dx = this.enemyX - this.x;
+        var dy = this.enemyY - this.y;
+        var angle = Math.atan(dy/dx);
+
+        var v = { x: Math.cos(angle),
+                 y: Math.sin(angle)};
+        
+        if (dx < 0)
+            v.x *= -1;
+
+        if ((angle > 0 && dy < 0) || (angle < 0 && dy > 0))
+            v.y *= -1;
+        
+        console.log(angle);
+        return v;
+    }
+
+    attack() {
+        var velocity = this.calculateVel();
+        var p = new Projectiles(this.game, this.x, this.y, velocity, 3, 2000);
+        this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }
 };
