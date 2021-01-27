@@ -3,7 +3,7 @@ class Fayere {
         Object.assign(this, { game, x, y });
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Fayere.png");
 
-        this.scale = 2.5;
+        this.scale = 2;
 
         this.state = 0; //0 = idle, 1 = move, 2 = attack, 3 = die
 
@@ -150,7 +150,6 @@ class Fayere {
         if ((angle > 0 && dy < 0) || (angle < 0 && dy > 0))
             v.y *= -1;
         
-        console.log(angle);
         return v;
     }
 

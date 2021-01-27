@@ -10,7 +10,7 @@ class Rutherford {
 
         this.face = 0; // 0 = right, 1 = left
 
-        this.speed = 2;
+        this.speed = 3;
 
         this.velocity = { x : 0, y : 0};
 
@@ -67,6 +67,11 @@ class Rutherford {
         this.animations[this.action][this.face].elapsedTime = 0;
     }
 
+    /**
+     * Calculate x, y velocity towards a location such that x^2 + y^2 = 1 
+     * 
+     * @param {*} click 
+     */
     calculateVel(click) {
         var dx = click.x - this.x;
         var dy = click.y - this.y;
@@ -81,7 +86,6 @@ class Rutherford {
         if ((angle > 0 && dy < 0) || (angle < 0 && dy > 0))
             v.y *= -1;
         
-        console.log(angle);
         return v;
     }
 }
