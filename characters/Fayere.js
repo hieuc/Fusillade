@@ -92,7 +92,7 @@ class Fayere {
             } else {
                 this.x += 1 * this.speed;
                 this.face = 0;
-                this.state = 1
+                this.state = 1;
             }
             if(this.y - this.enemyY > 0) {
                 this.y += -1 * this.speed;

@@ -117,14 +117,15 @@ class GameEngine {
         }
     };
 
+    //FIX
     update() {
         var entitiesCount = this.entities.length;
 
         for (var i = 0; i < entitiesCount; i++) {
             var entity = this.entities[i];
 
-            if(entity instanceof Fayere) {
-                for(var j = 0; i < entitiesCount; j++) {
+            if(entity instanceof Fayere || entity instanceof Buck) {
+                for(var j = 0; j < entitiesCount; j++) {
                     if(this.entities[j] instanceof Rutherford) {
                         entity.getEnemyPos(this.entities[j].x, this.entities[j].y);
                         break;

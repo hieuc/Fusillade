@@ -6,6 +6,7 @@ ASSET_MANAGER.queueDownload("./sprites/rutherford-main.png");
 ASSET_MANAGER.queueDownload("./sprites/Fayere.png");
 ASSET_MANAGER.queueDownload("./sprites/forest.png");
 ASSET_MANAGER.queueDownload("./sprites/projectiles.png");
+ASSET_MANAGER.queueDownload("./sprites/Buck.png");
 
 
 ASSET_MANAGER.downloadAll(function () {

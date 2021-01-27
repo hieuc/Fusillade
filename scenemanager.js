@@ -24,7 +24,9 @@ class SceneManager {
 
         var character = new Rutherford(this.game, x, y); 
         var fayereCharacter = new Fayere(this.game, 600, 500);
+        var buckCharacter = new Buck(this.game, 650, 100);
         
+        this.game.addEntity(buckCharacter);
         this.game.addEntity(fayereCharacter);
         this.game.addEntity(character);
     };
