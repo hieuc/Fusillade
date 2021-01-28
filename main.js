@@ -15,6 +15,9 @@ ASSET_MANAGER.downloadAll(function () {
 	var ctx = canvas.getContext('2d');
 	ctx.imageSmoothingEnabled = false;
 
+	PARAMS.canvas_width = canvas.width;
+	PARAMS.canvas_height = canvas.height;
+
 	new SceneManager(gameEngine);
 
 	gameEngine.init(ctx);	

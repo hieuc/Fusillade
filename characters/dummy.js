@@ -21,7 +21,7 @@ class Dummy {
     }
 
     draw(ctx) {
-        ctx.drawImage(this.sprite, 0, 0, 17, 28, this.x, this.y, 17 * this.scale,  28 * this.scale);
+        ctx.drawImage(this.sprite, 0, 0, 17, 28, this.x - this.game.camera.x, this.y - this.game.camera.y, 17 * this.scale,  28 * this.scale);
     }
 
     /*

@@ -115,6 +115,7 @@ class GameEngine {
         for (var i = 0; i < this.entities.length; i++) {
             this.entities[i].draw(this.ctx);
         }
+        this.camera.draw(this.ctx);
     };
 
     //FIX
@@ -143,6 +144,7 @@ class GameEngine {
                 this.entities.splice(i, 1);
             }
         }
+        this.camera.update();
     };
 
     loop() {

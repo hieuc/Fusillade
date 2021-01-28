@@ -10,6 +10,6 @@ class Ground {
     }
 
     draw(ctx) {
-        ctx.drawImage(this.spritesheet, 96, 0, 96, 96, this.x, this.y, 96, 96);
+        ctx.drawImage(this.spritesheet, 96, 0, 96, 96, this.x - this.game.camera.x, this.y - this.game.camera.y, 96, 96);
     }
 }

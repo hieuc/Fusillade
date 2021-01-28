@@ -52,7 +52,7 @@ class Rutherford {
     }
 
     draw(ctx) {
-        this.animations[this.action][this.face].drawFrame(this.game.clockTick, ctx, this.x - 25, this.y - 25, this.scale);
+        this.animations[this.action][this.face].drawFrame(this.game.clockTick, ctx, this.x - 25 - this.game.camera.x, this.y - 25 - this.game.camera.y, this.scale);
     }
 
     startAttack(click) {
@@ -73,8 +73,8 @@ class Rutherford {
      * @param {*} click 
      */
     calculateVel(click) {
-        var dx = click.x - this.x;
-        var dy = click.y - this.y;
+        var dx = click.x - this.x + this.game.camera.x - 16;
+        var dy = click.y - this.y + this.game.camera.y - 16;
         var angle = Math.atan(dy/dx);
 
         var v = { x: Math.cos(angle),

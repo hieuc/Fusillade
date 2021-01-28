@@ -6,7 +6,7 @@ class Projectiles {
         if (spritesheet) {
             this.spritesheet = ASSET_MANAGER.getAsset(spritesheet);
         } else {
-            this.spritesheet = ASSET_MANAGER.getAsset(params.default_projectile_sheet);
+            this.spritesheet = ASSET_MANAGER.getAsset(PARAMS.default_projectile_sheet);
         }
 
         this.scale = 2;
@@ -45,6 +45,6 @@ class Projectiles {
         ctx2.translate(-16 * this.scale / 2, -16 * this.scale / 2);
         ctx2.drawImage(this.spritesheet, 96, 96, 16, 16, 0, 0, 16 * this.scale, 16 * this.scale);
 
-        ctx.drawImage(c2, this.x, this.y, 16 * this.scale, 16 * this.scale);
+        ctx.drawImage(c2, this.x - this.game.camera.x, this.y - this.game.camera.y, 16 * this.scale, 16 * this.scale);
     }
 }

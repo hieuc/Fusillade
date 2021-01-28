@@ -140,7 +140,7 @@ class Buck {
     }
 
     draw(ctx) {
-        this.animations[this.state][this.face].drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
+        this.animations[this.state][this.face].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale);
     }
 
     getEnemyPos(eneX, eneY) {

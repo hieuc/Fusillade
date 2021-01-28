@@ -2,6 +2,10 @@ class SceneManager {
     constructor(game) {
         this.game = game;
         this.game.camera = this;
+        this.x = 0;
+        this.y = 0;
+
+        this.char;
 
         this.loadSandbox(50, 50);
     };
@@ -23,6 +27,7 @@ class SceneManager {
         
 
         var character = new Rutherford(this.game, x, y); 
+        this.char = character;
         var fayereCharacter = new Fayere(this.game, 900, 600);
         var buckCharacter = new Buck(this.game, 900, 300);
         
@@ -35,14 +40,8 @@ class SceneManager {
 
     update() {
 
-        let midpoint = PARAMS.CANVAS_WIDTH/2 - PARAMS.BLOCKWIDTH / 2;
-
-        if (this.x < this.mario.x - midpoint) this.x = this.mario.x - midpoint;
-    
-        if (this.mario.dead && this.mario.y > PARAMS.BLOCKWIDTH * 16) {
-            this.mario.dead = false;
-            this.loadLevelOne(2.5 * PARAMS.BLOCKWIDTH, 0 * PARAMS.BLOCKWIDTH);
-        };
+        this.x = this.char.x - PARAMS.canvas_width/2 + 25;
+        this.y = this.char.y - PARAMS.canvas_height/2 + 25;
     };
 
     draw(ctx) {
