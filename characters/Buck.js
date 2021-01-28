@@ -5,7 +5,7 @@ class Buck {
 
         //ADD AN ENEMY TAG SO GETTING PLAYER LOCATION GETS NEATER (BOOLEAN)
 
-        this.scale = 1.8;
+        this.scale = 2.1;
 
         this.state = 0; //0 = idle, 1 = move, 2 = attack SLASH, 3 = Summon, LATER(4 = Fury Attack, 5 = die)
 
@@ -23,9 +23,22 @@ class Buck {
 
         this.fireRate = 200; //in milliseconds.
 
-        this.summoncooldown = 5000;
+        this.summoncooldown = 25000;
 
-        this.enemypos = { enemyX: 0, enemyY: 0};
+        this.whichattack = 0;
+
+        this.patterntimer = Date.now();
+
+        this.patternduration = 6000; // 6 seconds.
+
+        this.walkaroundtimer = Date.now();
+
+        this.iter = 0;
+
+
+        //
+
+        this.enemypos = { enemyX: 0, enemyY: 0, instX : 0, instY: 0};
 
         this.animations = [];
 
@@ -33,7 +46,7 @@ class Buck {
     }
 
     loadAnimations() {
-        for (var i = 0; i < 4; i++) { // 4 states
+        for (var i = 0; i < 5; i++) { // 4 states
             this.animations.push([]);
             for (var j = 0; j < 2; j++) { // 2 directions
                 this.animations[i].push([]);
@@ -56,10 +69,10 @@ class Buck {
 
         //attack SLASH animation for state = 2
         //facing right = 0
-        this.animations[2][0] = new Animator(this.spritesheet, 1, 295, 90, 61, 9, 0.1, 6, false, true);
+        this.animations[2][0] = new Animator(this.spritesheet, 1, 295, 90, 61, 9, 0.05, 6, false, true);
 
         //facing left = 1
-        this.animations[2][1] = new Animator(this.spritesheet, 10, 1255, 80, 65, 9, 0.1, 16, false, true);
+        this.animations[2][1] = new Animator(this.spritesheet, 10, 1255, 80, 65, 9, 0.05, 16, false, true);
 
         //Summon animation for state = 3
         //facing right = 0
@@ -104,8 +117,25 @@ class Buck {
                     this.summoned = false;
                 }
             } else {
-                this.state = 0;
-                this.decideDir();
+                var timer = Date.now() - this.patterntimer;
+                if(timer < this.patternduration) {
+                    this.decideDir();
+                    console.log(timer);
+                    if(this.whichattack >= 0 && this.whichattack < 0.34) { 
+                        var timepassed = Date.now() - this.attackbuffer;
+                        if(timepassed > this.fireRate) {
+                            this.state = 2;
+                            this.attack();
+                            this.attackbuffer = Date.now();
+                        }
+                    } else if(this.whichattack >= 0.34 && this.whichattack < 0.77) {
+                        this.walkaround(Math.random(), Math.random(), Math.random(), Math.random());
+                    }
+                } else {
+                    this.state = 0;
+                    this.patterntimer = Date.now();
+                    this.whichattack = Math.random();
+                }
             }
         } 
     }
@@ -138,15 +168,12 @@ class Buck {
 
     attack() {
         var velocity = this.calculateVel();
-        var p = new Newprojectiles(this.game, this.x, this.y, velocity, 5, 4000, 49, 337, 15, 14, 0.03);
+        var offset = this.face == 0? 100: 0;
+        var p = new Newprojectiles(this.game, this.x + offset, this.y, velocity, 5, 4000, 49, 337, 15, 14, 0.03);
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }
 
     bringSummons() {
-        //var fayereSummon = new Fayere(this.game, this.enemyX - 150, this.enemyY);
-        //var fayereSummon2 = new Fayere(this.game, this.enemyX + 150, this.enemyY);
-        //var fayereSummon3 = new Fayere(this.game, this.enemyX , this.enemyY - 150);
-        //var fayereSummon4 = new Fayere(this.game, this.enemyX, this.enemyY + 150);
         this.game.addEntity(new Fayere(this.game, this.enemyX - 150, this.enemyY));
         this.game.addEntity(new Fayere(this.game, this.enemyX + 150, this.enemyY));
         this.game.addEntity(new Fayere(this.game, this.enemyX, this.enemyY - 150));
@@ -160,4 +187,36 @@ class Buck {
             this.face = 0;
         }
     }
+
+    walkaround(rand1, rand2, rand3, rand4) {
+        this.howlong = Date.now() - this.walkaroundtimer;
+        if(this.howlong < 1500) {
+            this.face = 1;
+            this.x += -rand1 * (this.speed+1.5);
+            this.y += -rand2 * (this.speed+1.5);
+            this.state = 1;
+        } else if (this.howlong >= 1500 && this.howlong < 3000) {
+            this.face = 0;
+            this.x += rand3 * (this.speed+1.5);
+            this.y += rand4 * (this.speed+1.5);
+            this.state = 1;
+        } else if(this.howlong >= 3000 && this.howlong < 4500) {
+            this.face = 1;
+            this.x += -rand2 * (this.speed+1.5);
+            this.y += rand3 * (this.speed+1.5);
+            this.state = 1;
+        } else if (this.howlong >= 4500 && this.howlong < 5900) {
+            this.face = 0;
+            this.x += rand4 * (this.speed+1.5);
+            this.y += -rand1 * (this.speed+1.5);
+            this.state = 1;
+        } else {
+            this.walkaroundtimer = Date.now();
+        }
+    }
+
+    
+    //Spinning Sword
+
+
 };

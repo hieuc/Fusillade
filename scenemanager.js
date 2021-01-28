@@ -24,10 +24,10 @@ class SceneManager {
 
         var character = new Rutherford(this.game, x, y); 
         var fayereCharacter = new Fayere(this.game, 900, 600);
-        var buckCharacter = new Buck(this.game, 850, 100);
+        var buckCharacter = new Buck(this.game, 500, 300);
         
         
-        this.game.addEntity(new Dummy(this.game, 400, 200));
+        //this.game.addEntity(new Dummy(this.game, 400, 200));
         this.game.addEntity(buckCharacter);
         this.game.addEntity(fayereCharacter);
         this.game.addEntity(character);
