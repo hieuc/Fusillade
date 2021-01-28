@@ -14,8 +14,8 @@ class SceneManager {
     loadSandbox(x, y) {
         this.game.entityies = [];
 
-        for (var i = 0; i < 8; i++) {
-            for (var j = 0; j < 6; j++) {
+        for (var i = 0; i < 10; i++) {
+            for (var j = 0; j < 7; j++) {
                 var bg = new Ground(this.game, i * 96, j * 96);
                 this.game.addEntity(bg);
             }
@@ -23,9 +23,11 @@ class SceneManager {
         
 
         var character = new Rutherford(this.game, x, y); 
-        var fayereCharacter = new Fayere(this.game, 600, 500);
-        var buckCharacter = new Buck(this.game, 650, 100);
+        var fayereCharacter = new Fayere(this.game, 900, 600);
+        var buckCharacter = new Buck(this.game, 850, 100);
         
+        
+        this.game.addEntity(new Dummy(this.game, 400, 200));
         this.game.addEntity(buckCharacter);
         this.game.addEntity(fayereCharacter);
         this.game.addEntity(character);

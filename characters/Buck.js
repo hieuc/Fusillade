@@ -133,7 +133,6 @@ class Buck {
         if ((angle > 0 && dy < 0) || (angle < 0 && dy > 0))
             v.y *= -1;
         
-        console.log(angle);
         return v;
     }
 
