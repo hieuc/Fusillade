@@ -120,7 +120,6 @@ class GameEngine {
     //FIX
     update() {
         var entitiesCount = this.entities.length;
-        console.log(entitiesCount);
 
         for (var i = 0; i < entitiesCount; i++) {
             var entity = this.entities[i];

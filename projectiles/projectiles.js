@@ -1,10 +1,15 @@
 class Projectiles {
-    constructor(game, x, y, velocity, speed, lifetime) {
+    constructor(game, x, y, velocity, speed, lifetime, spritesheet) {
         Object.assign(this, { game, x, y, velocity, speed, lifetime});
 
-        this.scale = 2;
+        // if no spritesheet provided, use default
+        if (spritesheet) {
+            this.spritesheet = ASSET_MANAGER.getAsset(spritesheet);
+        } else {
+            this.spritesheet = ASSET_MANAGER.getAsset(params.default_projectile_sheet);
+        }
 
-        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/projectiles.png");
+        this.scale = 2;
         
         this.timestamp = Date.now();
     }

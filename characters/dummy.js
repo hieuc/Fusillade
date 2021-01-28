@@ -13,7 +13,7 @@ class Dummy {
 
         this.timestamp = Date.now();
 
-        this.attack2();
+        this.attack3();
     }
 
     update() {
@@ -94,6 +94,37 @@ class Dummy {
         }
 
         setInterval(pattern, 800);
+    }
+    /**
+     * Alternating boomerang shots
+     */
+    attack3() {
+        var that = this;
+        this.timestamp = Date.now();
+
+        this.update = function () {};
+        var n = 6; // <------------ change number of projectiles here
+        var delay = 800;
+
+        var pattern = async function() {
+            // shoot outward 6 directions
+            
+            for (var i = 0; i < n; i++) {
+                var velocity = that.calculateVel(Math.PI / n * i * 2);
+                var p = new Boomerang(that.game, that.x, that.y, velocity, 3, 2000, 0.55);
+                that.game.entities.splice(that.game.entities.length - 1, 0, p);
+            }
+            await that.sleep(delay);
+            for (var i = 0; i < n; i++) {
+                var velocity = that.calculateVel(Math.PI / n * i * 2 - Math.PI / n);
+                var p = new Boomerang(that.game, that.x, that.y, velocity, 3, 2000, 0.55);
+                that.game.entities.splice(that.game.entities.length - 1, 0, p);
+            }
+
+            // boomerang
+        }
+
+        setInterval(pattern, delay * 2);
     }
 
     sleep(ms) {

@@ -120,7 +120,6 @@ class Buck {
                 var timer = Date.now() - this.patterntimer;
                 if(timer < this.patternduration) {
                     this.decideDir();
-                    console.log(timer);
                     if(this.whichattack >= 0 && this.whichattack < 0.34) { 
                         var timepassed = Date.now() - this.attackbuffer;
                         if(timepassed > this.fireRate) {
@@ -169,7 +168,7 @@ class Buck {
     attack() {
         var velocity = this.calculateVel();
         var offset = this.face == 0? 100: 0;
-        var p = new Newprojectiles(this.game, this.x + offset, this.y, velocity, 5, 4000, 49, 337, 15, 14, 0.03);
+        var p = new ScaleProjectiles(this.game, this.x + offset, this.y, velocity, 5, 4000, 49, 337, 15, 14, 0.03);
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }
 
