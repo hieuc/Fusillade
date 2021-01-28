@@ -101,6 +101,7 @@ class Buck {
 
                 if(summon > this.summoncooldown+10500) {
                     this.summontime = Date.now();
+                    this.summoned = false;
                 }
             } else {
                 this.state = 0;
@@ -143,14 +144,14 @@ class Buck {
     }
 
     bringSummons() {
-        var fayereSummon = new Fayere(this.game, this.enemyX - 150, this.enemyY);
-        var fayereSummon2 = new Fayere(this.game, this.enemyX + 150, this.enemyY);
-        var fayereSummon3 = new Fayere(this.game, this.enemyX , this.enemyY - 150);
-        var fayereSummon4 = new Fayere(this.game, this.enemyX, this.enemyY + 150);
-        this.game.addEntity(fayereSummon);
-        this.game.addEntity(fayereSummon2);
-        this.game.addEntity(fayereSummon3);
-        this.game.addEntity(fayereSummon4);
+        //var fayereSummon = new Fayere(this.game, this.enemyX - 150, this.enemyY);
+        //var fayereSummon2 = new Fayere(this.game, this.enemyX + 150, this.enemyY);
+        //var fayereSummon3 = new Fayere(this.game, this.enemyX , this.enemyY - 150);
+        //var fayereSummon4 = new Fayere(this.game, this.enemyX, this.enemyY + 150);
+        this.game.addEntity(new Fayere(this.game, this.enemyX - 150, this.enemyY));
+        this.game.addEntity(new Fayere(this.game, this.enemyX + 150, this.enemyY));
+        this.game.addEntity(new Fayere(this.game, this.enemyX, this.enemyY - 150));
+        this.game.addEntity(new Fayere(this.game, this.enemyX, this.enemyY + 150));
     }
 
     decideDir() {

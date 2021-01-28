@@ -17,7 +17,7 @@ class Fayere {
 
         this.attackbuffer = Date.now(); //Used to calculate when the last shot was fired.
 
-        this.fireRate = 200; //in milliseconds.
+        this.fireRate = 300; //in milliseconds.
 
         this.enemypos = { enemyX: 0, enemyY: 0};
 
