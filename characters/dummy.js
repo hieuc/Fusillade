@@ -11,6 +11,8 @@ class Dummy {
 
         this.speed = 1;
 
+        this.bound = new BoundingBox(this.x, this.y, 17 * this.scale, 28 * this.scale);
+
         this.timestamp = Date.now();
 
         this.attack3();
@@ -22,6 +24,10 @@ class Dummy {
 
     draw(ctx) {
         ctx.drawImage(this.sprite, 0, 0, 17, 28, this.x - this.game.camera.x, this.y - this.game.camera.y, 17 * this.scale,  28 * this.scale);
+        if (PARAMS.debug) {
+            ctx.strokeStyle = 'Red';
+            ctx.strokeRect(this.bound.x - this.game.camera.x, this.bound.y - this.game.camera.y, this.bound.w, this.bound.h);
+        }
     }
 
     /*

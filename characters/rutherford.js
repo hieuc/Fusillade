@@ -14,6 +14,8 @@ class Rutherford {
 
         this.velocity = { x : 0, y : 0};
 
+        this.bound = new BoundingBox(this.x, this.y, 16, 32);
+
         this.animations = [];
 
         this.loadAnimations();
@@ -49,15 +51,25 @@ class Rutherford {
 
         this.x += this.velocity.x * this.speed;
         this.y += this.velocity.y * this.speed;
+        this.updateBound();
     }
 
     draw(ctx) {
         this.animations[this.action][this.face].drawFrame(this.game.clockTick, ctx, this.x - 25 - this.game.camera.x, this.y - 25 - this.game.camera.y, this.scale);
+        if (PARAMS.debug) {
+            ctx.strokeStyle = 'Red';
+            ctx.strokeRect(this.bound.x - this.game.camera.x, this.bound.y - this.game.camera.y, this.bound.w, this.bound.h);
+        }
+    }
+
+    updateBound() {
+        this.bound.x = this.x + 16;
+        this.bound.y = this.y + 16;
     }
 
     startAttack(click) {
         this.action = 2;
-        if (click.x - this.x < 0)
+        if (click.x - this.x  + this.game.camera.x - 25 < 0)
             this.face = 1;
         else 
             this.face = 0;

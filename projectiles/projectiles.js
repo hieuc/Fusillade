@@ -9,6 +9,8 @@ class Projectiles {
             this.spritesheet = ASSET_MANAGER.getAsset(PARAMS.default_projectile_sheet);
         }
 
+        this.bound = new BoundingCircle(this.x, this.y, 16);
+
         this.scale = 2;
         
         this.timestamp = Date.now();
@@ -26,11 +28,23 @@ class Projectiles {
             this.x += this.speed * this.velocity.x;
             this.y += this.speed * this.velocity.y;
         }
+        this.updateBound();
+    }
+
+    updateBound() {
+        this.bound.x = this.x + 16;
+        this.bound.y = this.y + 16;
     }
 
     draw(ctx) {
         //ctx.drawImage(this.spritesheet, 96, 96, 16, 16, this.x, this.y, 16 * this.scale, 16 * this.scale);
         this.rotate(ctx, Math.atan(this.velocity.y / this.velocity.x) + (this.velocity.x <= 0 ? Math.PI : 0));
+        if (PARAMS.debug) {
+            ctx.strokeStyle = 'Red';
+            ctx.beginPath();
+            ctx.arc(this.bound.x - this.game.camera.x, this.bound.y - this.game.camera.y, this.bound.r, 0, Math.PI * 2, false);
+            ctx.stroke();
+        }
     }
 
     rotate(ctx, angle) {

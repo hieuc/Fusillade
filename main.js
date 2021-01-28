@@ -17,6 +17,7 @@ ASSET_MANAGER.downloadAll(function () {
 
 	PARAMS.canvas_width = canvas.width;
 	PARAMS.canvas_height = canvas.height;
+	PARAMS.debug = document.getElementById("debug").checked;
 
 	new SceneManager(gameEngine);
 

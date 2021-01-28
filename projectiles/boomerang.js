@@ -22,5 +22,6 @@ class Boomerang extends Projectiles {
             this.x += this.speed * this.velocity.x;
             this.y += this.speed * this.velocity.y;
         }
+        this.updateBound();
     }
 }
