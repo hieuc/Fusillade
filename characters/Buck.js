@@ -33,10 +33,7 @@ class Buck {
 
         this.walkaroundtimer = Date.now();
 
-        this.iter = 0;
-
-
-        //
+        this.blitz = 0;
 
         this.enemypos = { enemyX: 0, enemyY: 0, instX : 0, instY: 0};
 
@@ -46,7 +43,7 @@ class Buck {
     }
 
     loadAnimations() {
-        for (var i = 0; i < 5; i++) { // 4 states
+        for (var i = 0; i < 5; i++) { // 5 states
             this.animations.push([]);
             for (var j = 0; j < 2; j++) { // 2 directions
                 this.animations[i].push([]);
@@ -81,9 +78,16 @@ class Buck {
         //facing left = 1
         this.animations[3][1] = new Animator(this.spritesheet, 31, 1450, 44, 59, 6, 0.1, 52, false, true);
 
+        //Summon animation for state = 4
+        //facing right = 0
+        this.animations[4][0] = new Animator(this.spritesheet, 8, 597, 84, 47, 9, 0.075, 12, false, true);
+
+        //facing left = 1
+        this.animations[4][1] = new Animator(this.spritesheet, 10, 1556, 75, 48, 9, 0.075, 21, false, true);
+
     }
 
-    update() {
+    update() { 
         //First check if player triggered the enemy.
         if((Math.abs(this.x - this.enemyX) < 300 && Math.abs(this.y - this.enemyY) < 200) && !this.triggered) {
             this.triggered = true;
@@ -120,15 +124,23 @@ class Buck {
                 var timer = Date.now() - this.patterntimer;
                 if(timer < this.patternduration) {
                     this.decideDir();
-                    if(this.whichattack >= 0 && this.whichattack < 0.34) { 
+                    if(this.whichattack >= 0 && this.whichattack < 0.01) { 
                         var timepassed = Date.now() - this.attackbuffer;
                         if(timepassed > this.fireRate) {
                             this.state = 2;
                             this.attack();
                             this.attackbuffer = Date.now();
                         }
-                    } else if(this.whichattack >= 0.34 && this.whichattack < 0.77) {
+                    } else if(this.whichattack >= 0.01 && this.whichattack < 0.02) {
                         this.walkaround(Math.random(), Math.random(), Math.random(), Math.random());
+                    } else {
+                        var timepassed = Date.now() - this.attackbuffer;
+                        if(timepassed > this.fireRate+300) {
+                            this.state = 4;
+                            this.rageAttack();
+                            this.attackbuffer = Date.now();
+                            this.blitz += 50; //Keep changing starting angle
+                        }
                     }
                 } else {
                     this.state = 0;
@@ -137,6 +149,7 @@ class Buck {
                 }
             }
         } 
+
     }
 
     draw(ctx) {
@@ -155,6 +168,8 @@ class Buck {
 
         var v = { x: Math.cos(angle),
                  y: Math.sin(angle)};
+
+         console.log(v);
         
         if (dx < 0)
             v.x *= -1;
@@ -163,6 +178,17 @@ class Buck {
             v.y *= -1;
         
         return v;
+    }
+
+
+    rageAttack() {
+        var partitions = 10;
+        for(var i = 0; i < partitions; i++) {
+            var p = new ScaleProjectiles(this.game, this.x+65, this.y+40, {x :Math.cos(this.blitz), y:Math.sin(this.blitz)}, 5, 4000, 49, 337, 15, 14, 0.03);
+            this.blitz += Math.PI/partitions;
+            console.log(this.blitz);
+            this.game.entities.splice(this.game.entities.length - 1, 0, p);        
+        }    
     }
 
     attack() {
@@ -213,9 +239,5 @@ class Buck {
             this.walkaroundtimer = Date.now();
         }
     }
-
     
-    //Spinning Sword
-
-
 };
