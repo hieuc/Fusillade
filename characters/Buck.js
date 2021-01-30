@@ -124,14 +124,14 @@ class Buck {
                 var timer = Date.now() - this.patterntimer;
                 if(timer < this.patternduration) {
                     this.decideDir();
-                    if(this.whichattack >= 0 && this.whichattack < 0.01) { 
+                    if(this.whichattack >= 0 && this.whichattack < 0.34) { 
                         var timepassed = Date.now() - this.attackbuffer;
                         if(timepassed > this.fireRate) {
                             this.state = 2;
                             this.attack();
                             this.attackbuffer = Date.now();
                         }
-                    } else if(this.whichattack >= 0.01 && this.whichattack < 0.02) {
+                    } else if(this.whichattack >= 0.34 && this.whichattack < 0.67) {
                         this.walkaround(Math.random(), Math.random(), Math.random(), Math.random());
                     } else {
                         var timepassed = Date.now() - this.attackbuffer;
@@ -184,7 +184,7 @@ class Buck {
     rageAttack() {
         var partitions = 10;
         for(var i = 0; i < partitions; i++) {
-            var p = new ScaleProjectiles(this.game, this.x+65, this.y+40, {x :Math.cos(this.blitz), y:Math.sin(this.blitz)}, 5, 4000, 49, 337, 15, 14, 0.03);
+            var p = new ScaleProjectiles(this.game, this.x+65, this.y+40, {x :Math.cos(this.blitz), y:Math.sin(this.blitz)}, 5, 2500, 49, 337, 15, 14, 0.03);
             this.blitz += Math.PI/partitions;
             console.log(this.blitz);
             this.game.entities.splice(this.game.entities.length - 1, 0, p);        
