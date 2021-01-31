@@ -205,7 +205,7 @@ class Buck {
     rageAttack() {
         var partitions = 10;
         for(var i = 0; i < partitions; i++) {
-            var p = new ScaleProjectiles(this.game, this.x+40, this.y+40, {x :Math.cos(this.blitz), y:Math.sin(this.blitz)}, 5, 2500, 96, 144, 16, 16, 0.012);
+            var p = new GenProjectiles(this.game, this.x+40, this.y+40, {x :Math.cos(this.blitz), y:Math.sin(this.blitz)}, 5, 3000, 96, 144, 16, 16, 0.012, true);
             this.blitz += Math.PI/partitions;
             console.log(this.blitz);
             this.game.entities.splice(this.game.entities.length - 1, 0, p);        
@@ -216,7 +216,7 @@ class Buck {
     attack() {
         var velocity = this.calculateVel();
         var offset = this.face == 0? 100: 0;
-        var p = new ScaleProjectiles(this.game, this.x + offset, this.y, velocity, 5, 2500, 96, 144, 16, 16, 0.012);
+        var p = new GenProjectiles(this.game, this.x + offset, this.y, velocity, 5, 4000, 96, 144, 16, 16, 0.012, false);
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }
 
