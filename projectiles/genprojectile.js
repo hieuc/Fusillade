@@ -6,7 +6,6 @@ class GenProjectiles extends Projectiles{
     }
 
     update() {
-        this.scale += this.scaleIncrease;
         // if lifetime expired
 
         if(this.boomerang) {
@@ -15,10 +14,16 @@ class GenProjectiles extends Projectiles{
                 this.velocity.x = -this.velocity.x;
                 this.velocity.y = -this.velocity.y;
             } else {
+                if(!this.returned) {
+                    this.scale += this.scaleIncrease;
+                } else {
+                    this.scale -= this.scaleIncrease;
+                }
                 this.x += this.speed * this.velocity.x;
                 this.y += this.speed * this.velocity.y;
             }
         } else {
+            this.scale += this.scaleIncrease;
             this.x += this.speed * this.velocity.x;
             this.y += this.speed * this.velocity.y;
         }
