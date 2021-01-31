@@ -23,15 +23,15 @@ class Buck {
 
         this.fireRate = 200; //in milliseconds.
 
-        this.summoncooldown = 25000;
+        this.summoncooldown = 22000; //Cooldown for the summon attack.
 
-        this.whichattack = 0;
+        this.whichattack = Math.random(); //Deciding attack among 3 possibilites.
 
-        this.patterntimer = Date.now();
+        this.patterntimer = Date.now(); //To keep track of how long we've been running a pattern.
 
-        this.patternduration = 6000; // 6 seconds.
+        this.patternduration = 7000; // 6 seconds.
 
-        this.walkaroundtimer = Date.now();
+        this.walkaroundtimer = Date.now(); 
 
         this.blitz = 0;
 
@@ -55,7 +55,7 @@ class Buck {
         this.animations[0][0] = new Animator(this.spritesheet, 22, 22, 62, 47, 5, 0.25, 34, false, true);
 
         // facing left = 1
-        this.animations[0][1] = new Animator(this.spritesheet, 15, 982, 57, 47, 5, 0.25, 39, false, true);
+        this.animations[0][1] = new Animator(this.spritesheet, 15, 982, 62, 47, 5, 0.25, 34, false, true);
 
         //walking animation for state = 1
         //facing right = 0
@@ -87,7 +87,15 @@ class Buck {
 
     }
 
+    /**
+     * Updates our Buck. In our case, we don't trigger unless we're in a certain rage. Once in that range, buck starts
+     * counting time for his summon attack and decides from among 3 differnet patterns, rage attack, walking around, 
+     * scaling attacks. His summon attack takes priority, so if its time to summon, he'll stop his other attack and start
+     * summoning. The probability of choosing any one of the 3 different patterns is same as we are using true random
+     * i.e. Math random class.
+     */
     update() { 
+
         //First check if player triggered the enemy.
         if((Math.abs(this.x - this.enemyX) < 300 && Math.abs(this.y - this.enemyY) < 200) && !this.triggered) {
             this.triggered = true;
@@ -116,7 +124,7 @@ class Buck {
                     }
                 } 
 
-                if(summon > this.summoncooldown+10500) {
+                if(summon > this.summoncooldown+10900) {
                     this.summontime = Date.now();
                     this.summoned = false;
                 }
@@ -139,7 +147,6 @@ class Buck {
                             this.state = 4;
                             this.rageAttack();
                             this.attackbuffer = Date.now();
-                            this.blitz += 50; //Keep changing starting angle
                         }
                     }
                 } else {
@@ -149,11 +156,22 @@ class Buck {
                 }
             }
         } 
-
     }
 
     draw(ctx) {
-        this.animations[this.state][this.face].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale);
+        //These are just to make sure sprites don't "jump" since some animation sprites are bigger than others.
+        var offsetX = 0;
+        var offsetY = 0;
+        if(this.state == 2) {
+            offsetX = 40;
+            offsetY = 30;
+        } else if(this.state == 3) {
+            offsetY = 20;
+        } else if(this.state == 4) {
+            offsetX = 40;
+        }
+
+        this.animations[this.state][this.face].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x - offsetX, this.y - this.game.camera.y - offsetY, this.scale);
     }
 
     getEnemyPos(eneX, eneY) {
@@ -180,21 +198,25 @@ class Buck {
         return v;
     }
 
-
+    
+    /**
+     * This is the rage attack for buck. Partitions define how many attacks he'll launch in the 180 degree angle.
+     */
     rageAttack() {
         var partitions = 10;
         for(var i = 0; i < partitions; i++) {
-            var p = new ScaleProjectiles(this.game, this.x+65, this.y+40, {x :Math.cos(this.blitz), y:Math.sin(this.blitz)}, 5, 2500, 49, 337, 15, 14, 0.03);
+            var p = new ScaleProjectiles(this.game, this.x+40, this.y+40, {x :Math.cos(this.blitz), y:Math.sin(this.blitz)}, 5, 2500, 96, 144, 16, 16, 0.012);
             this.blitz += Math.PI/partitions;
             console.log(this.blitz);
             this.game.entities.splice(this.game.entities.length - 1, 0, p);        
-        }    
+        }
+        this.blitz += 50; //Keep changing starting angle
     }
 
     attack() {
         var velocity = this.calculateVel();
         var offset = this.face == 0? 100: 0;
-        var p = new ScaleProjectiles(this.game, this.x + offset, this.y, velocity, 5, 4000, 49, 337, 15, 14, 0.03);
+        var p = new ScaleProjectiles(this.game, this.x + offset, this.y, velocity, 5, 2500, 96, 144, 16, 16, 0.012);
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }
 
@@ -215,29 +237,56 @@ class Buck {
 
     walkaround(rand1, rand2, rand3, rand4) {
         this.howlong = Date.now() - this.walkaroundtimer;
-        if(this.howlong < 1500) {
-            this.face = 1;
-            this.x += -rand1 * (this.speed+1.5);
-            this.y += -rand2 * (this.speed+1.5);
-            this.state = 1;
-        } else if (this.howlong >= 1500 && this.howlong < 3000) {
+        if(this.howlong < 3500) {
             this.face = 0;
-            this.x += rand3 * (this.speed+1.5);
-            this.y += rand4 * (this.speed+1.5);
+            this.x += rand1 * (this.speed+1.5);
             this.state = 1;
-        } else if(this.howlong >= 3000 && this.howlong < 4500) {
+        } else if (this.howlong >= 3500 && this.howlong < 5000) {
+            this.face = 1;
+            this.x -= rand3 * (this.speed+1.5);
+            var updown = this.y - this.enemyY < 0? 1: -1;
+            this.y += rand3 * (this.speed) * updown;
+        } else if(this.howlong >= 5000 && this.howlong < 6900) {
             this.face = 1;
             this.x += -rand2 * (this.speed+1.5);
-            this.y += rand3 * (this.speed+1.5);
-            this.state = 1;
-        } else if (this.howlong >= 4500 && this.howlong < 5900) {
-            this.face = 0;
-            this.x += rand4 * (this.speed+1.5);
-            this.y += -rand1 * (this.speed+1.5);
-            this.state = 1;
         } else {
             this.walkaroundtimer = Date.now();
         }
     }
     
+    //Testing code.
+    /**
+     var time = Date.now() - this.patterntimer;
+        if(time < 2500) {
+            this.state = 0;
+            this.face = 0;
+        } else if(time >= 2500 && time < 5000) {
+            this.state = 0;
+            this.face = 1;
+        } else if(time >= 5000 && time < 7500) {
+            this.state = 1;
+            this.face = 0;
+        } else if(time >= 7500 && time < 10000) {
+            this.state = 1;
+            this.face = 1;
+        } else if(time >= 10000 && time < 12500) {
+            this.state = 2;
+            this.face = 0;
+        } else if(time >=12500 && time < 15000) {
+            this.state =2;
+            this.face = 1;
+        } else if(time >= 15000 && time < 17500) {
+            this.state = 3;
+            this.face = 0;
+        } else if(time >=17500 && time < 20000) {
+            this.state = 3;
+            this.face = 1;
+        } else if(time >= 20000 && time < 22500) {
+            this.state = 4;
+            this.face = 0;
+        } else if(time >=22500 && time < 25000) {
+            this.state = 4;
+            this.face = 1;
+        }
+     */
 };

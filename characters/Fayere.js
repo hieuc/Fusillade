@@ -155,7 +155,7 @@ class Fayere {
 
     attack() {
         var velocity = this.calculateVel();
-        var p = new Projectiles(this.game, this.x, this.y, velocity, 3, 2000);
+        var p = new GenProjectiles(this.game, this.x, this.y, velocity, 3, 2000, 84, 101, 12, 7, 0, false);
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }
 };
