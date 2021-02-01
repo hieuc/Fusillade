@@ -17,6 +17,8 @@ class Buck {
 
         this.summoned = false;
 
+        this.isEnemy = true;
+
         this.summontime = Date.now();
         
         this.attackbuffer = Date.now(); //Used to calculate when the last shot was fired.

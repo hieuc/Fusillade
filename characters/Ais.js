@@ -11,6 +11,8 @@ class Ais {
 
         this.speed = 1.2;
 
+        this.isEnemy = true;
+
         this.toofarmovement = Date.now(); //We want to give a behavior pattern when enemy is too far.
 
         this.attackpatterntime = Date.now(); //When are in attack range, do time interval patterns.
