@@ -1,4 +1,5 @@
 class Projectiles {
+    //firedby refers to who shot it. 'H' means hero, 'E' means enemy. 
     constructor(game, firedby, x, y, velocity, speed, lifetime, spritesheet) {
         Object.assign(this, { game, firedby, x, y, velocity, speed, lifetime});
 
