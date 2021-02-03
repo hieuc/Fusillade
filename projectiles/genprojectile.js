@@ -3,6 +3,8 @@ class GenProjectiles extends Projectiles{
         super(game, x, y, velocity, speed, lifetime, spritesheet);
         Object.assign(this, {posX, posY, width, height, scaleIncrease, boomerang});
 
+        this.r = 16;
+
     }
 
     update() {
@@ -47,5 +49,10 @@ class GenProjectiles extends Projectiles{
         ctx2.translate(-16 * this.scale / 2, -16 * this.scale / 2);
         ctx2.drawImage(this.spritesheet, this.posX, this.posY, this.width, this.height, 0, 0, 16 * this.scale, 16 * this.scale);
         ctx.drawImage(c2, this.x - this.game.camera.x, this.y - this.game.camera.y, 16 * this.scale, 16 * this.scale);
+    }
+
+    updateBound() {
+        this.r += this.scaleIncrease;
+        this.bound = new BoundingCircle(this.x + 16 + this.scale, this.y + 16 + this.scale, this.r);
     }
 }

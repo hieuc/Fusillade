@@ -118,7 +118,6 @@ class GameEngine {
         this.camera.draw(this.ctx);
     };
 
-    //FIX
     update() {
         var entitiesCount = this.entities.length;
 

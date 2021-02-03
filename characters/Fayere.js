@@ -25,6 +25,8 @@ class Fayere {
 
         this.animations = [];
 
+        this.bound = new BoundingBox(this.x, this.y, 22, 20);
+
         this.loadAnimations();
     }
 
@@ -127,10 +129,20 @@ class Fayere {
                 this.attackpatterntime = Date.now();
             }
         }
+        this.updateBound();
     }
 
     draw(ctx) {
         this.animations[this.state][this.face].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale);
+        if (PARAMS.debug) {
+            ctx.strokeStyle = 'Red';
+            ctx.strokeRect(this.bound.x - this.game.camera.x, this.bound.y - this.game.camera.y, this.bound.w, this.bound.h);
+        }
+    }
+
+    updateBound() {
+        this.bound.x = this.x + 10;
+        this.bound.y = this.y + 5;
     }
 
     getEnemyPos(eneX, eneY) {

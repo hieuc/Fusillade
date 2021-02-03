@@ -23,6 +23,8 @@ class Ais {
 
         this.enemypos = { enemyX: 0, enemyY: 0};
 
+        this.bound = new BoundingBox(this.x, this.y, 22, 20);
+
         this.animations = [];
 
         this.loadAnimations();
@@ -127,15 +129,26 @@ class Ais {
                 this.attackpatterntime = Date.now();
             }
         }
+
+        this.updateBound();
     }
 
     draw(ctx) {
         this.animations[this.state][this.face].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale);
+        if (PARAMS.debug) {
+            ctx.strokeStyle = 'Red';
+            ctx.strokeRect(this.bound.x - this.game.camera.x, this.bound.y - this.game.camera.y, this.bound.w, this.bound.h);
+        }
     }
 
     getEnemyPos(eneX, eneY) {
         this.enemyX = eneX;
         this.enemyY = eneY;
+    }
+
+    updateBound() {
+        this.bound.x = this.x + 10;
+        this.bound.y = this.y + 5;
     }
 
     calculateVel() {

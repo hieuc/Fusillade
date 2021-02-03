@@ -8,6 +8,7 @@ ASSET_MANAGER.queueDownload("./sprites/Ais.png");
 ASSET_MANAGER.queueDownload("./sprites/forest.png");
 ASSET_MANAGER.queueDownload("./sprites/projectiles.png");
 ASSET_MANAGER.queueDownload("./sprites/Buck.png");
+ASSET_MANAGER.queueDownload("./sprites/Drumbuck.png");
 ASSET_MANAGER.queueDownload("./sprites/dummy.png");
 
 

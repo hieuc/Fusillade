@@ -35,6 +35,8 @@ class Buck {
 
         this.walkaroundtimer = Date.now(); 
 
+        this.bound = new BoundingBox(this.x-60, this.y, 70, 70);
+
         this.blitz = 0;
 
         this.enemypos = { enemyX: 0, enemyY: 0, instX : 0, instY: 0};
@@ -158,6 +160,8 @@ class Buck {
                 }
             }
         } 
+
+        this.updateBound();
     }
 
     draw(ctx) {
@@ -174,11 +178,20 @@ class Buck {
         }
 
         this.animations[this.state][this.face].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x - offsetX, this.y - this.game.camera.y - offsetY, this.scale);
+        if (PARAMS.debug) {
+            ctx.strokeStyle = 'Red';
+            ctx.strokeRect(this.bound.x - this.game.camera.x, this.bound.y - this.game.camera.y, this.bound.w, this.bound.h);
+        }
     }
 
     getEnemyPos(eneX, eneY) {
         this.enemyX = eneX;
         this.enemyY = eneY;
+    }
+
+    updateBound() {
+        this.bound.x = this.x + 16;
+        this.bound.y = this.y + 16;
     }
 
     calculateVel() {
@@ -218,7 +231,7 @@ class Buck {
     attack() {
         var velocity = this.calculateVel();
         var offset = this.face == 0? 100: 0;
-        var p = new GenProjectiles(this.game, this.x + offset, this.y, velocity, 5, 4000, 96, 144, 16, 16, 0.012, false);
+        var p = new GenProjectiles(this.game, this.x + offset, this.y, velocity, 4, 2500, 96, 144, 16, 16, 0.005, false);
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }
 
