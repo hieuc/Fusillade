@@ -8,8 +8,10 @@ class GameEngine {
         this.click = null;
         this.mouse = null;
         this.wheel = null;
-        this.surfaceWidth = null;
-        this.surfaceHeight = null;
+        this.left = false;
+        this.right= false;
+        this.up = false;
+        this.down = false;
     };
 
     init(ctx) {
@@ -42,20 +44,16 @@ class GameEngine {
         this.ctx.canvas.addEventListener("keydown", e => {
             switch (e.key) {
                 case 'd':
-                    if (c.velocity.x < 1)
-                        c.velocity.x++;
+                    that.right = true;
                     break;
                 case 'a':
-                    if (c.velocity.x > -1)
-                        c.velocity.x--;
+                    that.left = true;
                     break;
                 case 's':
-                    if (c.velocity.y < 1)
-                        c.velocity.y++;
+                    that.down = true;
                     break;
                 case 'w':
-                    if (c.velocity.y > -1)
-                        c.velocity.y--;
+                    that.up = true;
                     break;
                 default:
                     break;
@@ -65,16 +63,16 @@ class GameEngine {
         this.ctx.canvas.addEventListener("keyup", e => {
             switch (e.key) {
                 case 'd':
-                    c.velocity.x = 0;
+                    that.right = false;
                     break;
                 case 'a':
-                    c.velocity.x = 0;
+                    that.left = false;
                     break;
                 case 's':
-                    c.velocity.y = 0;
+                    that.down = false;
                     break;
                 case 'w':
-                    c.velocity.y = 0;
+                    that.up = false;
                     break;
                 default:
                     break;

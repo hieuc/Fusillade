@@ -37,6 +37,26 @@ class Rutherford {
     }
 
     update() {
+        // movement
+        var g = this.game;
+        if (g.left && !g.right) {
+            this.velocity.x = -1;
+        } else if (g.right && !g.left) {
+            this.velocity.x = 1;
+        } else {
+            this.velocity.x = 0;
+        }
+
+        if (g.up && !g.down) {
+            this.velocity.y = -1;
+        } else if (g.down && !g.up) {
+            this.velocity.y = 1;
+        } else {
+            this.velocity.y = 0;
+        }
+
+
+        // animation
         if(this.action !== 2 || this.animations[this.action][this.face].isAlmostDone(this.game.clockTick)) {
             if (this.velocity.x !== 0 || this.velocity.y !== 0)
                 this.action = 1;
@@ -49,6 +69,7 @@ class Rutherford {
         if (this.velocity.x < 0 && this.action !== 2)
             this.face = 1;
 
+        // update position
         this.x += this.velocity.x * this.speed;
         this.y += this.velocity.y * this.speed;
         this.updateBound();
