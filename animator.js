@@ -36,4 +36,8 @@ class Animator {
     isDone() {
         return (this.elapsedTime >= this.totalTime);
     };
+
+    isAlmostDone(tick) {
+        return (this.elapsedTime + tick >= this.totalTime);
+    };
 };

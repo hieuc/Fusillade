@@ -37,7 +37,7 @@ class Rutherford {
     }
 
     update() {
-        if(this.action !== 2 || this.animations[this.action][this.face].isDone()) {
+        if(this.action !== 2 || this.animations[this.action][this.face].isAlmostDone(this.game.clockTick)) {
             if (this.velocity.x !== 0 || this.velocity.y !== 0)
                 this.action = 1;
             else 
@@ -74,8 +74,9 @@ class Rutherford {
         else 
             this.face = 0;
         var velocity = this.calculateVel(click);
-        var p = new Projectiles(this.game, 'H', this.x, this.y, velocity, 3, 2000);
+        var p = new Projectiles(this.game, true, this.x, this.y, velocity, 3, 2000);
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
+        
         this.animations[this.action][this.face].elapsedTime = 0;
     }
 

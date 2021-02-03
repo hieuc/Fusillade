@@ -148,7 +148,7 @@ class Ais {
         var that = this;
         this.game.entities.forEach(function (entity) {
             if (entity.bound && that.bound.collide(entity.bound)) {
-                if(entity instanceof Projectiles && entity.firedby == 'H') {
+                if(entity instanceof Projectiles && entity.friendly) {
                     that.health -= 10;
                     entity.removeFromWorld = true;
                     console.log(that.health);
@@ -199,7 +199,8 @@ class Ais {
 
     attack() {
         var velocity = this.calculateVel();
-        var p = new GenProjectiles(this.game, 'E', this.x, this.y, velocity, 3, 2000, 84, 133, 12, 7, 0, false);
+        var pp = { sx: 80, sy: 128, size: 16}
+        var p = new GenProjectiles(this.game, false, this.x, this.y, velocity, 3, 2000, 0, false, pp);
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }
 };

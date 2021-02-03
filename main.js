@@ -20,6 +20,8 @@ ASSET_MANAGER.downloadAll(function () {
 	PARAMS.canvas_width = canvas.width;
 	PARAMS.canvas_height = canvas.height;
 	PARAMS.debug = document.getElementById("debug").checked;
+	PARAMS.default_p_sheet = ASSET_MANAGER.getAsset("./sprites/projectiles.png");
+	PARAMS.default_projectile = {spritesheet: PARAMS.default_p_sheet, sx : 96, sy : 96, size: 16}
 
 	new SceneManager(gameEngine);
 
