@@ -76,66 +76,70 @@ class Fayere {
 
     update() {
         //As long as we don't trigger the enemy, do a pattern movement.
-
-        if(Math.abs(this.x - this.enemyX) > 300 || Math.abs(this.y - this.enemyY) > 170) {
-            this.howlong = Date.now() - this.toofarmovement;
-            if(this.howlong < 1500) {
-                this.face = 1;
-                this.x += -1 * this.speed;
-                this.state = 1;
-            } else if (this.howlong >= 1500 && this.howlong < 3000) {
-                this.state = 0;
-            } else if(this.howlong >= 3000 && this.howlong < 4500) {
-                this.face = 0;
-                this.x += 1 * this.speed;
-                this.state = 1;
-            } else if (this.howlong >= 4500 && this.howlong < 6000) {
-                this.state = 0;
-            } else {
-                this.toofarmovement = Date.now();
-            }
-        //If we are in trigger range, get closer to the main character
-        } else if(Math.abs(this.x - this.enemyX) > 150 || Math.abs(this.y - this.enemyY) > 120) {
-            if(this.x - this.enemyX > 0) {
-                this.x += -1 * this.speed;
-                this.face = 1;
-                this.state = 1;
-            } else {
-                this.x += 1 * this.speed;
-                this.face = 0;
-                this.state = 1;
-            }
-            if(this.y - this.enemyY > 0) {
-                this.y += -1 * this.speed;
-            } else {
-                this.y += 1 * this.speed;
-            }
-        //Once we are in a decent attack range, Do something now. 
+        if(this.state == 3) {
+             if(this.animations[this.state][this.face].isDone()) {
+                this.removeFromWorld = true;
+             }
         } else {
-            this.attackbehavior = Date.now() - this.attackpatterntime;
-            if(this.attackbehavior < 1500) {
-                this.state = 0;
-                if(this.x - this.enemyX > 0) {
+            if(Math.abs(this.x - this.enemyX) > 300 || Math.abs(this.y - this.enemyY) > 170) {
+                this.howlong = Date.now() - this.toofarmovement;
+                if(this.howlong < 1500) {
                     this.face = 1;
-                } else {
+                    this.x += -1 * this.speed;
+                    this.state = 1;
+                } else if (this.howlong >= 1500 && this.howlong < 3000) {
+                    this.state = 0;
+                } else if(this.howlong >= 3000 && this.howlong < 4500) {
                     this.face = 0;
+                    this.x += 1 * this.speed;
+                    this.state = 1;
+                } else if (this.howlong >= 4500 && this.howlong < 6000) {
+                    this.state = 0;
+                } else {
+                    this.toofarmovement = Date.now();
                 }
-            } else if (this.attackbehavior >= 1500 && this.attackbehavior < 4200) {
-                this.state = 2;
+            //If we are in trigger range, get closer to the main character
+            } else if(Math.abs(this.x - this.enemyX) > 150 || Math.abs(this.y - this.enemyY) > 120) {
                 if(this.x - this.enemyX > 0) {
+                    this.x += -1 * this.speed;
                     this.face = 1;
+                    this.state = 1;
                 } else {
+                    this.x += 1 * this.speed;
                     this.face = 0;
+                    this.state = 1;
                 }
-                var timepassed = Date.now() - this.attackbuffer;
-                if(timepassed > this.fireRate) {
-                    this.attack();
-                    this.attackbuffer = Date.now();
+                if(this.y - this.enemyY > 0) {
+                    this.y += -1 * this.speed;
+                } else {
+                    this.y += 1 * this.speed;
                 }
+            //Once we are in a decent attack range, Do something now. 
             } else {
-                this.attackpatterntime = Date.now();
+                this.attackbehavior = Date.now() - this.attackpatterntime;
+                if(this.attackbehavior < 1500) {
+                    this.state = 0;
+                    if(this.x - this.enemyX > 0) {
+                        this.face = 1;
+                    } else {
+                        this.face = 0;
+                    }
+                } else if (this.attackbehavior >= 1500 && this.attackbehavior < 4200) {
+                    this.state = 2;
+                    if(this.x - this.enemyX > 0) {
+                        this.face = 1;
+                    } else {
+                        this.face = 0;
+                    }
+                    var timepassed = Date.now() - this.attackbuffer;
+                    if(timepassed > this.fireRate) {
+                        this.attack();
+                        this.attackbuffer = Date.now();
+                    }
+                } else {
+                    this.attackpatterntime = Date.now();
+                }
             }
-        }
 
         this.updateBound();
 
@@ -149,13 +153,15 @@ class Fayere {
                     entity.removeFromWorld = true;
                     console.log(that.health);
                     if(that.health <= 0) {
-                        that.removeFromWorld = true;
+                        that.state = 3;
                     }
                 } else {
                     //nothing really.
                 }
             }
         })
+
+    }
     }
 
     draw(ctx) {
