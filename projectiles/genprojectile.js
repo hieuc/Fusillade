@@ -1,6 +1,6 @@
 class GenProjectiles extends Projectiles{
-    constructor(game, x, y, velocity, speed, lifetime, posX, posY, width, height, scaleIncrease, boomerang, spritesheet) {
-        super(game, x, y, velocity, speed, lifetime, spritesheet);
+    constructor(game, firedby, x, y, velocity, speed, lifetime, posX, posY, width, height, scaleIncrease, boomerang, spritesheet) {
+        super(game, firedby, x, y, velocity, speed, lifetime, spritesheet);
         Object.assign(this, {posX, posY, width, height, scaleIncrease, boomerang});
 
         this.r = 16;

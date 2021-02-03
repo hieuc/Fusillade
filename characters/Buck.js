@@ -3,7 +3,11 @@ class Buck {
         Object.assign(this, { game, x, y });
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Buck.png");
 
-        //ADD AN ENEMY TAG SO GETTING PLAYER LOCATION GETS NEATER (BOOLEAN)
+        this.health = 500;
+
+        this.damage = 15;
+        
+        this.removeFromWorld = false;
 
         this.scale = 2.1;
 
@@ -162,6 +166,23 @@ class Buck {
         } 
 
         this.updateBound();
+
+        //Take into account different damage types for future reference.
+        var that = this;
+        this.game.entities.forEach(function (entity) {
+            if (entity.bound && that.bound.collide(entity.bound)) {
+                if(entity instanceof Projectiles && entity.firedby == 'H') {
+                    that.health -= 10;
+                    entity.removeFromWorld = true;
+                    console.log(that.health);
+                    if(that.health <= 0) {
+                        that.removeFromWorld = true;
+                    }
+                } else {
+                    //nothing really.
+                }
+            }
+        })
     }
 
     draw(ctx) {
@@ -220,7 +241,7 @@ class Buck {
     rageAttack() {
         var partitions = 10;
         for(var i = 0; i < partitions; i++) {
-            var p = new GenProjectiles(this.game, this.x+40, this.y+40, {x :Math.cos(this.blitz), y:Math.sin(this.blitz)}, 5, 3000, 96, 144, 16, 16, 0.012, true);
+            var p = new GenProjectiles(this.game, 'E', this.x+40, this.y+40, {x :Math.cos(this.blitz), y:Math.sin(this.blitz)}, 5, 3000, 96, 144, 16, 16, 0.012, true);
             this.blitz += Math.PI/partitions;
             console.log(this.blitz);
             this.game.entities.splice(this.game.entities.length - 1, 0, p);        
@@ -231,7 +252,7 @@ class Buck {
     attack() {
         var velocity = this.calculateVel();
         var offset = this.face == 0? 100: 0;
-        var p = new GenProjectiles(this.game, this.x + offset, this.y, velocity, 4, 2500, 96, 144, 16, 16, 0.005, false);
+        var p = new GenProjectiles(this.game, 'E', this.x + offset, this.y, velocity, 4, 2500, 96, 144, 16, 16, 0.005, false);
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }
 

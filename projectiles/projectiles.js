@@ -1,6 +1,6 @@
 class Projectiles {
-    constructor(game, x, y, velocity, speed, lifetime, spritesheet) {
-        Object.assign(this, { game, x, y, velocity, speed, lifetime});
+    constructor(game, firedby, x, y, velocity, speed, lifetime, spritesheet) {
+        Object.assign(this, { game, firedby, x, y, velocity, speed, lifetime});
 
         // if no spritesheet provided, use default
         if (spritesheet) {

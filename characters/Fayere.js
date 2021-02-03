@@ -3,6 +3,12 @@ class Fayere {
         Object.assign(this, { game, x, y });
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Fayere.png");
 
+        this.health = 100;
+
+        this.damage = 8;
+        
+        this.removeFromWorld = false;
+
         this.scale = 2;
 
         this.state = 0; //0 = idle, 1 = move, 2 = attack, 3 = die
@@ -70,6 +76,7 @@ class Fayere {
 
     update() {
         //As long as we don't trigger the enemy, do a pattern movement.
+
         if(Math.abs(this.x - this.enemyX) > 300 || Math.abs(this.y - this.enemyY) > 170) {
             this.howlong = Date.now() - this.toofarmovement;
             if(this.howlong < 1500) {
@@ -129,7 +136,26 @@ class Fayere {
                 this.attackpatterntime = Date.now();
             }
         }
+
         this.updateBound();
+
+        //Collision Detection. Check if its fired by enemy or hero.
+
+        var that = this;
+        this.game.entities.forEach(function (entity) {
+            if (entity.bound && that.bound.collide(entity.bound)) {
+                if(entity instanceof Projectiles && entity.firedby == 'H') {
+                    that.health -= 10;
+                    entity.removeFromWorld = true;
+                    console.log(that.health);
+                    if(that.health <= 0) {
+                        that.removeFromWorld = true;
+                    }
+                } else {
+                    //nothing really.
+                }
+            }
+        })
     }
 
     draw(ctx) {
@@ -169,7 +195,7 @@ class Fayere {
 
     attack() {
         var velocity = this.calculateVel();
-        var p = new GenProjectiles(this.game, this.x, this.y, velocity, 3, 2000, 84, 101, 12, 7, 0, false);
+        var p = new GenProjectiles(this.game, 'E', this.x, this.y, velocity, 3, 2000, 84, 101, 12, 7, 0, false);
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }
 };

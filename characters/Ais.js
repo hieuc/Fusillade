@@ -3,6 +3,12 @@ class Ais {
         Object.assign(this, { game, x, y });
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Ais.png");
 
+        this.health = 130;
+
+        this.damage = 10;
+
+        this.removeFromWorld = false;
+
         this.scale = 2;
 
         this.state = 0; //0 = idle, 1 = move, 2 = attack, 3 = die
@@ -131,6 +137,22 @@ class Ais {
         }
 
         this.updateBound();
+
+        var that = this;
+        this.game.entities.forEach(function (entity) {
+            if (entity.bound && that.bound.collide(entity.bound)) {
+                if(entity instanceof Projectiles && entity.firedby == 'H') {
+                    that.health -= 10;
+                    entity.removeFromWorld = true;
+                    console.log(that.health);
+                    if(that.health <= 0) {
+                        that.removeFromWorld = true;
+                    }
+                } else {
+                    //nothing really.
+                }
+            }
+        })
     }
 
     draw(ctx) {
@@ -170,7 +192,7 @@ class Ais {
 
     attack() {
         var velocity = this.calculateVel();
-        var p = new GenProjectiles(this.game, this.x, this.y, velocity, 3, 2000, 84, 133, 12, 7, 0, false);
+        var p = new GenProjectiles(this.game, 'E', this.x, this.y, velocity, 3, 2000, 84, 133, 12, 7, 0, false);
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }
 };
