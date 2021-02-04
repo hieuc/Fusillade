@@ -4,6 +4,8 @@ class SceneManager {
         this.game.camera = this;
         this.x = 0;
         this.y = 0;
+        this.offsetx = 0;
+        this.offsety = 0;
         this.rotation = 0;
         this.char;
 
@@ -44,6 +46,20 @@ class SceneManager {
 
         this.x = this.char.x - PARAMS.canvas_width/2 + 25;
         this.y = this.char.y - PARAMS.canvas_height/2 + 25;
+
+        if (this.game.mouse) {
+            var dx = this.game.mouse.x - PARAMS.canvas_width/2;
+            if (Math.abs(dx) / 100 > 2 && Math.abs(this.offsetx + dx / 100) < PARAMS.canvas_width / 4) {
+                this.offsetx += dx / 100;
+            }
+
+            var dy = this.game.mouse.y - PARAMS.canvas_height/2;
+            if (Math.abs(dy) / 100 > 2 && Math.abs(this.offsety + dy / 100) < PARAMS.canvas_height / 4) {
+                this.offsety += dy / 100;
+            }
+        }
+        this.x += this.offsetx;
+        this.y += this.offsety;
     };
 
     draw(ctx) {
