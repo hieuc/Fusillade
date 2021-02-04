@@ -87,8 +87,6 @@ class GameEngine {
 
         this.ctx.canvas.addEventListener("click", function (e) {
             that.click = getXandY(e);
-            console.log(that.click.x - PARAMS.canvas_width/2);
-            console.log(that.click.y - PARAMS.canvas_height/2);
             c.startAttack(that.click);
         }, false);
 
