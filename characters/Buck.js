@@ -193,6 +193,8 @@ class Buck {
                 if(entity instanceof Projectiles && entity.friendly) {
                     that.health -= 10;
                     entity.removeFromWorld = true;
+                    var audio = new Audio("/Sounds/Hit.wav");
+                    audio.play();
                     console.log(that.health);
                     if(that.health <= 0) {
                         that.state = 5;
