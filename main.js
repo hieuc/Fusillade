@@ -11,7 +11,6 @@ ASSET_MANAGER.queueDownload("./sprites/Buck.png");
 ASSET_MANAGER.queueDownload("./sprites/Drumbuck.png");
 ASSET_MANAGER.queueDownload("./sprites/dummy.png");
 
-
 ASSET_MANAGER.downloadAll(function () {
 	var canvas = document.getElementById('gameWorld');
 	var ctx = canvas.getContext('2d');

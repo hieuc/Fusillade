@@ -3,6 +3,8 @@ class Fayere {
         Object.assign(this, { game, x, y });
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Fayere.png");
 
+        console.log(this.spritesheet);
+
         this.health = 100;
 
         this.damage = 8;
