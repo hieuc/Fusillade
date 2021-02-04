@@ -28,5 +28,5 @@ window.requestAnimFrame = (function () {
 // add global parameters here
 
 var PARAMS = {
-    default_projectile_sheet : "./sprites/projectiles.png",
+    hit_volume: 0.2
 };

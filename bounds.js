@@ -19,6 +19,11 @@ class BoundingBox {
 
         return false;
     };
+
+    draw(ctx, game) {
+        ctx.strokeStyle = 'Red';
+        ctx.strokeRect(this.x - game.camera.x, this.y - game.camera.y, this.w, this.h);
+    }
 };
 
 class BoundingCircle {
@@ -50,5 +55,12 @@ class BoundingCircle {
 
             return dx*dx+dy*dy<=(this.r*this.r);
         }
+    }
+
+    draw(ctx, game) {
+        ctx.strokeStyle = 'Red';
+        ctx.beginPath();
+        ctx.arc(this.x - game.camera.x, this.y - game.camera.y, this.r, 0, Math.PI * 2, false);
+        ctx.stroke();
     }
 }

@@ -194,6 +194,7 @@ class Buck {
                     that.health -= 10;
                     entity.removeFromWorld = true;
                     var audio = new Audio("./sounds/Hit.mp3");
+                    audio.volume = PARAMS.hit_volume;
                     audio.play();
                     console.log(that.health);
                     if(that.health <= 0) {
@@ -221,8 +222,7 @@ class Buck {
 
         this.animations[this.state][this.face].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x - offsetX, this.y - this.game.camera.y - offsetY, this.scale);
         if (PARAMS.debug) {
-            ctx.strokeStyle = 'Red';
-            ctx.strokeRect(this.bound.x - this.game.camera.x, this.bound.y - this.game.camera.y, this.bound.w, this.bound.h);
+            this.bound.draw(ctx, this.game);
         }
     }
 

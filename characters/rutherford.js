@@ -78,8 +78,7 @@ class Rutherford {
     draw(ctx) {
         this.animations[this.action][this.face].drawFrame(this.game.clockTick, ctx, this.x - 25 - this.game.camera.x, this.y - 25 - this.game.camera.y, this.scale);
         if (PARAMS.debug) {
-            ctx.strokeStyle = 'Red';
-            ctx.strokeRect(this.bound.x - this.game.camera.x, this.bound.y - this.game.camera.y, this.bound.w, this.bound.h);
+            this.bound.draw(ctx, this.game);
         }
     }
 

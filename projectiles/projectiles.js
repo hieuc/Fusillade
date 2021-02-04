@@ -52,10 +52,7 @@ class Projectiles {
         ctx.drawImage(this.rotatedSprite, this.x - this.game.camera.x, this.y - this.game.camera.y, this.proj.size * this.proj.scale, this.proj.size * this.proj.scale);
         
         if (PARAMS.debug) {
-            ctx.strokeStyle = 'Red';
-            ctx.beginPath();
-            ctx.arc(this.bound.x - this.game.camera.x, this.bound.y - this.game.camera.y, this.bound.r, 0, Math.PI * 2, false);
-            ctx.stroke();
+            this.bound.draw(ctx, this.game);
         }
     }
 
