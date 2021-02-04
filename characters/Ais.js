@@ -200,13 +200,13 @@ class Ais {
     attack() {
         var pp = { sx: 80, sy: 128, size: 16}
         this.atkleftorright = this.enemyX - this.x > 0? 0: Math.PI;
-        var p = new ScaleBoomerProjectiles(this.game, false, this.x, this.y, {x: Math.cos(this.atkleftorright), y:Math.sin(this.atkleftorright)}, 3, 2000, 0, false, pp);
+        var p = new Projectiles(this.game, false, this.x, this.y, {x: Math.cos(this.atkleftorright), y:Math.sin(this.atkleftorright)}, 3, 2000, pp);
         this.atkleftorright += Math.PI/4;
-        console.log(this.atkleftorright);
-        var p2 = new ScaleBoomerProjectiles(this.game, false, this.x, this.y, {x: Math.cos(this.atkleftorright), y:Math.sin(this.atkleftorright)}, 3, 2000, 0, false, pp);
+        //console.log(this.atkleftorright);
+        var p2 = new Projectiles(this.game, false, this.x, this.y, {x: Math.cos(this.atkleftorright), y:Math.sin(this.atkleftorright)}, 3, 2000, pp);
         this.atkleftorright -= Math.PI/2;
-        console.log(this.atkleftorright);
-        var p3 = new ScaleBoomerProjectiles(this.game, false, this.x, this.y, {x: Math.cos(this.atkleftorright), y:Math.sin(this.atkleftorright)}, 3, 2000, 0, false, pp);
+        //console.log(this.atkleftorright);
+        var p3 = new Projectiles(this.game, false, this.x, this.y, {x: Math.cos(this.atkleftorright), y:Math.sin(this.atkleftorright)}, 3, 2000, pp);
 
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
         this.game.entities.splice(this.game.entities.length - 1, 0, p2);

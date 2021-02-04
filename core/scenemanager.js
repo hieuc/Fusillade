@@ -49,12 +49,12 @@ class SceneManager {
 
         if (this.game.mouse) {
             var dx = this.game.mouse.x - PARAMS.canvas_width/2;
-            if (Math.abs(dx) / 150 > 1 && Math.abs(this.offsetx + dx / 150) < PARAMS.canvas_width / 4) {
+            if (Math.abs(dx) / 150 > 1 && Math.abs(this.offsetx + dx / 150) < PARAMS.canvas_width / 5) {
                 this.offsetx += dx / 150;
             }
 
             var dy = this.game.mouse.y - PARAMS.canvas_height/2;
-            if (Math.abs(dy) / 150 > 1 && Math.abs(this.offsety + dy / 150) < PARAMS.canvas_height / 4) {
+            if (Math.abs(dy) / 150 > 1 && Math.abs(this.offsety + dy / 150) < PARAMS.canvas_height / 5) {
                 this.offsety += dy / 150;
             }
         }

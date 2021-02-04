@@ -39,6 +39,6 @@ class ScaleBoomerProjectiles extends Projectiles{
 
     updateBound() {
         this.r += this.scaleIncrease;
-        this.bound = new BoundingCircle(this.x + 16 + this.scale, this.y + 16 + this.scale, this.r);
+        this.bound = new BoundingCircle(this.x + 16 + this.proj.scale, this.y + 16 + this.proj.scale, this.r);
     }
 }

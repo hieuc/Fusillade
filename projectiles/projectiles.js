@@ -1,5 +1,4 @@
 class Projectiles {
-    //firedby refers to who shot it. 'H' means hero, 'E' means enemy. 
     constructor(game, friendly, x, y, velocity, speed, lifetime, proj) {
         Object.assign(this, { game, friendly, x, y, velocity, speed, lifetime});
 
@@ -18,6 +17,7 @@ class Projectiles {
         }
 
         this.bound = new BoundingCircle(this.x, this.y, this.proj.size);
+        
 
         if (!this.proj.scale)
             this.proj.scale = 2;

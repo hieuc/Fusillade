@@ -208,7 +208,7 @@ class Fayere {
     attack() {
         var velocity = this.calculateVel();
         var pp = { sx: 80, sy: 96, size: 16};
-        var p = new ScaleBoomerProjectiles(this.game, false, this.x, this.y, velocity, 3, 2000, 0, false, pp);
+        var p = new Projectiles(this.game, false, this.x, this.y, velocity, 3, 2000, pp);
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }
 };
