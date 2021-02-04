@@ -3,8 +3,6 @@ class Buck {
         Object.assign(this, { game, x, y });
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Buck.png");
 
-        this.health = 300;
-
         this.damage = 15;
 
         this.projspeed = 5;
@@ -44,6 +42,8 @@ class Buck {
         this.moreleftoright = 0; //Should we walk more to left or right?
 
         this.bound = new BoundingBox(this.x-60, this.y, 70, 70);
+
+        this.hp = new HealthBar(this.x + 16 * this.scale, this.y + 44 * this.scale, 32 * this.scale, 300);
 
         this.blitz = 0;
 
@@ -191,13 +191,12 @@ class Buck {
         this.game.entities.forEach(function (entity) {
             if (entity.bound && that.bound.collide(entity.bound)) {
                 if(entity instanceof Projectiles && entity.friendly) {
-                    that.health -= 10;
+                    that.hp.current -= 10;
                     entity.removeFromWorld = true;
                     var audio = new Audio("./sounds/Hit.mp3");
                     audio.volume = PARAMS.hit_volume;
                     audio.play();
-                    console.log(that.health);
-                    if(that.health <= 0) {
+                    if(that.hp.current <= 0) {
                         that.state = 5;
                     }
                 } else {
@@ -221,6 +220,7 @@ class Buck {
         }
 
         this.animations[this.state][this.face].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x - offsetX, this.y - this.game.camera.y - offsetY, this.scale);
+        this.hp.draw(ctx, this.game);
         if (PARAMS.debug) {
             this.bound.draw(ctx, this.game);
         }
@@ -234,6 +234,9 @@ class Buck {
     updateBound() {
         this.bound.x = this.x + 16;
         this.bound.y = this.y + 16;
+
+        this.hp.x = this.x + 16 * this.scale;
+        this.hp.y = this.y + 44 * this.scale;
     }
 
     calculateVel() {
@@ -287,7 +290,7 @@ class Buck {
         this.game.addEntity(new Fayere(this.game, this.enemyX, this.enemyY + 150));
 
         //The rule of thumb is 50%.
-        if(this.health < 150) {
+        if(this.hp.current < 150) {
             this.game.addEntity(new Ais(this.game, this.enemyX-250, this.enemyY));
             this.game.addEntity(new Ais(this.game, this.enemyX+250, this.enemyY));
         }
