@@ -154,7 +154,7 @@ class Fayere {
                 if(entity instanceof Projectiles && entity.friendly) {
                     that.health -= 10;
                     entity.removeFromWorld = true;
-                    var audio = new Audio("/Sounds/Hit.mp3");
+                    var audio = new Audio("./sounds/Hit.mp3");
                     audio.play();
                     console.log(that.health);
                     if(that.health <= 0) {
