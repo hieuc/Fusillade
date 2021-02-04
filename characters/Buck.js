@@ -41,9 +41,9 @@ class Buck {
 
         this.moreleftoright = 0; //Should we walk more to left or right?
 
-        this.bound = new BoundingBox(this.x-60, this.y, 70, 70);
+        this.bound = new BoundingBox(this.game, this.x-60, this.y, 70, 70);
 
-        this.hp = new HealthBar(this.x + 16 * this.scale, this.y + 44 * this.scale, 32 * this.scale, 300);
+        this.hp = new HealthBar(this.game, this.x + 16 * this.scale, this.y + 44 * this.scale, 32 * this.scale, 300);
 
         this.blitz = 0;
 
@@ -192,6 +192,7 @@ class Buck {
             if (entity.bound && that.bound.collide(entity.bound)) {
                 if(entity instanceof Projectiles && entity.friendly) {
                     that.hp.current -= 10;
+                    that.game.addEntity(new Score(that.game, that.bound.x, that.bound.y, 10));
                     entity.removeFromWorld = true;
                     var audio = new Audio("./sounds/Hit.mp3");
                     audio.volume = PARAMS.hit_volume;
@@ -220,9 +221,9 @@ class Buck {
         }
 
         this.animations[this.state][this.face].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x - offsetX, this.y - this.game.camera.y - offsetY, this.scale);
-        this.hp.draw(ctx, this.game);
+        this.hp.draw();
         if (PARAMS.debug) {
-            this.bound.draw(ctx, this.game);
+            this.bound.draw();
         }
     }
 

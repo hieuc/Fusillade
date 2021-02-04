@@ -1,6 +1,6 @@
 class BoundingBox {
-    constructor(x, y, w, h) {
-        Object.assign(this, { x, y, w, h });
+    constructor( game, x, y, w, h) {
+        Object.assign(this, { game, x, y, w, h });
 
         this.left = x;
         this.top = y;
@@ -20,15 +20,16 @@ class BoundingBox {
         return false;
     };
 
-    draw(ctx, game) {
+    draw() {
+        var ctx = this.game.ctx;
         ctx.strokeStyle = 'Red';
-        ctx.strokeRect(this.x - game.camera.x, this.y - game.camera.y, this.w, this.h);
+        ctx.strokeRect(this.x - this.game.camera.x, this.y - this.game.camera.y, this.w, this.h);
     }
 };
 
 class BoundingCircle {
-    constructor(x, y, r) {
-        Object.assign(this, {x, y, r});
+    constructor( game, x, y, r) {
+        Object.assign(this, { game, x, y, r});
         
     }
 
@@ -57,10 +58,11 @@ class BoundingCircle {
         }
     }
 
-    draw(ctx, game) {
+    draw() {
+        var ctx = this.game.ctx;
         ctx.strokeStyle = 'Red';
         ctx.beginPath();
-        ctx.arc(this.x - game.camera.x, this.y - game.camera.y, this.r, 0, Math.PI * 2, false);
+        ctx.arc(this.x - this.game.camera.x, this.y - this.game.camera.y, this.r, 0, Math.PI * 2, false);
         ctx.stroke();
     }
 }

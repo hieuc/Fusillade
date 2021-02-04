@@ -1,20 +1,21 @@
 class HealthBar {
-    constructor(x, y, w, max) {
-        Object.assign(this, { x, y, w, max});
+    constructor( game, x, y, w, max) {
+        Object.assign(this, { game, x, y, w, max});
         
         this.current = max;
         this.h = 6;
     }
 
-    draw(ctx,game) {
+    draw() {
+        var ctx = this.game.ctx;
         ctx.strokeStyle = 'black';
-        ctx.strokeRect(this.x - game.camera.x, this.y - game.camera.y, this.w, this.h);
+        ctx.strokeRect(this.x - this.game.camera.x, this.y - this.game.camera.y, this.w, this.h);
 
         var percentage = this.current / this.max;
         
         if (percentage < 0) percentage = 0;
         ctx.fillStyle = this.getColor(percentage);
-        ctx.fillRect(this.x - game.camera.x, this.y - game.camera.y, this.w * percentage, this.h);
+        ctx.fillRect(this.x - this.game.camera.x, this.y - this.game.camera.y, this.w * percentage, this.h);
     }
 
     /**

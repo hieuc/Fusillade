@@ -16,7 +16,7 @@ class Projectiles {
             this.proj.spritesheet = PARAMS.default_p_sheet;
         }
 
-        this.bound = new BoundingCircle(this.x, this.y, this.proj.size);
+        this.bound = new BoundingCircle(this.game, this.x, this.y, this.proj.size);
         
 
         if (!this.proj.scale)
@@ -52,7 +52,7 @@ class Projectiles {
         ctx.drawImage(this.rotatedSprite, this.x - this.game.camera.x, this.y - this.game.camera.y, this.proj.size * this.proj.scale, this.proj.size * this.proj.scale);
         
         if (PARAMS.debug) {
-            this.bound.draw(ctx, this.game);
+            this.bound.draw();
         }
     }
 
