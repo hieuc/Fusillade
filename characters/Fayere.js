@@ -81,7 +81,7 @@ class Fayere {
                 this.removeFromWorld = true;
              }
         } else {
-            if(Math.abs(this.x - this.enemyX) > 300 || Math.abs(this.y - this.enemyY) > 170) {
+            if(Math.abs(this.x - this.enemyX) > 800 || Math.abs(this.y - this.enemyY) > 600) {
                 this.howlong = Date.now() - this.toofarmovement;
                 if(this.howlong < 1500) {
                     this.face = 1;
@@ -99,7 +99,7 @@ class Fayere {
                     this.toofarmovement = Date.now();
                 }
             //If we are in trigger range, get closer to the main character
-            } else if(Math.abs(this.x - this.enemyX) > 150 || Math.abs(this.y - this.enemyY) > 120) {
+            } else if(Math.abs(this.x - this.enemyX) > 350 || Math.abs(this.y - this.enemyY) > 300) {
                 if(this.x - this.enemyX > 0) {
                     this.x += -1 * this.speed;
                     this.face = 1;
@@ -140,6 +140,7 @@ class Fayere {
                     this.attackpatterntime = Date.now();
                 }
             }
+        }
 
         this.updateBound();
 
@@ -160,8 +161,6 @@ class Fayere {
                 }
             }
         })
-
-    }
     }
 
     draw(ctx) {
@@ -202,7 +201,7 @@ class Fayere {
     attack() {
         var velocity = this.calculateVel();
         var pp = { sx: 80, sy: 96, size: 16};
-        var p = new GenProjectiles(this.game, false, this.x, this.y, velocity, 3, 2000, 0, false, pp);
+        var p = new ScaleBoomerProjectiles(this.game, false, this.x, this.y, velocity, 3, 2000, 0, false, pp);
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }
 };

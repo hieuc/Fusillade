@@ -15,9 +15,11 @@ class Ais {
 
         this.face = 0; // 0 = right, 1 = left
 
-        this.speed = 1.2;
+        this.speed = 2;
 
         this.isEnemy = true;
+
+        this.atkleftorright = 0;
 
         this.toofarmovement = Date.now(); //We want to give a behavior pattern when enemy is too far.
 
@@ -81,7 +83,7 @@ class Ais {
                this.removeFromWorld = true;
             }
        } else {
-           if(Math.abs(this.x - this.enemyX) > 300 || Math.abs(this.y - this.enemyY) > 170) {
+           if(Math.abs(this.x - this.enemyX) > 800 || Math.abs(this.y - this.enemyY) > 600) {
                this.howlong = Date.now() - this.toofarmovement;
                if(this.howlong < 1500) {
                    this.face = 1;
@@ -99,22 +101,32 @@ class Ais {
                    this.toofarmovement = Date.now();
                }
            //If we are in trigger range, get closer to the main character
-           } else if(Math.abs(this.x - this.enemyX) > 150 || Math.abs(this.y - this.enemyY) > 120) {
-               if(this.x - this.enemyX > 0) {
-                   this.x += -1 * this.speed;
-                   this.face = 1;
-                   this.state = 1;
-               } else {
-                   this.x += 1 * this.speed;
-                   this.face = 0;
-                   this.state = 1;
-               }
-               if(this.y - this.enemyY > 0) {
-                   this.y += -1 * this.speed;
-               } else {
-                   this.y += 1 * this.speed;
-               }
+           } else if(Math.abs(this.x - this.enemyX) > 350 || Math.abs(this.y - this.enemyY) > 100) {
+                if(this.x - this.enemyX > 0) {
+                    this.x += -1 * this.speed;
+                    this.face = 1;
+                    this.state = 1;
+                } else {
+                    this.x += 1 * this.speed;
+                    this.face = 0;
+                    this.state = 1;
+                }
+                if(this.y - this.enemyY > 0) {
+                    this.y += -1 * this.speed;
+                } else {
+                    this.y += 1 * this.speed;
+                }
            //Once we are in a decent attack range, Do something now. 
+           } else if(Math.abs(this.y - this.enemyY) > 100) {
+                if(this.y - this.enemyY > 0) {
+                    this.y += -1 * this.speed;
+                    this.face = 1;
+                    this.state = 1;
+                } else {
+                    this.y += 1 * this.speed;
+                    this.face = 0;
+                    this.state = 1;
+                }
            } else {
                this.attackbehavior = Date.now() - this.attackpatterntime;
                if(this.attackbehavior < 1500) {
@@ -180,27 +192,20 @@ class Ais {
         this.bound.y = this.y + 5;
     }
 
-    calculateVel() {
-        var dx = this.enemyX - this.x;
-        var dy = this.enemyY - this.y;
-        var angle = Math.atan(dy/dx);
-
-        var v = { x: Math.cos(angle),
-                 y: Math.sin(angle)};
-        
-        if (dx < 0)
-            v.x *= -1;
-
-        if ((angle > 0 && dy < 0) || (angle < 0 && dy > 0))
-            v.y *= -1;
-        
-        return v;
-    }
-
     attack() {
-        var velocity = this.calculateVel();
         var pp = { sx: 80, sy: 128, size: 16}
-        var p = new GenProjectiles(this.game, false, this.x, this.y, velocity, 3, 2000, 0, false, pp);
+        this.atkleftorright = this.enemyX - this.x > 0? 0: Math.PI;
+        var p = new ScaleBoomerProjectiles(this.game, false, this.x, this.y, {x: Math.cos(this.atkleftorright), y:Math.sin(this.atkleftorright)}, 3, 2000, 0, false, pp);
+        this.atkleftorright += Math.PI/4;
+        console.log(this.atkleftorright);
+        var p2 = new ScaleBoomerProjectiles(this.game, false, this.x, this.y, {x: Math.cos(this.atkleftorright), y:Math.sin(this.atkleftorright)}, 3, 2000, 0, false, pp);
+        this.atkleftorright -= Math.PI/2;
+        console.log(this.atkleftorright);
+        var p3 = new ScaleBoomerProjectiles(this.game, false, this.x, this.y, {x: Math.cos(this.atkleftorright), y:Math.sin(this.atkleftorright)}, 3, 2000, 0, false, pp);
+
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
+        this.game.entities.splice(this.game.entities.length - 1, 0, p2);
+        this.game.entities.splice(this.game.entities.length - 1, 0, p3);
+
     }
 };

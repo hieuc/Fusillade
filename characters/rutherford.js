@@ -10,7 +10,7 @@ class Rutherford {
 
         this.face = 0; // 0 = right, 1 = left
 
-        this.speed = 3;
+        this.speed = 3.5;
 
         this.velocity = { x : 0, y : 0};
 
@@ -95,7 +95,7 @@ class Rutherford {
         else 
             this.face = 0;
         var velocity = this.calculateVel(click);
-        var p = new Projectiles(this.game, true, this.x, this.y, velocity, 3, 2000);
+        var p = new Projectiles(this.game, true, this.x, this.y, velocity, 5, 1200);
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
         
         this.animations[this.action][this.face].elapsedTime = 0;

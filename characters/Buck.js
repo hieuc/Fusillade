@@ -3,9 +3,11 @@ class Buck {
         Object.assign(this, { game, x, y });
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Buck.png");
 
-        this.health = 500;
+        this.health = 300;
 
         this.damage = 15;
+
+        this.projspeed = 5;
         
         this.removeFromWorld = false;
 
@@ -13,7 +15,7 @@ class Buck {
 
         this.state = 0; //0 = idle, 1 = move, 2 = attack SLASH, 3 = Summon, LATER(4 = Fury Attack, 5 = die)
 
-        this.face = 0; // 0 = right, 1 = left
+        this.face = 1; // 0 = right, 1 = left
 
         this.speed = 1.8;
 
@@ -35,9 +37,11 @@ class Buck {
 
         this.patterntimer = Date.now(); //To keep track of how long we've been running a pattern.
 
-        this.patternduration = 7000; // 6 seconds.
+        this.patternduration = 6000; // 6 seconds.
 
         this.walkaroundtimer = Date.now(); 
+
+        this.moreleftoright = 0; //Should we walk more to left or right?
 
         this.bound = new BoundingBox(this.x-60, this.y, 70, 70);
 
@@ -51,7 +55,7 @@ class Buck {
     }
 
     loadAnimations() {
-        for (var i = 0; i < 5; i++) { // 5 states
+        for (var i = 0; i < 6; i++) { // 5 states
             this.animations.push([]);
             for (var j = 0; j < 2; j++) { // 2 directions
                 this.animations[i].push([]);
@@ -93,6 +97,14 @@ class Buck {
         //facing left = 1
         this.animations[4][1] = new Animator(this.spritesheet, 10, 1556, 75, 48, 9, 0.075, 21, false, true);
 
+
+        //Death animation for state = 5
+        //facing right
+        this.animations[5][0] = new Animator(this.spritesheet, 29, 885, 65, 45, 6, 0.1, 31, false, false);
+
+        //facing left = 1
+        this.animations[5][1] = new Animator(this.spritesheet, 8, 1845, 65, 44, 6, 0.1, 30, false, false);
+
     }
 
     /**
@@ -103,6 +115,12 @@ class Buck {
      * i.e. Math random class.
      */
     update() { 
+
+        if(this.state == 5) {
+            if(this.animations[this.state][this.face].isDone()) {
+               this.removeFromWorld = true;
+            }
+       } else {
 
         //First check if player triggered the enemy.
         if((Math.abs(this.x - this.enemyX) < 300 && Math.abs(this.y - this.enemyY) < 200) && !this.triggered) {
@@ -118,12 +136,12 @@ class Buck {
                 this.decideDir();
                 this.state = 3;
                 //After 5 seconds of channel, summon fayeres.
-                if(summon > this.summoncooldown+5000 && !this.summoned) {
+                if(summon > this.summoncooldown+2500 && !this.summoned) {
                     this.bringSummons(); 
                     this.summoned = true;
                 }
                 //After 10 seconds of channel, do an attack yourself as well.
-                if(summon >= this.summoncooldown+10000 && summon < this.summoncooldown+10900) {
+                if(summon >= this.summoncooldown+5000 && summon < this.summoncooldown+5900) {
                     this.decideDir();
                     this.state = 2;
                     if(Date.now() - this.attackbuffer >= this.fireRate) {
@@ -132,7 +150,7 @@ class Buck {
                     }
                 } 
 
-                if(summon > this.summoncooldown+10900) {
+                if(summon > this.summoncooldown+5900) {
                     this.summontime = Date.now();
                     this.summoned = false;
                 }
@@ -164,6 +182,7 @@ class Buck {
                 }
             }
         } 
+    }
 
         this.updateBound();
 
@@ -176,7 +195,7 @@ class Buck {
                     entity.removeFromWorld = true;
                     console.log(that.health);
                     if(that.health <= 0) {
-                        that.removeFromWorld = true;
+                        that.state = 5;
                     }
                 } else {
                     //nothing really.
@@ -242,8 +261,8 @@ class Buck {
         var partitions = 10;
         for(var i = 0; i < partitions; i++) {
             var pp = {sx: 96, sy: 144, size: 16};
-            var p = new GenProjectiles(this.game, false, this.x+40, this.y+40, {x :Math.cos(this.blitz), y:Math.sin(this.blitz)}, 
-                        5, 3000, 0.012, true, pp);
+            var p = new ScaleBoomerProjectiles(this.game, false, this.x+40, this.y+40, {x :Math.cos(this.blitz), y:Math.sin(this.blitz)}, 
+                        this.projspeed, 3000, 0.012, true, pp);
             this.blitz += Math.PI/partitions;
             console.log(this.blitz);
             this.game.entities.splice(this.game.entities.length - 1, 0, p);        
@@ -255,7 +274,7 @@ class Buck {
         var velocity = this.calculateVel();
         var offset = this.face == 0? 100: 0;
         var pp = {sx: 96, sy: 144, size: 16};
-        var p = new GenProjectiles(this.game, false, this.x + offset, this.y, velocity, 4, 2500, 0.005, false, pp);
+        var p = new ScaleBoomerProjectiles(this.game, false, this.x + offset, this.y, velocity, this.projspeed, 2500, 0.005, false, pp);
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }
 
@@ -264,6 +283,12 @@ class Buck {
         this.game.addEntity(new Fayere(this.game, this.enemyX + 150, this.enemyY));
         this.game.addEntity(new Fayere(this.game, this.enemyX, this.enemyY - 150));
         this.game.addEntity(new Fayere(this.game, this.enemyX, this.enemyY + 150));
+
+        //The rule of thumb is 50%.
+        if(this.health < 150) {
+            this.game.addEntity(new Ais(this.game, this.enemyX-250, this.enemyY));
+            this.game.addEntity(new Ais(this.game, this.enemyX+250, this.enemyY));
+        }
     }
 
     decideDir() {
@@ -276,16 +301,16 @@ class Buck {
 
     walkaround(rand1, rand2, rand3, rand4) {
         this.howlong = Date.now() - this.walkaroundtimer;
-        if(this.howlong < 3500) {
+        if(this.howlong < 2400) {
             this.face = 0;
             this.x += rand1 * (this.speed+1.5);
             this.state = 1;
-        } else if (this.howlong >= 3500 && this.howlong < 5000) {
+        } else if (this.howlong >= 2400 && this.howlong < 3400) {
             this.face = 1;
             this.x -= rand3 * (this.speed+1.5);
             var updown = this.y - this.enemyY < 0? 1: -1;
             this.y += rand3 * (this.speed) * updown;
-        } else if(this.howlong >= 5000 && this.howlong < 6900) {
+        } else if(this.howlong >= 3400 && this.howlong < 5800) {
             this.face = 1;
             this.x += -rand2 * (this.speed+1.5);
         } else {

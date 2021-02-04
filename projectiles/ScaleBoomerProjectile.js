@@ -1,5 +1,5 @@
-class GenProjectiles extends Projectiles{
-    //firedby refers to who shot it. 'H' means hero, 'E' means enemy. 
+class ScaleBoomerProjectiles extends Projectiles{
+
     constructor(game, friendly, x, y, velocity, speed, lifetime, scaleIncrease, boomerang, proj) {
         super(game, friendly, x, y, velocity, speed, lifetime, proj);
         Object.assign(this, {scaleIncrease, boomerang});
