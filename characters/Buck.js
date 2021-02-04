@@ -192,7 +192,7 @@ class Buck {
             if (entity.bound && that.bound.collide(entity.bound)) {
                 if(entity instanceof Projectiles && entity.friendly) {
                     that.hp.current -= 10;
-                    that.game.addEntity(new Score(that.game, that.bound.x, that.bound.y, 10));
+                    that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, 10));
                     entity.removeFromWorld = true;
                     var audio = new Audio("./sounds/Hit.mp3");
                     audio.volume = PARAMS.hit_volume;
@@ -247,8 +247,6 @@ class Buck {
 
         var v = { x: Math.cos(angle),
                  y: Math.sin(angle)};
-
-         console.log(v);
         
         if (dx < 0)
             v.x *= -1;
@@ -270,7 +268,6 @@ class Buck {
             var p = new ScaleBoomerProjectiles(this.game, false, this.x+40, this.y+40, {x :Math.cos(this.blitz), y:Math.sin(this.blitz)}, 
                         this.projspeed, 3000, 0.012, true, pp);
             this.blitz += Math.PI/partitions;
-            console.log(this.blitz);
             this.game.entities.splice(this.game.entities.length - 1, 0, p);        
         }
         this.blitz += 50; //Keep changing starting angle

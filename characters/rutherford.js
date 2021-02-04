@@ -14,7 +14,7 @@ class Rutherford {
 
         this.velocity = { x : 0, y : 0};
 
-        this.bound = new BoundingBox(this.x, this.y, 16, 32);
+        this.bound = new BoundingBox(this.game, this.x, this.y, 16, 32);
 
         this.animations = [];
 

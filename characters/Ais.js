@@ -162,7 +162,7 @@ class Ais {
             if (entity.bound && that.bound.collide(entity.bound)) {
                 if(entity instanceof Projectiles && entity.friendly) {
                     that.hp.current -= 10;
-                    that.game.addEntity(new Score(that.game, that.bound.x, that.bound.y, 10));
+                    that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y + that.bound.h / 2, 10));
                     entity.removeFromWorld = true;
                     var audio = new Audio("./sounds/Hit.mp3");
                     audio.volume = PARAMS.hit_volume;
