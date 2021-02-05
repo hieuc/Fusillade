@@ -100,10 +100,10 @@ class Buck {
 
         //Death animation for state = 5
         //facing right
-        this.animations[5][0] = new Animator(this.spritesheet, 29, 868, 90, 90, 6, 0.1, 6, false, false);
+        this.animations[5][0] = new Animator(this.spritesheet, 29, 868, 90, 90, 6, 0.12, 6, false, false);
 
         //facing left = 1
-        this.animations[5][1] = new Animator(this.spritesheet, 20, 1830, 90, 90, 6, 0.1, 6, false, false);
+        this.animations[5][1] = new Animator(this.spritesheet, 5, 1830, 90, 90, 6, 0.12, 6, false, false);
 
     }
 
@@ -298,11 +298,13 @@ class Buck {
             this.x += rand1 * (this.speed+1.5);
             this.state = 1;
         } else if (this.howlong >= 2400 && this.howlong < 3400) {
+            this.state = 1;
             this.face = 1;
             this.x -= rand3 * (this.speed+1.5);
             var updown = this.y - this.enemyY < 0? 1: -1;
             this.y += rand3 * (this.speed) * updown;
         } else if(this.howlong >= 3400 && this.howlong < 5800) {
+            this.state = 1;
             this.face = 1;
             this.x += -rand2 * (this.speed+1.5);
         } else {
