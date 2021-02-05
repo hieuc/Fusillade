@@ -34,7 +34,7 @@ class Score {
         // 0 -> normal size
         // 0 - 10% lifetime -> enlarged
         // 10 - 40% lifetime -> shrink to normal size
-        // 60 - 100% lifetime -> stay at normal size
+        // 40 - 100% lifetime -> stay at normal size
         var size = 0;
         var t = Date.now() - this.timestamp;
         if (t < this.lifetime * 0.1) {
