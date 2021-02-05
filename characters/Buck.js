@@ -64,46 +64,46 @@ class Buck {
 
         // idle animation for state = 0
         // facing right = 0
-        this.animations[0][0] = new Animator(this.spritesheet, 22, 22, 62, 47, 5, 0.25, 34, false, true);
+        this.animations[0][0] = new Animator(this.spritesheet, 22, 22, 90, 90, 5, 0.25, 6, false, true);
 
         // facing left = 1
-        this.animations[0][1] = new Animator(this.spritesheet, 15, 982, 62, 47, 5, 0.25, 34, false, true);
+        this.animations[0][1] = new Animator(this.spritesheet, 15, 982, 90, 90, 5, 0.25, 6, false, true);
 
         //walking animation for state = 1
         //facing right = 0
-        this.animations[1][0] = new Animator(this.spritesheet, 23, 115, 58, 46, 8, 0.1, 38, false, true);
+        this.animations[1][0] = new Animator(this.spritesheet, 23, 115, 90, 90, 8, 0.1, 6, false, true);
 
         //facing left = 1
-        this.animations[1][1] = new Animator(this.spritesheet, 15, 1076, 57, 45, 8, 0.1, 39, false, true);
+        this.animations[1][1] = new Animator(this.spritesheet, 15, 1076, 90, 90, 8, 0.1, 6, false, true);
 
         //attack SLASH animation for state = 2
         //facing right = 0
-        this.animations[2][0] = new Animator(this.spritesheet, 1, 295, 90, 61, 9, 0.05, 6, false, true);
+        this.animations[2][0] = new Animator(this.spritesheet, 1, 295, 90, 90, 9, 0.05, 6, false, true);
 
         //facing left = 1
-        this.animations[2][1] = new Animator(this.spritesheet, 10, 1255, 80, 65, 9, 0.05, 16, false, true);
+        this.animations[2][1] = new Animator(this.spritesheet, 10, 1255, 90, 90, 9, 0.05, 6, false, true);
 
         //Summon animation for state = 3
         //facing right = 0
-        this.animations[3][0] = new Animator(this.spritesheet, 17, 492, 47, 58, 6, 0.1, 49, false, true);
+        this.animations[3][0] = new Animator(this.spritesheet, 17, 492, 90, 90, 6, 0.1, 6, false, true);
 
         //facing left = 1
-        this.animations[3][1] = new Animator(this.spritesheet, 31, 1450, 44, 59, 6, 0.1, 52, false, true);
+        this.animations[3][1] = new Animator(this.spritesheet, 31, 1450, 90, 90, 6, 0.1, 6, false, true);
 
         //Summon animation for state = 4
         //facing right = 0
-        this.animations[4][0] = new Animator(this.spritesheet, 8, 597, 84, 47, 9, 0.075, 12, false, true);
+        this.animations[4][0] = new Animator(this.spritesheet, 8, 597, 90, 90, 9, 0.075, 6, false, true);
 
         //facing left = 1
-        this.animations[4][1] = new Animator(this.spritesheet, 10, 1556, 75, 48, 9, 0.075, 21, false, true);
+        this.animations[4][1] = new Animator(this.spritesheet, 10, 1556, 90, 90, 9, 0.075, 6, false, true);
 
 
         //Death animation for state = 5
         //facing right
-        this.animations[5][0] = new Animator(this.spritesheet, 29, 885, 65, 45, 6, 0.1, 31, false, false);
+        this.animations[5][0] = new Animator(this.spritesheet, 29, 885, 90, 90, 6, 0.1, 6, false, false);
 
         //facing left = 1
-        this.animations[5][1] = new Animator(this.spritesheet, 8, 1845, 65, 44, 6, 0.1, 30, false, false);
+        this.animations[5][1] = new Animator(this.spritesheet, 8, 1845, 90, 90, 6, 0.1, 6, false, false);
 
     }
 

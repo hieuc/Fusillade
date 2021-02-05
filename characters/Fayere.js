@@ -62,17 +62,17 @@ class Fayere {
 
         //attack animation for state = 2
         //facing right = 0
-        this.animations[2][0] = new Animator(this.spritesheet, 8, 82, 16, 16, 6, 0.1, 16, false, true);
+        this.animations[2][0] = new Animator(this.spritesheet, 8, 82, 18, 18, 6, 0.1, 14, false, true);
 
         //facing left = 1
-        this.animations[2][1] = new Animator(this.spritesheet, 9, 275, 16, 16, 6, 0.1, 16, false, true);
+        this.animations[2][1] = new Animator(this.spritesheet, 7, 274, 18, 18, 6, 0.1, 14, false, true);
 
         //die animation for state = 3
         //facing right = 0
-        this.animations[3][0] = new Animator(this.spritesheet, 7, 146, 16, 16, 6, 0.1, 16, false, false);
+        this.animations[3][0] = new Animator(this.spritesheet, 7, 146, 18, 18, 6, 0.1, 14, false, false);
 
         //facing left = 1
-        this.animations[3][1] = new Animator(this.spritesheet, 8, 339, 16, 16, 6, 0.1, 16, false, false);
+        this.animations[3][1] = new Animator(this.spritesheet, 8, 339, 18, 18, 6, 0.1, 14, false, false);
 
     }
 
