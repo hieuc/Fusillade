@@ -29,7 +29,7 @@ class Buck {
 
         this.fireRate = 200; //in milliseconds.
 
-        this.summoncooldown = 22000; //Cooldown for the summon attack.
+        this.summoncooldown = 18000; //Cooldown for the summon attack.
 
         this.whichattack = Math.random(); //Deciding attack among 3 possibilites.
 
@@ -41,7 +41,7 @@ class Buck {
 
         this.moreleftoright = 0; //Should we walk more to left or right?
 
-        this.bound = new BoundingBox(this.game, this.x-60, this.y, 70, 70);
+        this.bound = new BoundingBox(this.game, this.x, this.y, 100, 100);
 
         this.hp = new HealthBar(this.game, this.x + 16 * this.scale, this.y + 44 * this.scale, 32 * this.scale, 300);
 
@@ -64,46 +64,46 @@ class Buck {
 
         // idle animation for state = 0
         // facing right = 0
-        this.animations[0][0] = new Animator(this.spritesheet, 22, 22, 90, 90, 5, 0.25, 6, false, true);
+        this.animations[0][0] = new Animator(this.spritesheet, 10, 5, 90, 90, 5, 0.25, 6, false, true);
 
         // facing left = 1
-        this.animations[0][1] = new Animator(this.spritesheet, 15, 982, 90, 90, 5, 0.25, 6, false, true);
+        this.animations[0][1] = new Animator(this.spritesheet, 10, 966, 90, 90, 5, 0.25, 6, false, true);
 
         //walking animation for state = 1
         //facing right = 0
-        this.animations[1][0] = new Animator(this.spritesheet, 23, 115, 90, 90, 8, 0.1, 6, false, true);
+        this.animations[1][0] = new Animator(this.spritesheet, 10, 100, 90, 90, 8, 0.1, 6, false, true);
 
         //facing left = 1
-        this.animations[1][1] = new Animator(this.spritesheet, 15, 1076, 90, 90, 8, 0.1, 6, false, true);
+        this.animations[1][1] = new Animator(this.spritesheet, 10, 1058, 90, 90, 8, 0.1, 6, false, true);
 
         //attack SLASH animation for state = 2
         //facing right = 0
-        this.animations[2][0] = new Animator(this.spritesheet, 1, 295, 90, 90, 9, 0.05, 6, false, true);
+        this.animations[2][0] = new Animator(this.spritesheet, 4, 293, 90, 90, 9, 0.05, 6, false, true);
 
         //facing left = 1
         this.animations[2][1] = new Animator(this.spritesheet, 10, 1255, 90, 90, 9, 0.05, 6, false, true);
 
         //Summon animation for state = 3
         //facing right = 0
-        this.animations[3][0] = new Animator(this.spritesheet, 17, 492, 90, 90, 6, 0.1, 6, false, true);
+        this.animations[3][0] = new Animator(this.spritesheet, 5, 484, 90, 90, 6, 0.1, 6, false, true);
 
         //facing left = 1
-        this.animations[3][1] = new Animator(this.spritesheet, 31, 1450, 90, 90, 6, 0.1, 6, false, true);
+        this.animations[3][1] = new Animator(this.spritesheet, 17, 1445, 90, 90, 6, 0.1, 6, false, true);
 
-        //Summon animation for state = 4
+        //Spin animation for state = 4
         //facing right = 0
-        this.animations[4][0] = new Animator(this.spritesheet, 8, 597, 90, 90, 9, 0.075, 6, false, true);
+        this.animations[4][0] = new Animator(this.spritesheet, 8, 580, 90, 90, 9, 0.075, 6, false, true);
 
         //facing left = 1
-        this.animations[4][1] = new Animator(this.spritesheet, 10, 1556, 90, 90, 9, 0.075, 6, false, true);
+        this.animations[4][1] = new Animator(this.spritesheet, 10, 1540, 90, 90, 9, 0.075, 6, false, true);
 
 
         //Death animation for state = 5
         //facing right
-        this.animations[5][0] = new Animator(this.spritesheet, 29, 885, 90, 90, 6, 0.1, 6, false, false);
+        this.animations[5][0] = new Animator(this.spritesheet, 29, 868, 90, 90, 6, 0.1, 6, false, false);
 
         //facing left = 1
-        this.animations[5][1] = new Animator(this.spritesheet, 8, 1845, 90, 90, 6, 0.1, 6, false, false);
+        this.animations[5][1] = new Animator(this.spritesheet, 20, 1830, 90, 90, 6, 0.1, 6, false, false);
 
     }
 
@@ -208,19 +208,8 @@ class Buck {
     }
 
     draw(ctx) {
-        //These are just to make sure sprites don't "jump" since some animation sprites are bigger than others.
-        var offsetX = 0;
-        var offsetY = 0;
-        if(this.state == 2) {
-            offsetX = 40;
-            offsetY = 30;
-        } else if(this.state == 3) {
-            offsetY = 20;
-        } else if(this.state == 4) {
-            offsetX = 40;
-        }
 
-        this.animations[this.state][this.face].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x - offsetX, this.y - this.game.camera.y - offsetY, this.scale);
+        this.animations[this.state][this.face].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale);
         this.hp.draw();
         if (PARAMS.debug) {
             this.bound.draw();
@@ -236,8 +225,8 @@ class Buck {
         this.bound.x = this.x + 16;
         this.bound.y = this.y + 16;
 
-        this.hp.x = this.x + 16 * this.scale;
-        this.hp.y = this.y + 44 * this.scale;
+        this.hp.x = this.x + 20 * this.scale;
+        this.hp.y = this.y + 62 * this.scale;
     }
 
     calculateVel() {
