@@ -1,7 +1,7 @@
 class ScaleBoomerProjectiles extends Projectiles{
 
-    constructor(game, friendly, x, y, velocity, speed, lifetime, scaleIncrease, boomerang, proj) {
-        super(game, friendly, x, y, velocity, speed, lifetime, proj);
+    constructor(game, friendly, x, y, velocity, speed, lifetime, damage, scaleIncrease, boomerang, proj) {
+        super(game, friendly, x, y, velocity, speed, lifetime, damage, proj);
         Object.assign(this, {scaleIncrease, boomerang});
 
         this.r = 16;
@@ -15,6 +15,7 @@ class ScaleBoomerProjectiles extends Projectiles{
                 this.returned = true;
                 this.velocity.x = -this.velocity.x;
                 this.velocity.y = -this.velocity.y;
+                this.rotatedSprite = this.rotate(Math.atan(this.velocity.y / this.velocity.x) + (this.velocity.x <= 0 ? Math.PI : 0));
             } else {
                 if(!this.returned) {
                     this.proj.size += this.scaleIncrease;

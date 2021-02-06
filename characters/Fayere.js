@@ -3,8 +3,6 @@ class Fayere {
         Object.assign(this, { game, x, y });
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Fayere.png");
 
-        console.log(this.spritesheet);
-
         this.damage = 8;
         
         this.removeFromWorld = false;
@@ -152,8 +150,8 @@ class Fayere {
         this.game.entities.forEach(function (entity) {
             if (entity.bound && that.bound.collide(entity.bound)) {
                 if(entity instanceof Projectiles && entity.friendly) {
-                    that.hp.current -= 10;
-                    that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y + that.bound.h / 2, 10));
+                    that.hp.current -= entity.damage;
+                    that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y + that.bound.h / 2, entity.damage));
                     entity.removeFromWorld = true;
                     var audio = new Audio("./sounds/Hit.mp3");
                     audio.volume = PARAMS.hit_volume;
@@ -209,7 +207,7 @@ class Fayere {
     attack() {
         var velocity = this.calculateVel();
         var pp = { sx: 80, sy: 96, size: 16};
-        var p = new Projectiles(this.game, false, this.x, this.y, velocity, 3, 2000, pp);
+        var p = new Projectiles(this.game, false, this.x, this.y, velocity, 3, 2000, 10, pp);
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }
 };

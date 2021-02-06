@@ -159,8 +159,8 @@ class Ais {
         this.game.entities.forEach(function (entity) {
             if (entity.bound && that.bound.collide(entity.bound)) {
                 if(entity instanceof Projectiles && entity.friendly) {
-                    that.hp.current -= 10;
-                    that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y + that.bound.h / 2, 10));
+                    that.hp.current -= entity.damage;
+                    that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y + that.bound.h / 2, entity.damage));
                     entity.removeFromWorld = true;
                     var audio = new Audio("./sounds/Hit.mp3");
                     audio.volume = PARAMS.hit_volume;
@@ -199,13 +199,14 @@ class Ais {
     attack() {
         var pp = { sx: 80, sy: 128, size: 16}
         this.atkleftorright = this.enemyX - this.x > 0? 0: Math.PI;
-        var p = new Projectiles(this.game, false, this.x, this.y, {x: Math.cos(this.atkleftorright), y:Math.sin(this.atkleftorright)}, 3, 2000, pp);
+        
+        var p = new Projectiles(this.game, false, this.x, this.y, {x: Math.cos(this.atkleftorright), y:Math.sin(this.atkleftorright)}, 3, 2000, 10, pp);
         this.atkleftorright += Math.PI/4;
         //console.log(this.atkleftorright);
-        var p2 = new Projectiles(this.game, false, this.x, this.y, {x: Math.cos(this.atkleftorright), y:Math.sin(this.atkleftorright)}, 3, 2000, pp);
+        var p2 = new Projectiles(this.game, false, this.x, this.y, {x: Math.cos(this.atkleftorright), y:Math.sin(this.atkleftorright)}, 3, 2000, 10, pp);
         this.atkleftorright -= Math.PI/2;
         //console.log(this.atkleftorright);
-        var p3 = new Projectiles(this.game, false, this.x, this.y, {x: Math.cos(this.atkleftorright), y:Math.sin(this.atkleftorright)}, 3, 2000, pp);
+        var p3 = new Projectiles(this.game, false, this.x, this.y, {x: Math.cos(this.atkleftorright), y:Math.sin(this.atkleftorright)}, 3, 2000, 10, pp);
 
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
         this.game.entities.splice(this.game.entities.length - 1, 0, p2);
