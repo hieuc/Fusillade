@@ -44,9 +44,6 @@ class Propportal {
 
     draw(ctx) {
         this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale);
-        if (PARAMS.debug) {
-            this.bound.draw();
-        }
     }
 
     makeEnemy(mymethod) {

@@ -3,6 +3,8 @@ class Projectiles {
         Object.assign(this, { game, friendly, x, y, velocity, speed, lifetime, damage});
 
         // proj is an object of projectile's properties
+        // proj.size is the original sprite size
+        // proj.scale is the scaling when draw to canvas
 
         // if no property provided, use default
         if (proj) {

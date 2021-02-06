@@ -2,7 +2,7 @@ var gameEngine = new GameEngine();
 
 var ASSET_MANAGER = new AssetManager();
 
-ASSET_MANAGER.queueDownload("./sprites/rutherford-main.png");
+ASSET_MANAGER.queueDownload("./sprites/rutherford.png");
 ASSET_MANAGER.queueDownload("./sprites/Fayere.png");
 ASSET_MANAGER.queueDownload("./sprites/Ais.png");
 ASSET_MANAGER.queueDownload("./sprites/forest.png");

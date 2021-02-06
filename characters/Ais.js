@@ -208,6 +208,10 @@ class Ais {
         //console.log(this.atkleftorright);
         var p3 = new Projectiles(this.game, false, this.x, this.y, {x: Math.cos(this.atkleftorright), y:Math.sin(this.atkleftorright)}, 3, 2000, 10, pp);
 
+        p.bound.r = 10;
+        p2.bound.r = 10;
+        p3.bound.r = 10;
+
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
         this.game.entities.splice(this.game.entities.length - 1, 0, p2);
         this.game.entities.splice(this.game.entities.length - 1, 0, p3);
