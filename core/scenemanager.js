@@ -19,7 +19,7 @@ class SceneManager {
      * @param {*} y starting point of main char
      */
     loadSandbox(x, y) {
-        this.game.entityies = [];
+        this.game.entities = [];
 
         for (var i = 0; i < 10; i++) {
             for (var j = 0; j < 7; j++) {
