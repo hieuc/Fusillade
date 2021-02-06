@@ -19,7 +19,7 @@ class SceneManager {
      * @param {*} y starting point of main char
      */
     loadSandbox(x, y) {
-        this.game.entityies = [];
+        this.game.entities = [];
 
         for (var i = 0; i < 10; i++) {
             for (var j = 0; j < 7; j++) {
@@ -31,23 +31,18 @@ class SceneManager {
 
         var character = new Rutherford(this.game, x, y); 
         this.char = character;
-<<<<<<< HEAD:scenemanager.js
         var fayereCharacter = new Fayere(this.game, 900, 600);
-        var buckCharacter = new Buck(this.game, 400, 300);
-        var cyclopsCharacter = new Cyclops(this.game, 300, 200)
-=======
-        var fayereCharacter = new Fayere(this.game, 100, 200);
         var aisCharacter = new Ais(this.game, 900, 200);
-        var buckCharacter = new Buck(this.game, 400, 250);
->>>>>>> d8b19f8c18c345ee5ae5235e1d412d2f6f49fa46:core/scenemanager.js
+        var buckCharacter = new Buck(this.game, 400, 300);
+        var cyclopsCharacter = new Cyclops(this.game, 300, 200);
         
         
         //this.game.addEntity(new Dummy(this.game, 400, 200));
         this.game.addEntity(aisCharacter);
         this.game.addEntity(buckCharacter);
         this.game.addEntity(fayereCharacter);
-        this.game.addEntity(character);s
         this.game.addEntity(cyclopsCharacter);
+        this.game.addEntity(character);
     };
 
     update() {
