@@ -31,7 +31,6 @@ class Buckportal {
         this.createdtime = Date.now();
         
         this.animations = [];
-
         this.loadAnimations();
     }
 

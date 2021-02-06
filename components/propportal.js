@@ -13,7 +13,6 @@ class Propportal {
         this.scale = 2.0;
 
         this.animations = [];
-
         this.loadAnimations();
     }
 
