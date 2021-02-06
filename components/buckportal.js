@@ -115,8 +115,8 @@ class Buckportal {
 
     fire() {
         var velocity = this.calculateVel();
-        var pp = {sx: 96, sy: 144, size: 16};
-        var p = new ScaleBoomerProjectiles(this.game, false, this.x+50, this.y+40, velocity, 3, 2500, 0.005, false, pp);
+        var pp = {sx: 96, sy: 112, size: 16};
+        var p = new Projectiles(this.game, false, this.x+50, this.y+40, velocity, 3, 2500, 10, pp);
         this.attacks--;
         var audio = new Audio("./sounds/warpO.mp3");
         console.log(this.attacks);
