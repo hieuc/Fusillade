@@ -272,7 +272,7 @@ class Buck {
         var partitions = 10;
         for(var i = 0; i < partitions; i++) {
             var pp = {sx: 96, sy: 144, size: 16};
-            var p = new ScaleBoomerProjectiles(this.game, false, this.x+40, this.y+40, {x :Math.cos(this.blitz), y:Math.sin(this.blitz)}, 
+            var p = new ScaleBoomerProjectiles(this.game, false, this.x+80, this.y+80, {x :Math.cos(this.blitz), y:Math.sin(this.blitz)}, 
                         this.projspeed, 3000, 10, 0.012, true, pp);
             this.blitz += Math.PI/partitions;
             this.game.entities.splice(this.game.entities.length - 1, 0, p);        
