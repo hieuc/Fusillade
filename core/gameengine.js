@@ -55,6 +55,8 @@ class GameEngine {
                 case 'w':
                     that.up = true;
                     break;
+                case 'c':
+                    that.camera.camlock = !that.camera.camlock;
                 default:
                     break;
             }

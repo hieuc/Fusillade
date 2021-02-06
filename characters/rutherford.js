@@ -82,6 +82,9 @@ class Rutherford {
         if (this.hp.current > this.hp.max) {
             this.hp.current = this.hp.max;
         }
+        if (this.hp.current < 0) {
+            this.hp.current = 0;
+        }
         this.checkCollision();
     }
 
@@ -108,7 +111,7 @@ class Rutherford {
         else 
             this.face = 0;
         var velocity = this.calculateVel(click);
-        var p = new Projectiles(this.game, true, this.x, this.y, velocity, 5, 1200, 20);
+        var p = new Projectiles(this.game, true, this.x, this.y, velocity, 5, 1200, 10 + randomInt(10));
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
         
         this.animations[this.action][this.face].elapsedTime = 0;
