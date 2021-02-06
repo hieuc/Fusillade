@@ -3,8 +3,6 @@ class Buck {
         Object.assign(this, { game, x, y });
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Buck.png");
 
-        this.damage = 15;
-
         this.projspeed = 5;
         
         this.removeFromWorld = false;
@@ -108,10 +106,10 @@ class Buck {
 
         //Death animation for state = 5
         //facing right
-        this.animations[5][0] = new Animator(this.spritesheet, 0, 864, 96, 96, 6, 0.1, 6, false, false);
+        this.animations[5][0] = new Animator(this.spritesheet, 0, 864, 96, 96, 6, 0.15, 0, false, false);
 
         //facing left = 1
-        this.animations[5][1] = new Animator(this.spritesheet, 0, 1824, 96, 96, 6, 0.1, 6, false, false);
+        this.animations[5][1] = new Animator(this.spritesheet, 0, 1824, 96, 96, 6, 0.15, 0, false, false);
 
     }
 
@@ -211,8 +209,8 @@ class Buck {
         this.game.entities.forEach(function (entity) {
             if (entity.bound && that.bound.collide(entity.bound)) {
                 if(entity instanceof Projectiles && entity.friendly) {
-                    that.hp.current -= 10;
-                    that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, 10));
+                    that.hp.current -= entity.damage;
+                    that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, entity.damage));
                     entity.removeFromWorld = true;
                     var audio = new Audio("./sounds/Hit.mp3");
                     audio.volume = PARAMS.hit_volume;
@@ -274,8 +272,8 @@ class Buck {
         var partitions = 10;
         for(var i = 0; i < partitions; i++) {
             var pp = {sx: 96, sy: 144, size: 16};
-            var p = new ScaleBoomerProjectiles(this.game, false, this.x+80, this.y+80, {x :Math.cos(this.blitz), y:Math.sin(this.blitz)}, 
-                        this.projspeed, 3000, 0.012, true, pp);
+            var p = new ScaleBoomerProjectiles(this.game, false, this.x+40, this.y+40, {x :Math.cos(this.blitz), y:Math.sin(this.blitz)}, 
+                        this.projspeed, 3000, 10, 0.012, true, pp);
             this.blitz += Math.PI/partitions;
             this.game.entities.splice(this.game.entities.length - 1, 0, p);        
         }
@@ -286,7 +284,7 @@ class Buck {
         var velocity = this.calculateVel();
         var offset = this.face == 0? 100: 0;
         var pp = {sx: 96, sy: 144, size: 16};
-        var p = new ScaleBoomerProjectiles(this.game, false, this.x + offset, this.y, velocity, this.projspeed, 2500, 0.005, false, pp);
+        var p = new ScaleBoomerProjectiles(this.game, false, this.x + offset, this.y, velocity, this.projspeed, 2500, 10, 0.005, false, pp);
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }
 

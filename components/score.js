@@ -5,7 +5,7 @@ class Score {
     constructor (game, x, y, value) {
         Object.assign(this, { game, x, y, value});
 
-        this.lifetime = 600;
+        this.lifetime = 500;
 
         this.timestamp = Date.now();
 

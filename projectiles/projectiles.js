@@ -1,6 +1,6 @@
 class Projectiles {
-    constructor(game, friendly, x, y, velocity, speed, lifetime, proj) {
-        Object.assign(this, { game, friendly, x, y, velocity, speed, lifetime});
+    constructor(game, friendly, x, y, velocity, speed, lifetime, damage, proj) {
+        Object.assign(this, { game, friendly, x, y, velocity, speed, lifetime, damage});
 
         // proj is an object of projectile's properties
 

@@ -8,6 +8,7 @@ class SceneManager {
         this.offsety = 0;
         this.rotation = 0;
         this.char;
+        this.camlock = false;
 
         this.loadSandbox(50, 50);
     };
@@ -47,15 +48,15 @@ class SceneManager {
         this.x = this.char.x - PARAMS.canvas_width/2 + 25;
         this.y = this.char.y - PARAMS.canvas_height/2 + 25;
 
-        if (this.game.mouse) {
+        if (this.game.mouse && !this.camlock) {
             var dx = this.game.mouse.x - PARAMS.canvas_width/2;
-            if (Math.abs(dx) / 150 > 1 && Math.abs(this.offsetx + dx / 150) < PARAMS.canvas_width / 5) {
-                this.offsetx += dx / 150;
+            if (Math.abs(dx) / 100 > 1 && Math.abs(this.offsetx + dx / 100) < PARAMS.canvas_width / 5) {
+                this.offsetx += dx / 100;
             }
 
             var dy = this.game.mouse.y - PARAMS.canvas_height/2;
-            if (Math.abs(dy) / 150 > 1 && Math.abs(this.offsety + dy / 150) < PARAMS.canvas_height / 5) {
-                this.offsety += dy / 150;
+            if (Math.abs(dy) / 100 > 1 && Math.abs(this.offsety + dy / 100) < PARAMS.canvas_height / 5) {
+                this.offsety += dy / 100;
             }
         }
         this.x += this.offsetx;
