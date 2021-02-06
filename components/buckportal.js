@@ -67,7 +67,7 @@ class Buckportal {
                     this.fire();
                     this.attacktime = Date.now();
                 }
-                this.angle += Math.PI/360;
+                this.angle += Math.PI/90;
             } else {
                 this.removeFromWorld = true;
             }
