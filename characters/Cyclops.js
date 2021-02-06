@@ -11,6 +11,8 @@ class Cyclops
 
         this.face = 0; // 0 = right, 1 = left
 
+        this.patterntimer = Date.now();
+
         //this.speed = 1.2;
 
         // this.toofarmovement = Date.now(); //We want to give a behavior pattern when enemy is too far.
@@ -39,38 +41,63 @@ class Cyclops
 
         // idle animation for state = 0
         // facing right = 0
-        this.animations[0][0] = new Animator(this.spritesheet, 13, 25, 35, 47, 15, 0.25, 44, false, true);
+        this.animations[0][0] = new Animator(this.spritesheet, 0, 0, 64, 64, 15, 0.25, 0, false, true);
 
         // facing left = 1
-        this.animations[0][1] = new Animator(this.spritesheet, 13, 663, 35, 47, 15, 0.25, 44, false, true);
+        this.animations[0][1] = new Animator(this.spritesheet, 0, 640, 64, 64, 15, 0.25, 0, false, true);
 
         //walking animation for state = 1
         //facing right = 0
-        this.animations[1][0] = new Animator(this.spritesheet, 13, 86, 35, 47, 12, 0.1, 44, false, true);
+        this.animations[1][0] = new Animator(this.spritesheet, 0, 64, 64, 64, 12, 0.1, 0, false, true);
 
         //facing left = 1
-        this.animations[1][1] = new Animator(this.spritesheet, 9, 241, 35, 47, 12, 0.1, 44, false, true);
+        this.animations[1][1] = new Animator(this.spritesheet, 0, 704, 64, 64, 12, 0.1, 0, false, true);
 
         //attack animation for state = 2
         //facing right = 0
-        this.animations[2][0] = new Animator(this.spritesheet, 13, 540, 35, 47, 6, 0.1, 44, false, true);
+        this.animations[2][0] = new Animator(this.spritesheet, 0, 192, 64, 64, 13, 0.1, 0, false, true);
 
         //facing left = 1
-        this.animations[2][1] = new Animator(this.spritesheet, 13, 1178, 35, 47, 6, 0.1, 44, false, true);
+        this.animations[2][1] = new Animator(this.spritesheet, 0, 832, 64, 64, 13, 0.1, 0, false, true);
 
         //die animation for state = 3
         //facing right = 0
-        this.animations[3][0] = new Animator(this.spritesheet, 13, 410, 35, 47, 9, 0.1, 44, false, false);
+        this.animations[3][0] = new Animator(this.spritesheet, 0, 384, 64, 64, 9, 0.1, 0, false, false);
 
         //facing left = 1
-        this.animations[3][1] = new Animator(this.spritesheet, 12, 1047, 35, 47, 9, 0.1, 44, false, false);
+        this.animations[3][1] = new Animator(this.spritesheet, 0, 1024, 64, 64, 9, 0.1, 0, false, false);
 
     }
 
 
     update()
     {
-
+        var time = Date.now() - this.patterntimer;
+        if(time < 2500) {
+            this.state = 0;
+            this.face = 0;
+        } else if(time >= 2500 && time < 5000) {
+            this.state = 0;
+            this.face = 1;
+        } else if(time >= 5000 && time < 7500) {
+            this.state = 1;
+            this.face = 0;
+        } else if(time >= 7500 && time < 10000) {
+            this.state = 1;
+            this.face = 1;
+        } else if(time >= 10000 && time < 12500) {
+            this.state = 2;
+            this.face = 0;
+        } else if(time >=12500 && time < 15000) {
+            this.state =2;
+            this.face = 1;
+        } else if(time >= 15000 && time < 17500) {
+            this.state = 3;
+            this.face = 0;
+        } else if(time >=17500 && time < 20000) {
+            this.state = 3;
+            this.face = 1;
+        }
     }
 
 

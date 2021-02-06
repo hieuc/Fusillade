@@ -34,14 +34,14 @@ class SceneManager {
         var fayereCharacter = new Fayere(this.game, 900, 600);
         var aisCharacter = new Ais(this.game, 900, 200);
         var buckCharacter = new Buck(this.game, 400, 300);
-        var cyclopsCharacter = new Cyclops(this.game, 300, 200);
+        
         
         
         //this.game.addEntity(new Dummy(this.game, 400, 200));
         this.game.addEntity(aisCharacter);
         this.game.addEntity(buckCharacter);
         this.game.addEntity(fayereCharacter);
-        this.game.addEntity(cyclopsCharacter);
+        this.game.addEntity(new Propportal(this.game, 100, 0, "Cyclops"));
         this.game.addEntity(character);
     };
 

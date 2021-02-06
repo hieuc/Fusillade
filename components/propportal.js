@@ -61,6 +61,9 @@ class Propportal {
             case "Ais":
                 this.game.addEntity(new Ais(this.game, this.x + 46, this.y+46));
                 break;
+            case "Cyclops":
+                this.game.addEntity(new Cyclops(this.game, this.x, this.y));
+                break;
             default:
         }
     }
