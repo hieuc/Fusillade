@@ -20,20 +20,40 @@
     <script type="text/javascript" src="./characters/rutherford.js"></script>
     <script type="text/javascript" src="./characters/Fayere.js"></script>
     <script type="text/javascript" src="./characters/Buck.js"></script>
+    <script type="text/javascript" src="./characters/Cyclops.js"></script>
     <script type="text/javascript" src="./characters/dummy.js"></script>
     <script type="text/javascript" src="./main.js"></script>
 
     <style>
-        body {
+        body 
+        {
             background: #0f0f0f;
             text-align: center;
+        }
+
+        #instruction ul li
+        {
+            color: red;
+            list-style-type: none;
         }
         
     </style>
 </head>
 <body>
+
     <canvas id="gameWorld" width="900" height="900" style="background: lightgray; border: 1px solid black" autofocus tabindex=1></canvas>
     <br>
+
+    <!-- Instructions for playing the game -->
+
+    <!-- try adding button to toggle instructions -->
+    <div id="instruction">
+        <ul>
+            <li>WASD to move up, left, down, right respectively</li>
+            <li>Point and click in the direction you wish to shoot a projectile</li>
+        </ul>
+    </div>
+
     <label for="debug">Debug</label>
     <input type="checkbox" id="debug" onclick="check()">
     <script>
