@@ -1,10 +1,10 @@
-class Fayere {
+class Ais {
     constructor(game, x, y) {
         Object.assign(this, { game, x, y });
-        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Fayere.png");
+        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Ais.png");
 
-        this.damage = 8;
-        
+        this.damage = 10;
+
         this.removeFromWorld = false;
 
         this.scale = 2;
@@ -13,9 +13,11 @@ class Fayere {
 
         this.face = 0; // 0 = right, 1 = left
 
-        this.speed = 1.2;
+        this.speed = 2;
 
         this.isEnemy = true;
+
+        this.atkleftorright = 0;
 
         this.toofarmovement = Date.now(); //We want to give a behavior pattern when enemy is too far.
 
@@ -27,11 +29,11 @@ class Fayere {
 
         this.enemypos = { enemyX: 0, enemyY: 0};
 
-        this.animations = [];
-
         this.bound = new BoundingBox(this.game, this.x, this.y, 22, 20);
 
-        this.hp = new HealthBar(this.game, this.x + 2 * this.scale, this.y + 16 * this.scale, 16 * this.scale, 100);
+        this.hp = new HealthBar(this.game, this.x + 2 * this.scale, this.y + 16 * this.scale, 16 * this.scale, 130);
+
+        this.animations = [];
 
         this.loadAnimations();
     }
@@ -44,8 +46,6 @@ class Fayere {
             }
         }
 
-        // idle animation for state = 0
-        // facing right = 0
         this.animations[0][0] = new Animator(this.spritesheet, 6, 18, 18, 18, 7, 0.25, 14, false, true);
 
         // facing left = 1
@@ -77,29 +77,29 @@ class Fayere {
     update() {
         //As long as we don't trigger the enemy, do a pattern movement.
         if(this.state == 3) {
-             if(this.animations[this.state][this.face].isDone()) {
-                this.removeFromWorld = true;
-             }
-        } else {
-            if(Math.abs(this.x - this.enemyX) > 800 || Math.abs(this.y - this.enemyY) > 600) {
-                this.howlong = Date.now() - this.toofarmovement;
-                if(this.howlong < 1500) {
-                    this.face = 1;
-                    this.x += -1 * this.speed;
-                    this.state = 1;
-                } else if (this.howlong >= 1500 && this.howlong < 3000) {
-                    this.state = 0;
-                } else if(this.howlong >= 3000 && this.howlong < 4500) {
-                    this.face = 0;
-                    this.x += 1 * this.speed;
-                    this.state = 1;
-                } else if (this.howlong >= 4500 && this.howlong < 6000) {
-                    this.state = 0;
-                } else {
-                    this.toofarmovement = Date.now();
-                }
-            //If we are in trigger range, get closer to the main character
-            } else if(Math.abs(this.x - this.enemyX) > 350 || Math.abs(this.y - this.enemyY) > 300) {
+            if(this.animations[this.state][this.face].isDone()) {
+               this.removeFromWorld = true;
+            }
+       } else {
+           if(Math.abs(this.x - this.enemyX) > 800 || Math.abs(this.y - this.enemyY) > 600) {
+               this.howlong = Date.now() - this.toofarmovement;
+               if(this.howlong < 1500) {
+                   this.face = 1;
+                   this.x += -1 * this.speed;
+                   this.state = 1;
+               } else if (this.howlong >= 1500 && this.howlong < 3000) {
+                   this.state = 0;
+               } else if(this.howlong >= 3000 && this.howlong < 4500) {
+                   this.face = 0;
+                   this.x += 1 * this.speed;
+                   this.state = 1;
+               } else if (this.howlong >= 4500 && this.howlong < 6000) {
+                   this.state = 0;
+               } else {
+                   this.toofarmovement = Date.now();
+               }
+           //If we are in trigger range, get closer to the main character
+           } else if(Math.abs(this.x - this.enemyX) > 350 || Math.abs(this.y - this.enemyY) > 100) {
                 if(this.x - this.enemyX > 0) {
                     this.x += -1 * this.speed;
                     this.face = 1;
@@ -114,37 +114,46 @@ class Fayere {
                 } else {
                     this.y += 1 * this.speed;
                 }
-            //Once we are in a decent attack range, Do something now. 
-            } else {
-                this.attackbehavior = Date.now() - this.attackpatterntime;
-                if(this.attackbehavior < 1500) {
-                    this.state = 0;
-                    if(this.x - this.enemyX > 0) {
-                        this.face = 1;
-                    } else {
-                        this.face = 0;
-                    }
-                } else if (this.attackbehavior >= 1500 && this.attackbehavior < 4200) {
-                    this.state = 2;
-                    if(this.x - this.enemyX > 0) {
-                        this.face = 1;
-                    } else {
-                        this.face = 0;
-                    }
-                    var timepassed = Date.now() - this.attackbuffer;
-                    if(timepassed > this.fireRate) {
-                        this.attack();
-                        this.attackbuffer = Date.now();
-                    }
+           //Once we are in a decent attack range, Do something now. 
+           } else if(Math.abs(this.y - this.enemyY) > 50) {
+                if(this.y - this.enemyY > 0) {
+                    this.y += -1 * this.speed;
+                    this.face = 1;
+                    this.state = 1;
                 } else {
-                    this.attackpatterntime = Date.now();
+                    this.y += 1 * this.speed;
+                    this.face = 0;
+                    this.state = 1;
                 }
-            }
-        }
+           } else {
+               this.attackbehavior = Date.now() - this.attackpatterntime;
+               if(this.attackbehavior < 1500) {
+                   this.state = 0;
+                   if(this.x - this.enemyX > 0) {
+                       this.face = 1;
+                   } else {
+                       this.face = 0;
+                   }
+               } else if (this.attackbehavior >= 1500 && this.attackbehavior < 4200) {
+                   this.state = 2;
+                   if(this.x - this.enemyX > 0) {
+                       this.face = 1;
+                   } else {
+                       this.face = 0;
+                   }
+                   var timepassed = Date.now() - this.attackbuffer;
+                   if(timepassed > this.fireRate) {
+                       this.attack();
+                       this.attackbuffer = Date.now();
+                   }
+               } else {
+                   this.attackpatterntime = Date.now();
+               }
+           }
+       }
 
-        this.updateBound();
+       this.updateBound();
 
-        //Collision Detection. Check if its fired by enemy or hero.
 
         var that = this;
         this.game.entities.forEach(function (entity) {
@@ -174,6 +183,11 @@ class Fayere {
         }
     }
 
+    getEnemyPos(eneX, eneY) {
+        this.enemyX = eneX;
+        this.enemyY = eneY;
+    }
+
     updateBound() {
         this.bound.x = this.x + 10;
         this.bound.y = this.y + 5;
@@ -182,32 +196,21 @@ class Fayere {
         this.hp.y = this.y + 16 * this.scale;
     }
 
-    getEnemyPos(eneX, eneY) {
-        this.enemyX = eneX;
-        this.enemyY = eneY;
-    }
-
-    calculateVel() {
-        var dx = this.enemyX - this.x;
-        var dy = this.enemyY - this.y;
-        var angle = Math.atan(dy/dx);
-
-        var v = { x: Math.cos(angle),
-                 y: Math.sin(angle)};
-        
-        if (dx < 0)
-            v.x *= -1;
-
-        if ((angle > 0 && dy < 0) || (angle < 0 && dy > 0))
-            v.y *= -1;
-        
-        return v;
-    }
-
     attack() {
-        var velocity = this.calculateVel();
-        var pp = { sx: 80, sy: 96, size: 16};
-        var p = new Projectiles(this.game, false, this.x, this.y, velocity, 3, 2000, 10, pp);
+        var pp = { sx: 80, sy: 128, size: 16}
+        this.atkleftorright = this.enemyX - this.x > 0? 0: Math.PI;
+        
+        var p = new Projectiles(this.game, false, this.x, this.y, {x: Math.cos(this.atkleftorright), y:Math.sin(this.atkleftorright)}, 3, 2000, 10, pp);
+        this.atkleftorright += Math.PI/4;
+        //console.log(this.atkleftorright);
+        var p2 = new Projectiles(this.game, false, this.x, this.y, {x: Math.cos(this.atkleftorright), y:Math.sin(this.atkleftorright)}, 3, 2000, 10, pp);
+        this.atkleftorright -= Math.PI/2;
+        //console.log(this.atkleftorright);
+        var p3 = new Projectiles(this.game, false, this.x, this.y, {x: Math.cos(this.atkleftorright), y:Math.sin(this.atkleftorright)}, 3, 2000, 10, pp);
+
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
+        this.game.entities.splice(this.game.entities.length - 1, 0, p2);
+        this.game.entities.splice(this.game.entities.length - 1, 0, p3);
+
     }
 };

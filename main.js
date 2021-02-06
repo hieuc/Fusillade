@@ -4,11 +4,13 @@ var ASSET_MANAGER = new AssetManager();
 
 ASSET_MANAGER.queueDownload("./sprites/rutherford-main.png");
 ASSET_MANAGER.queueDownload("./sprites/Fayere.png");
+ASSET_MANAGER.queueDownload("./sprites/Ais.png");
 ASSET_MANAGER.queueDownload("./sprites/forest.png");
 ASSET_MANAGER.queueDownload("./sprites/projectiles.png");
 ASSET_MANAGER.queueDownload("./sprites/Buck.png");
+ASSET_MANAGER.queueDownload("./sprites/Drumbuck.png");
 ASSET_MANAGER.queueDownload("./sprites/dummy.png");
-
+ASSET_MANAGER.queueDownload("./sprites/Portal.png");
 
 ASSET_MANAGER.downloadAll(function () {
 	var canvas = document.getElementById('gameWorld');
@@ -18,6 +20,8 @@ ASSET_MANAGER.downloadAll(function () {
 	PARAMS.canvas_width = canvas.width;
 	PARAMS.canvas_height = canvas.height;
 	PARAMS.debug = document.getElementById("debug").checked;
+	PARAMS.default_p_sheet = ASSET_MANAGER.getAsset("./sprites/projectiles.png");
+	PARAMS.default_projectile = {spritesheet: PARAMS.default_p_sheet, sx : 96, sy : 96, size: 16}
 
 	new SceneManager(gameEngine);
 
