@@ -29,7 +29,11 @@ class Buck {
 
         this.fireRate = 200; //in milliseconds.
 
-        this.summoncooldown = 18000; //Cooldown for the summon attack.
+        this.summoncooldown = 22000; //Cooldown for the summon attack.
+
+        this.createone = Date.now(); //create one enemy
+
+        this.createonecd = 18000;
 
         this.whichattack = Math.random(); //Deciding attack among 3 possibilites.
 
@@ -45,9 +49,13 @@ class Buck {
 
         this.hp = new HealthBar(this.game, this.x + 16 * this.scale, this.y + 44 * this.scale, 32 * this.scale, 300);
 
+        this.portal = true;
+
+        this.myportal;
+
         this.blitz = 0;
 
-        this.enemypos = { enemyX: 0, enemyY: 0, instX : 0, instY: 0};
+        this.enemypos = { enemyX: 0, enemyY: 0};
 
         this.animations = [];
 
@@ -116,73 +124,85 @@ class Buck {
      */
     update() { 
 
+
         if(this.state == 5) {
             if(this.animations[this.state][this.face].isDone()) {
                this.removeFromWorld = true;
             }
        } else {
+            if(Date.now() - this.createone > this.createonecd) {
+                this.game.addEntity(new Propportal(this.game, this.x * Math.random(), this.y *Math.random(), "Ais"));
+                this.createone = Date.now();
+            }
 
-        //First check if player triggered the enemy.
-        if((Math.abs(this.x - this.enemyX) < 300 && Math.abs(this.y - this.enemyY) < 200) && !this.triggered) {
-            this.triggered = true;
-            this.summontime = Date.now();
-        }
+            //First check if player triggered the enemy.
+            if((Math.abs(this.x - this.enemyX) < 300 && Math.abs(this.y - this.enemyY) < 200) && !this.triggered) {
+                this.triggered = true;
+                this.summontime = Date.now();
+            }
 
-        if(this.triggered) {
-            //Is it time to summon enemies?
-            var summon = Date.now() - this.summontime;
-            //If it is time to summon, channel.
-            if(summon > this.summoncooldown) {
-                this.decideDir();
-                this.state = 3;
-                //After 5 seconds of channel, summon fayeres.
-                if(summon > this.summoncooldown+2500 && !this.summoned) {
-                    this.bringSummons(); 
-                    this.summoned = true;
-                }
-                //After 10 seconds of channel, do an attack yourself as well.
-                if(summon >= this.summoncooldown+5000 && summon < this.summoncooldown+5900) {
+            if(this.triggered) {
+                //Is it time to summon enemies?
+                var summon = Date.now() - this.summontime;
+                //If it is time to summon, channel.
+                if(summon > this.summoncooldown) {
                     this.decideDir();
-                    this.state = 2;
-                    if(Date.now() - this.attackbuffer >= this.fireRate) {
-                        this.attack();
-                        this.attackbuffer = Date.now();
+                    this.state = 3;
+                    //After 5 seconds of channel, summon fayeres.
+                    if(summon > this.summoncooldown+2500 && !this.summoned) {
+                        this.bringSummons(); 
+                        this.summoned = true;
                     }
-                } 
+                    //After 10 seconds of channel, do an attack yourself as well.
+                    if(summon >= this.summoncooldown+5000 && summon < this.summoncooldown+6800) {
+                        if(this.portal) {
+                            this.myportal = new Buckportal(this.game, this.x-300, this.y - 50, this.hp.current, this.hp.max);
+                            this.game.addEntity(this.myportal);
+                            this.portal = false;
+                        }
+                        this.state = 2;
+                        this.face = 1;
+                        if(Date.now() - this.attackbuffer >= this.fireRate) {
+                            this.attackportal();
+                            this.attackbuffer = Date.now();
+                        }
+                    } 
 
-                if(summon > this.summoncooldown+5900) {
-                    this.summontime = Date.now();
-                    this.summoned = false;
-                }
-            } else {
-                var timer = Date.now() - this.patterntimer;
-                if(timer < this.patternduration) {
-                    this.decideDir();
-                    if(this.whichattack >= 0 && this.whichattack < 0.34) { 
-                        var timepassed = Date.now() - this.attackbuffer;
-                        if(timepassed > this.fireRate) {
-                            this.state = 2;
-                            this.attack();
-                            this.attackbuffer = Date.now();
-                        }
-                    } else if(this.whichattack >= 0.34 && this.whichattack < 0.67) {
-                        this.walkaround(Math.random(), Math.random(), Math.random(), Math.random());
-                    } else {
-                        var timepassed = Date.now() - this.attackbuffer;
-                        if(timepassed > this.fireRate+300) {
-                            this.state = 4;
-                            this.rageAttack();
-                            this.attackbuffer = Date.now();
-                        }
+                    if(summon > this.summoncooldown+6800) {
+                        this.summontime = Date.now();
+                        this.summoned = false;
+                        this.portal = true;
                     }
                 } else {
-                    this.state = 0;
-                    this.patterntimer = Date.now();
-                    this.whichattack = Math.random();
+                    var timer = Date.now() - this.patterntimer;
+                    if(timer < this.patternduration) {
+                        this.decideDir();
+                        if(this.whichattack >= 0 && this.whichattack < 0.45) { 
+                            var timepassed = Date.now() - this.attackbuffer;
+                            if(timepassed > this.fireRate) {
+                                this.state = 2;
+                                this.attack();
+                                this.attackbuffer = Date.now();
+                            }
+                        } else if(this.whichattack >= 0.45 && this.whichattack < 0.55) {
+                            //Healing here.
+                            //this.walkaround(Math.random(), Math.random(), Math.random(), Math.random());
+                        } else {
+                            var timepassed = Date.now() - this.attackbuffer;
+                            if(timepassed > this.fireRate+300) {
+                                this.state = 4;
+                                this.rageAttack();
+                                this.attackbuffer = Date.now();
+                            }
+                        }
+                    } else {
+                        this.state = 0;
+                        this.patterntimer = Date.now();
+                        this.whichattack = Math.random();
+                    }
                 }
-            }
-        } 
-    }
+            } 
+        }
 
         this.updateBound();
 
@@ -254,7 +274,7 @@ class Buck {
         var partitions = 10;
         for(var i = 0; i < partitions; i++) {
             var pp = {sx: 96, sy: 144, size: 16};
-            var p = new ScaleBoomerProjectiles(this.game, false, this.x+40, this.y+40, {x :Math.cos(this.blitz), y:Math.sin(this.blitz)}, 
+            var p = new ScaleBoomerProjectiles(this.game, false, this.x+80, this.y+80, {x :Math.cos(this.blitz), y:Math.sin(this.blitz)}, 
                         this.projspeed, 3000, 0.012, true, pp);
             this.blitz += Math.PI/partitions;
             this.game.entities.splice(this.game.entities.length - 1, 0, p);        
@@ -270,17 +290,18 @@ class Buck {
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }
 
-    bringSummons() {
-        this.game.addEntity(new Fayere(this.game, this.enemyX - 150, this.enemyY));
-        this.game.addEntity(new Fayere(this.game, this.enemyX + 150, this.enemyY));
-        this.game.addEntity(new Fayere(this.game, this.enemyX, this.enemyY - 150));
-        this.game.addEntity(new Fayere(this.game, this.enemyX, this.enemyY + 150));
+    attackportal() {
+        var pp = {sx: 96, sy: 144, size: 16};
+        var p = new Projectiles(this.game, false, this.x, this.y, {x: Math.cos(Math.PI), y:Math.sin(Math.PI)}, 3, 2000, pp);
+        this.game.entities.splice(this.game.entities.length - 1, 0, p);
+    }
 
-        //The rule of thumb is 50%.
-        if(this.hp.current < 150) {
-            this.game.addEntity(new Ais(this.game, this.enemyX-250, this.enemyY));
-            this.game.addEntity(new Ais(this.game, this.enemyX+250, this.enemyY));
-        }
+    bringSummons() {
+        //this.game.addEntity(new Fayere(this.game, this.enemyX - 150, this.enemyY));
+        this.game.addEntity(new Propportal(this.game, this.x - 96, this.y, "Fayere"));
+        this.game.addEntity(new Propportal(this.game, this.x + 180, this.y, "Fayere"));
+        this.game.addEntity(new Propportal(this.game, this.x + 44, this.y + 140, "Fayere"));
+        this.game.addEntity(new Propportal(this.game, this.x + 44, this.y - 140, "Fayere"));
     }
 
     decideDir() {
@@ -290,6 +311,10 @@ class Buck {
             this.face = 0;
         }
     }
+
+    /* 
+
+    DEPRECATED CODE. Might need so don't delete.
 
     walkaround(rand1, rand2, rand3, rand4) {
         this.howlong = Date.now() - this.walkaroundtimer;
@@ -313,7 +338,7 @@ class Buck {
     }
     
     //Testing code.
-    /**
+
      var time = Date.now() - this.patterntimer;
         if(time < 2500) {
             this.state = 0;

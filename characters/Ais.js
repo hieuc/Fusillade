@@ -115,7 +115,7 @@ class Ais {
                     this.y += 1 * this.speed;
                 }
            //Once we are in a decent attack range, Do something now. 
-           } else if(Math.abs(this.y - this.enemyY) > 100) {
+           } else if(Math.abs(this.y - this.enemyY) > 50) {
                 if(this.y - this.enemyY > 0) {
                     this.y += -1 * this.speed;
                     this.face = 1;

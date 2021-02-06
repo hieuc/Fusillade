@@ -32,7 +32,7 @@ class SceneManager {
         this.char = character;
         var fayereCharacter = new Fayere(this.game, 100, 200);
         var aisCharacter = new Ais(this.game, 900, 200);
-        var buckCharacter = new Buck(this.game, 400, 300);
+        var buckCharacter = new Buck(this.game, 400, 250);
         
         
         //this.game.addEntity(new Dummy(this.game, 400, 200));
