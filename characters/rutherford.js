@@ -14,6 +14,8 @@ class Rutherford {
 
         this.regen = 0.2;
 
+        this.hero = true;
+
         this.velocity = { x : 0, y : 0};
 
         this.bound = new BoundingBox(this.game, this.x, this.y, 16, 24);

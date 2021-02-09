@@ -12,6 +12,9 @@ ASSET_MANAGER.queueDownload("./sprites/Drumbuck.png");
 ASSET_MANAGER.queueDownload("./sprites/dummy.png");
 ASSET_MANAGER.queueDownload("./sprites/Portal.png");
 ASSET_MANAGER.queueDownload("./sprites/Cyclops.png");
+ASSET_MANAGER.queueDownload("./sprites/Crate.png");
+ASSET_MANAGER.queueDownload("./sprites/Meat.png");
+
 
 ASSET_MANAGER.downloadAll(function () {
 	var canvas = document.getElementById('gameWorld');

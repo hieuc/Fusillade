@@ -27,7 +27,7 @@ class Buck {
 
         this.fireRate = 200; //in milliseconds.
 
-        this.summoncooldown = 2200000; //Cooldown for the summon attack.
+        this.summoncooldown = 22000; //Cooldown for the summon attack.
 
         this.createone = Date.now(); //create one enemy
 
