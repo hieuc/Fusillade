@@ -12,7 +12,7 @@ class Healthmp {
 
         this.regen = [500, 500, 250, 250]; //Coincides with "type" variable.
 
-        this.bound = new BoundingBox(this.game, this.x, this.y+10, 32, 32);
+        this.bound = new BoundingCircle(this.game, this.x+15, this.y+25, 20);
 
         this.loadAnimations();
     } 
@@ -35,13 +35,24 @@ class Healthmp {
     update() {
         var that = this;
             this.game.entities.forEach(function (entity) {
-                var c = Object.getPrototypeOf(entity);
-                console.log(c);
                 if (entity.bound && that.bound.collide(entity.bound)) {
-                    if(c instanceof Rutherford) {
-                        console.log("im here");
+                    if(entity instanceof Rutherford) {
+                        that.removeFromWorld = true;
+                        if(that.type == 0 || that.type == 2) {
+                            if(entity.hp.current + that.regen[that.type] > entity.hp.max) {
+                                var heal = entity.hp.max - entity.hp.current;
+                                entity.hp.current += heal;
+                            } else {
+                                entity.hp.current += that.regen[that.type];
+                            }
+                        } else {
+                            //No mana for now..
+                        }
+                        var audio = new Audio("./sounds/health.mp3");
+                        audio.volume = that.healthsound;
+                        audio.play();
                     } else {
-                        console.log("im here in else");
+                        //Nothing really
                     }
                 }
             })
