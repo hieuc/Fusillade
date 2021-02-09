@@ -33,18 +33,14 @@ class Healthmp {
     }
 
     update() {
+        
         var that = this;
-            this.game.entities.forEach(function (entity) {
-                var c = Object.getPrototypeOf(entity);
-                console.log(c);
-                if (entity.bound && that.bound.collide(entity.bound)) {
-                    if(c instanceof Rutherford) {
-                        console.log("im here");
-                    } else {
-                        console.log("im here in else");
-                    }
-                }
-            })
+        this.game.entities.forEach(e => {
+            if (e instanceof Rutherford && e.bound.collide(that.bound)) {
+                console.log("YOYOYOYO");    
+            }
+        });
+        
     }
 
     draw(ctx) {

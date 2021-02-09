@@ -46,10 +46,12 @@ class SceneManager {
         this.game.addEntity(theBarrel2);
         this.game.addEntity(theBarrel3);
         this.game.addEntity(theBarrel4);
+        /*
         this.game.addEntity(aisCharacter);
         this.game.addEntity(buckCharacter);
         this.game.addEntity(fayereCharacter);
         this.game.addEntity(new Propportal(this.game, 100, 0, "Cyclops"));
+        */
         this.game.addEntity(character);
     };
 

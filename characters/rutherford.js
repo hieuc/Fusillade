@@ -106,8 +106,7 @@ class Rutherford {
     }
 
     updateBound() {
-        this.bound.x = this.x + 16;
-        this.bound.y = this.y + 8;
+        this.bound.update(this.x + 16, this.y + 8);
 
         this.hp.x = this.bound.x - 12;
         this.hp.y = this.bound.y + 25 * this.scale;;
