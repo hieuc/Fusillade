@@ -9,16 +9,24 @@ class BoundingBox {
     };
 
     collide(oth) {
-        if (oth instanceof BoundingBox && 
-                this.right > oth.left && this.left < oth.right && 
-                this.top < oth.bottom && this.bottom > oth.top) 
-            return true;
+        if (oth instanceof BoundingBox)
+            if (this.right >= oth.left && this.left <= oth.right && this.top <= oth.bottom && this.bottom >= oth.top) 
+                return true; 
 
         if (oth instanceof BoundingCircle && oth.collide(this))
             return true;
 
         return false;
     };
+
+    update(x, y) {
+        this.x = x;
+        this.y = y;
+        this.left = x;
+        this.top = y;
+        this.right = this.left + this.w;
+        this.bottom = this.top + this.h;
+    }
 
     draw() {
         var ctx = this.game.ctx;
@@ -56,6 +64,11 @@ class BoundingCircle {
 
             return dx*dx+dy*dy<=(this.r*this.r);
         }
+    }
+
+    update(x, y) {
+        this.x = x;
+        this.y = y;
     }
 
     draw() {

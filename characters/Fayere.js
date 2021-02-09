@@ -175,8 +175,7 @@ class Fayere {
     }
 
     updateBound() {
-        this.bound.x = this.x + 10;
-        this.bound.y = this.y + 5;
+        this.bound.update(this.x + 10, this.y + 5);
 
         this.hp.x = this.x + 2 * this.scale;
         this.hp.y = this.y + 16 * this.scale;

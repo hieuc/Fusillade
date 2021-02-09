@@ -240,8 +240,7 @@ class Buck {
     }
 
     updateBound() {
-        this.bound.x = this.x + 75;
-        this.bound.y = this.y + 48;
+        this.bound.update(this.x + 75, this.y + 48);
 
         this.hp.x = this.bound.x - 4 * this.scale;
         this.hp.y = this.bound.y + 43 * this.scale;

@@ -33,6 +33,7 @@ class Healthmp {
     }
 
     update() {
+        
         var that = this;
             this.game.entities.forEach(function (entity) {
                 if (entity.bound && that.bound.collide(entity.bound)) {

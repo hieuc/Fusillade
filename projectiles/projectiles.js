@@ -45,8 +45,7 @@ class Projectiles {
     }
 
     updateBound() {
-        this.bound.x = this.x + this.proj.size;
-        this.bound.y = this.y + this.proj.size;
+        this.bound.update(this.x + this.proj.size, this.y + this.proj.size);
     }
 
     draw(ctx) {
