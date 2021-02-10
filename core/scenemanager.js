@@ -33,8 +33,8 @@ class SceneManager {
         this.char = character;
         var fayereCharacter = new Fayere(this.game, 900, 600);
         var theBarrel = new Barrel(this.game, -50, -50, "Red");
-        var theBarrel2 = new Barrel(this.game, -50, 300, "Blue");
-        var theBarrel3 = new Barrel(this.game, 50, 550, "SRed");
+        var theBarrel2 = new Barrel(this.game, -50, 300, "SRed");
+        var theBarrel3 = new Barrel(this.game, 550, 50, "SRed");
         var theBarrel4 = new Barrel(this.game, 50, 800, "SBlue");
         var aisCharacter = new Ais(this.game, 900, 200);
         var buckCharacter = new Buck(this.game, 400, 300);
@@ -46,9 +46,9 @@ class SceneManager {
         this.game.addEntity(theBarrel2);
         this.game.addEntity(theBarrel3);
         this.game.addEntity(theBarrel4);
+        this.game.addEntity(buckCharacter);
         /*
         this.game.addEntity(aisCharacter);
-        this.game.addEntity(buckCharacter);
         this.game.addEntity(fayereCharacter);
         this.game.addEntity(new Propportal(this.game, 100, 0, "Cyclops"));
         */

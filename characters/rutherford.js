@@ -12,7 +12,7 @@ class Rutherford {
 
         this.speed = 4;
 
-        this.regen = 0.2;
+        this.regen = 0.01;
 
         this.hero = true;
 

@@ -27,7 +27,7 @@ class Buck {
 
         this.fireRate = 200; //in milliseconds.
 
-        this.summoncooldown = 22000; //Cooldown for the summon attack.
+        this.summoncooldown = 21000; //Cooldown for the summon attack.
 
         this.createone = Date.now(); //create one enemy
 
@@ -41,11 +41,15 @@ class Buck {
 
         this.walkaroundtimer = Date.now(); 
 
+        this.healcd = 1200;
+
+        this.healtimer = Date.now();
+
         this.moreleftoright = 0; //Should we walk more to left or right?
 
         this.bound = new BoundingBox(this.game, this.x, this.y, 50, 86);
 
-        this.hp = new HealthBar(this.game, this.x + 16 * this.scale, this.y + 44 * this.scale, 32 * this.scale, 300);
+        this.hp = new HealthBar(this.game, this.x + 16 * this.scale, this.y + 44 * this.scale, 32 * this.scale, 3000);
 
         this.portal = true;
 
@@ -61,7 +65,7 @@ class Buck {
     }
 
     loadAnimations() {
-        for (var i = 0; i < 6; i++) { // 5 states
+        for (var i = 0; i < 7; i++) { // 5 states
             this.animations.push([]);
             for (var j = 0; j < 2; j++) { // 2 directions
                 this.animations[i].push([]);
@@ -111,6 +115,13 @@ class Buck {
         //facing left = 1
         this.animations[5][1] = new Animator(this.spritesheet, 0, 1824, 96, 96, 6, 0.15, 0, false, false);
 
+        //Healing animation for state = 6
+        //facing right
+        this.animations[6][0] = new Animator(this.spritesheet, 0, 384, 96, 96, 5, 0.15, 0, false, true);
+
+        //facing left = 1
+        this.animations[6][1] = new Animator(this.spritesheet, 0, 1344, 96, 96, 5, 0.15, 0, false, true);
+
     }
 
     /**
@@ -147,12 +158,12 @@ class Buck {
                     this.decideDir();
                     this.state = 3;
                     //After 5 seconds of channel, summon fayeres.
-                    if(summon > this.summoncooldown+2500 && !this.summoned) {
+                    if(summon > this.summoncooldown+1500 && !this.summoned) {
                         this.bringSummons(); 
                         this.summoned = true;
                     }
                     //After 10 seconds of channel, do an attack yourself as well.
-                    if(summon >= this.summoncooldown+5000 && summon < this.summoncooldown+6800) {
+                    if(summon >= this.summoncooldown+4500 && summon < this.summoncooldown+6800) {
                         if(this.portal) {
                             this.myportal = new Buckportal(this.game, this.x-300, this.y - 50, this.hp.current, this.hp.max);
                             this.game.addEntity(this.myportal);
@@ -183,8 +194,11 @@ class Buck {
                                 this.attackbuffer = Date.now();
                             }
                         } else if(this.whichattack >= 0.45 && this.whichattack < 0.55) {
-                            //Healing here.
-                            //this.walkaround(Math.random(), Math.random(), Math.random(), Math.random());
+                            this.state = 6;
+                            if(Date.now() - this.healtimer > this.healcd) {
+                                this.heal();
+                                this.healtimer = Date.now();
+                            }
                         } else {
                             var timepassed = Date.now() - this.attackbuffer;
                             if(timepassed > this.fireRate+300) {
@@ -307,6 +321,17 @@ class Buck {
         } else {
             this.face = 0;
         }
+    }
+
+    heal() {
+        if(this.hp.current < this.hp.max) { 
+            var theHeal = this.hp.max * 0.05;
+            if(this.hp.current + theHeal > this.hp.max) {
+                theHeal = this.hp.max - this.hp.current;
+            }
+
+            this.hp.current += theHeal;
+        } 
     }
 
     /* 
