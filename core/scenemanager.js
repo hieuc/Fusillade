@@ -8,7 +8,7 @@ class SceneManager {
         this.offsety = 0;
         this.rotation = 0;
         this.char;
-        this.camlock = false;
+        this.camlock = true;
 
         this.loadSandbox(50, 50);
     };
@@ -38,6 +38,13 @@ class SceneManager {
         var theBarrel4 = new Barrel(this.game, 50, 800, "SBlue");
         var aisCharacter = new Ais(this.game, 900, 200);
         var buckCharacter = new Buck(this.game, 400, 300);
+
+        // property for the stump
+        var p = { spritesheet: ASSET_MANAGER.getAsset("./sprites/forest.png"), sx: 416, sy: 192, width: 32, height: 32, scale: 2, 
+                    bound: {x: 8, y: 20, w: 0.7, h: 0.5}};
+        var stump = new Obstacle(this.game, 100, 500, p);
+        
+        this.game.addEntity(stump);
         
         
         

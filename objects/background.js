@@ -1,6 +1,6 @@
 class Ground {
-    constructor(game, x, y) {
-        Object.assign(this, { game, x, y});
+    constructor(game, x, y, property) {
+        Object.assign(this, { game, x, y, property});
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/forest.png");
     };

@@ -68,6 +68,7 @@ class Rutherford {
             this.velocity.y = 0;
         }
 
+        
 
         // animation
         if(this.action !== 2 || this.animations[this.action][this.face].isAlmostDone(this.game.clockTick)) {
@@ -82,11 +83,6 @@ class Rutherford {
         if (this.velocity.x < 0 && this.action !== 2)
             this.face = 1;
 
-        // update position
-        this.x += this.velocity.x * this.speed;
-        this.y += this.velocity.y * this.speed;
-        this.updateBound();
-
         this.hp.current += this.regen;
         if (this.hp.current > this.hp.max) {
             this.hp.current = this.hp.max;
@@ -94,6 +90,10 @@ class Rutherford {
         if (this.hp.current < 0) {
             this.hp.current = 0;
         }
+        // update position
+        this.x += this.velocity.x * this.speed;
+        this.y += this.velocity.y * this.speed;
+        this.updateBound();
         this.checkCollision();
     }
 
@@ -131,6 +131,29 @@ class Rutherford {
                 this.hp.current -= e.damage;
                 e.removeFromWorld = true;
                 this.game.addEntity(new Score(this.game, this.bound.x + this.bound.w, this.bound.y, e.damage));
+            } else if (e instanceof Obstacle && this.bound.collide(e.bound)) {
+                var changed = false;
+                // check horizontal
+                if (this.velocity.x > 0 && this.bound.left < e.bound.left & this.bound.right >= e.bound.left) {
+                    // revert the position change if bounds met
+                    this.x -= this.velocity.x * this.speed;
+                    this.velocity.x = 0;
+                } else if (this.velocity.x < 0 && this.bound.right > e.bound.right && this.bound.left <= e.bound.right) {
+                    this.x -= this.velocity.x * this.speed;
+                    this.velocity.x = 0;
+                }
+                // check vertical 
+                else if (this.velocity.y > 0 && this.bound.top < e.bound.top && this.bound.bottom >= this.bound.top) {
+                    this.y -= this.velocity.y * this.speed;
+                    this.velocity.y = 0;
+                } else if (this.velocity.y < 0 && this.bound.bottom > e.bound.bottom && this.bound.top <= e.bound.bottom) {
+                    this.y -= this.velocity.y * this.speed;
+                    this.velocity.y = 0;
+                }
+                if (changed) {
+                    // second bound update for collision update
+                    this.updateBound();
+                }
             }
         });
     }
