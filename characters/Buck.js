@@ -224,6 +224,8 @@ class Buck {
             if (entity.bound && that.bound.collide(entity.bound)) {
                 if(entity instanceof Projectiles && entity.friendly) {
                     that.hp.current -= entity.damage;
+                    //SUBJECT TO CHANGE
+                    that.game.addEntity(new star(that.game, entity.x, entity.y - 22));
                     that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, entity.damage));
                     entity.removeFromWorld = true;
                     var audio = new Audio("./sounds/Hit.mp3");

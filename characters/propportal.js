@@ -46,10 +46,6 @@ class Propportal {
         this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale);
     }
 
-    makeEnemy(mymethod) {
-        mymethod();
-    }
-
     makeEnemy() {
         switch(this.enemyspawn) {
             case "Fayere":

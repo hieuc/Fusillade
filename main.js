@@ -14,6 +14,7 @@ ASSET_MANAGER.queueDownload("./sprites/Portal.png");
 ASSET_MANAGER.queueDownload("./sprites/Cyclops.png");
 ASSET_MANAGER.queueDownload("./sprites/Crate.png");
 ASSET_MANAGER.queueDownload("./sprites/Meat.png");
+ASSET_MANAGER.queueDownload("./sprites/star.png");
 
 
 ASSET_MANAGER.downloadAll(function () {
