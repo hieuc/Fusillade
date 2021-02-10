@@ -13,7 +13,7 @@ class Ais {
 
         this.face = 0; // 0 = right, 1 = left
 
-        this.speed = 2;
+        this.speed = 1.9;
 
         this.isEnemy = true;
 
@@ -75,6 +75,7 @@ class Ais {
     }
 
     update() {
+        console.log(this.x);
         //As long as we don't trigger the enemy, do a pattern movement.
         if(this.state == 3) {
             if(this.animations[this.state][this.face].isDone()) {
@@ -98,6 +99,7 @@ class Ais {
                } else {
                    this.toofarmovement = Date.now();
                }
+               this.x = Math.floor(this.x) - 2;
            //If we are in trigger range, get closer to the main character
            } else if(Math.abs(this.x - this.enemyX) > 350 || Math.abs(this.y - this.enemyY) > 100) {
                 if(this.x - this.enemyX > 0) {
@@ -114,7 +116,8 @@ class Ais {
                 } else {
                     this.y += 1 * this.speed;
                 }
-           //Once we are in a decent attack range, Do something now. 
+                this.x = Math.floor(this.x) + 2;
+            //Once we are in a decent attack range, Do something now. 
            } else if(Math.abs(this.y - this.enemyY) > 50) {
                 if(this.y - this.enemyY > 0) {
                     this.y += -1 * this.speed;
