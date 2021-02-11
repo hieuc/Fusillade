@@ -2,11 +2,13 @@ class Rutherford {
     constructor(game, x, y) {
         Object.assign(this, { game, x, y});
 
-        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/rutherford.png");
+        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/rutherford-main.png");
 
         this.scale = 2;
 
-        this.action = 0; // 0 = idle, 1 = run, 2 = attack
+        this.action = 0; // 0 = idle, 1 = run, 2 = attack, 3 = transform
+
+        this.form = 0;
 
         this.face = 0; // 0 = right, 1 = left
 
@@ -14,13 +16,15 @@ class Rutherford {
 
         this.regen = 0.01;
 
+        this.shinecd = Date.now();
+
         this.hero = true;
 
         this.velocity = { x : 0, y : 0};
 
         this.bound = new BoundingBox(this.game, this.x, this.y, 16, 24);
 
-        this.hp = new HealthBar(this.game, this.bound.x, this.bound.y, 20 * this.scale, 500);
+        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y, 20 * this.scale, 500, true);
 
         this.animations = [];
 
@@ -28,28 +32,55 @@ class Rutherford {
     }
 
     loadAnimations() {
-        for (var i = 0; i < 3; i++) {
-            this.animations[i] = [];
+        for (var i = 0; i < 4; i++) { // 4 states as of now.
+            this.animations.push([]);
+            for (var j = 0; j < 2; j++) { // two directions
+                this.animations[i].push([]);
+                for (var k = 0; k < 2; k++) { // 2 forms. i.e. Rutherford, Ascended Rutherford.
+                    this.animations[i][j].push([]);
+                }
+            }
         }
+
         
-        // walk
-        this.animations[0][0] = new Animator(this.spritesheet, 0, 0, 50, 37, 4, 0.25, 0, false, true);
-        this.animations[0][1] = new Animator(this.spritesheet, 150, 629, 50, 37, 4, 0.25, 0, true, true);
+        // idle
+        this.animations[0][0][0] = new Animator(this.spritesheet, 0, 0, 50, 37, 4, 0.25, 0, false, true);
+        this.animations[0][1][0] = new Animator(this.spritesheet, 570, 0, 50, 37, 4, 0.25, 0, true, true);
+        this.animations[0][0][1] = new Animator(this.spritesheet, 0, 592, 50, 37, 4, 0.25, 0, false, true);
+        this.animations[0][1][1] = new Animator(this.spritesheet, 570, 592, 50, 37, 4, 0.25, 0, true, true);
         /*
         // walk
         this.animations[1][0] = new Animator(this.spritesheet, 0, 592, 50, 37, 6, 0.15, 0, false, true);
         this.animations[1][1] = new Animator(this.spritesheet, 50, 1221, 50, 37, 6, 0.15, 0, true, true);
         */
         // run
-        this.animations[1][0] = new Animator(this.spritesheet, 55, 37, 50, 37, 6, 0.15, 0, false, true);
-        this.animations[1][1] = new Animator(this.spritesheet, -5, 666, 50, 37, 6, 0.15, 0, true, true);
+        this.animations[1][0][0] = new Animator(this.spritesheet, 50, 37, 50, 37, 6, 0.15, 0, false, true);
+        this.animations[1][1][0] = new Animator(this.spritesheet, 420, 37, 50, 37, 6, 0.15, 0, true, true);
+        this.animations[1][0][1] = new Animator(this.spritesheet, 50, 629, 50, 37, 6, 0.15, 0, false, true);
+        this.animations[1][1][1] = new Animator(this.spritesheet, 420, 629, 50, 37, 6, 0.15, 0, true, true);
 
         // attack
-        this.animations[2][0] = new Animator(this.spritesheet, 0, 222, 50, 37, 5, 0.05, 0, false, false);
-        this.animations[2][1] = new Animator(this.spritesheet, 100, 851, 50, 37, 5, 0.05, 0, true, false);
+        this.animations[2][0][0] = new Animator(this.spritesheet, 0, 222, 50, 37, 7, 0.05, 0, false, false);
+        this.animations[2][1][0] = new Animator(this.spritesheet, 420, 222, 50, 37, 7, 0.05, 0, true, false);
+        this.animations[2][0][1] = new Animator(this.spritesheet, 0, 814, 50, 37, 7, 0.05, 0, false, false);
+        this.animations[2][1][1] = new Animator(this.spritesheet, 420, 814, 50, 37, 7, 0.05, 0, true, false);
+
+        //transform
+        this.animations[3][0][0] = new Animator(this.spritesheet, 100, 444, 50, 37, 5, 0.1, 0, false, false);
+        this.animations[3][1][0] = new Animator(this.spritesheet, 420, 444, 50, 37, 5, 0.1, 0, true, false);
+        this.animations[3][0][1] = new Animator(this.spritesheet, 100, 1036, 50, 37, 5, 0.1, 0, false, false);
+        this.animations[3][1][1] = new Animator(this.spritesheet, 420, 1036, 50, 37, 5, 0.1, 0, true, false);
     }
 
     update() {
+        //shine effect
+        if(this.form == 1) {
+            if(Date.now() - this.shinecd > 500) {
+                this.createshine();
+                this.shinecd = Date.now();
+            }
+        }
+
         // movement
         var g = this.game;
         if (g.left && !g.right) {
@@ -68,14 +99,24 @@ class Rutherford {
             this.velocity.y = 0;
         }
 
-        
+        if(g.gkey) {
+            this.action = 3;
+        }
 
         // animation
-        if(this.action !== 2 || this.animations[this.action][this.face].isAlmostDone(this.game.clockTick)) {
-            if (this.velocity.x !== 0 || this.velocity.y !== 0)
-                this.action = 1;
-            else 
+        if(this.action == 3) {
+            if(this.animations[this.action][this.face][this.form].isAlmostDone(this.game.clockTick)) {
+                this.transform();
                 this.action = 0;
+            }
+        } else {
+            if(this.action !== 2 || this.animations[this.action][this.face][this.form].isAlmostDone(this.game.clockTick)) {
+                if (this.velocity.x !== 0 || this.velocity.y !== 0) {
+                    this.action = 1;
+                } else {
+                    this.action = 0;
+                }
+            }
         }
 
         if (this.velocity.x > 0 && this.action !== 2)
@@ -84,11 +125,21 @@ class Rutherford {
             this.face = 1;
 
         this.hp.current += this.regen;
+        this.hp.currMana += this.regen;
         if (this.hp.current > this.hp.max) {
             this.hp.current = this.hp.max;
         }
         if (this.hp.current < 0) {
             this.hp.current = 0;
+        }
+
+        //If we are Ascended, subtract mana each tick.
+        if (this.form == 1) {
+            this.hp.currMana -= this.hp.max * 0.0005;
+            if(this.hp.currMana < 0) {
+                this.hp.currMana = 0;
+                this.action = 3;
+            }
         }
         // update position
         this.x += this.velocity.x * this.speed;
@@ -98,7 +149,7 @@ class Rutherford {
     }
 
     draw(ctx) {
-        this.animations[this.action][this.face].drawFrame(this.game.clockTick, ctx, this.x - 25 - this.game.camera.x, this.y - 25 - this.game.camera.y, this.scale);
+        this.animations[this.action][this.face][this.form].drawFrame(this.game.clockTick, ctx, this.x - 25 - this.game.camera.x, this.y - 25 - this.game.camera.y, this.scale);
         this.hp.draw();
         if (PARAMS.debug) {
             this.bound.draw(ctx, this.game);
@@ -112,6 +163,20 @@ class Rutherford {
         this.hp.y = this.bound.y + 25 * this.scale;;
     }
 
+    transform() {
+        var whatform = this.form == 0? 1: 0;
+        this.form = whatform;
+        this.game.addEntity(new thunder(this.game, this.x-25, this.y-230));
+        this.createshine();
+        this.animations[this.action][this.face][this.form].elapsedTime = 0;
+    }
+
+    createshine() {
+        this.game.addEntity(new shine(this.game, this.x, this.y));
+        this.game.addEntity(new shine(this.game, this.x-40, this.y-60));
+        this.game.addEntity(new shine(this.game, this.x-45, this.y));
+    }
+
     startAttack(click) {
         this.action = 2;
         if (click.x - this.x  + this.game.camera.x - 25 < 0)
@@ -119,16 +184,22 @@ class Rutherford {
         else 
             this.face = 0;
         var velocity = this.calculateVel(click);
-        var p = new Projectiles(this.game, true, this.x, this.y, velocity, 5, 1200, 10 + randomInt(10));
+        //In case we are ascended, we want to know our coordinates.
+        var pp = {sx: 96, sy: 336, size: 16};
+        var p = this.form == 0? new Projectiles(this.game, true, this.x, this.y, velocity, 5, 1200, 10 + randomInt(10)) : new Projectiles(this.game, true, this.x, this.y, velocity, 5, 1200, 15 + randomInt(10), pp)
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
         
-        this.animations[this.action][this.face].elapsedTime = 0;
+        this.animations[this.action][this.face][this.form].elapsedTime = 0;
     }
 
     checkCollision() {
         this.game.entities.forEach(e => {
             if (e instanceof Projectiles && this.bound.collide(e.bound) && !e.friendly) {
-                this.hp.current -= e.damage;
+                if(this.form == 1) {
+                    this.hp.current -= e.damage * 0.8;
+                } else {
+                    this.hp.current -= e.damage;
+                }
                 e.removeFromWorld = true;
                 this.game.addEntity(new Score(this.game, this.bound.x + this.bound.w, this.bound.y, e.damage));
             } else if (e instanceof Obstacle && this.bound.collide(e.bound)) {

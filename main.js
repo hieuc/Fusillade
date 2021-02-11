@@ -3,6 +3,7 @@ var gameEngine = new GameEngine();
 var ASSET_MANAGER = new AssetManager();
 
 ASSET_MANAGER.queueDownload("./sprites/rutherford.png");
+ASSET_MANAGER.queueDownload("./sprites/rutherford-main.png");
 ASSET_MANAGER.queueDownload("./sprites/Fayere.png");
 ASSET_MANAGER.queueDownload("./sprites/Ais.png");
 ASSET_MANAGER.queueDownload("./sprites/forest.png");
@@ -15,6 +16,9 @@ ASSET_MANAGER.queueDownload("./sprites/Cyclops.png");
 ASSET_MANAGER.queueDownload("./sprites/Crate.png");
 ASSET_MANAGER.queueDownload("./sprites/Meat.png");
 ASSET_MANAGER.queueDownload("./sprites/star.png");
+ASSET_MANAGER.queueDownload("./sprites/Thunder.png");
+ASSET_MANAGER.queueDownload("./sprites/Shine.png");
+ASSET_MANAGER.queueDownload("./sprites/Burn.png");
 
 
 ASSET_MANAGER.downloadAll(function () {

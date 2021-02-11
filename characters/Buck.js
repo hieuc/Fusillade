@@ -49,7 +49,7 @@ class Buck {
 
         this.bound = new BoundingBox(this.game, this.x, this.y, 50, 86);
 
-        this.hp = new HealthBar(this.game, this.x + 16 * this.scale, this.y + 44 * this.scale, 32 * this.scale, 300);
+        this.hp = new HealthMpBar(this.game, this.x + 16 * this.scale, this.y + 44 * this.scale, 32 * this.scale, 300);
 
         this.portal = true;
 
@@ -132,8 +132,6 @@ class Buck {
      * i.e. Math random class.
      */
     update() { 
-
-
         if(this.state == 5) {
             if(this.animations[this.state][this.face].isDone()) {
                this.removeFromWorld = true;
@@ -218,27 +216,37 @@ class Buck {
 
         this.updateBound();
 
-        //Take into account different damage types for future reference.
-        var that = this;
-        this.game.entities.forEach(function (entity) {
-            if (entity.bound && that.bound.collide(entity.bound)) {
-                if(entity instanceof Projectiles && entity.friendly) {
-                    that.hp.current -= entity.damage;
-                    //SUBJECT TO CHANGE
-                    that.game.addEntity(new star(that.game, entity.x, entity.y - 22));
-                    that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, entity.damage));
-                    entity.removeFromWorld = true;
-                    var audio = new Audio("./sounds/Hit.mp3");
-                    audio.volume = PARAMS.hit_volume;
-                    audio.play();
-                    if(that.hp.current <= 0) {
-                        that.state = 5;
-                    }
-                } else {
-                    //nothing really.
+        //Collision detection and damage type detection.
+        if(this.state !== 5) {
+            var rutherform = 0;
+            var that = this;
+            this.game.entities.forEach(function (entity) {
+                if(entity instanceof Rutherford) {
+                    rutherform = entity.form;
                 }
-            }
-        })
+                if (entity.bound && that.bound.collide(entity.bound)) {
+                    if(entity instanceof Projectiles && entity.friendly) {
+                        that.hp.current -= entity.damage;
+                        //SUBJECT TO CHANGE
+                        if(rutherform == 0) {
+                            that.game.addEntity(new star(that.game, entity.x, entity.y - 22));
+                        } else {
+                            that.game.addEntity(new burn(that.game, entity.x-32, entity.y - 32));
+                        }
+                        that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, entity.damage));
+                        entity.removeFromWorld = true;
+                        var audio = new Audio("./sounds/Hit.mp3");
+                        audio.volume = PARAMS.hit_volume;
+                        audio.play();
+                        if(that.hp.current <= 0) {
+                            that.state = 5;
+                        }
+                    } else {
+                        //nothing really.
+                    }
+                }
+            })
+        }
     }
 
     draw(ctx) {

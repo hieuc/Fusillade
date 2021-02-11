@@ -16,7 +16,7 @@ class Barrel {
 
         this.bound = new BoundingBox(this.game, this.x+44, this.y+48, 50, 50);
 
-        this.hp = new HealthBar(this.game, this.x + 25.5 * this.scale, this.y + 50 * this.scale, 16 * this.scale, 25);
+        this.hp = new HealthMpBar(this.game, this.x + 25.5 * this.scale, this.y + 50 * this.scale, 16 * this.scale, 25);
 
         this.loadAnimations();
     } 

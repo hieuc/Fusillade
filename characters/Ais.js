@@ -31,7 +31,7 @@ class Ais {
 
         this.bound = new BoundingBox(this.game, this.x, this.y, 22, 20);
 
-        this.hp = new HealthBar(this.game, this.x + 2 * this.scale, this.y + 16 * this.scale, 16 * this.scale, 130);
+        this.hp = new HealthMpBar(this.game, this.x + 2 * this.scale, this.y + 16 * this.scale, 16 * this.scale, 130, false);
 
         this.animations = [];
 
@@ -75,7 +75,6 @@ class Ais {
     }
 
     update() {
-        console.log(this.x);
         //As long as we don't trigger the enemy, do a pattern movement.
         if(this.state == 3) {
             if(this.animations[this.state][this.face].isDone()) {
@@ -158,26 +157,35 @@ class Ais {
        this.updateBound();
 
 
-        var that = this;
-        this.game.entities.forEach(function (entity) {
-            if (entity.bound && that.bound.collide(entity.bound)) {
-                if(entity instanceof Projectiles && entity.friendly) {
-                    that.hp.current -= entity.damage;
-                    //SUBJECT TO CHANGE
-                    that.game.addEntity(new star(that.game, entity.x-8, entity.y-25));
-                    that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y + that.bound.h / 2, entity.damage));
-                    entity.removeFromWorld = true;
-                    var audio = new Audio("./sounds/Hit.mp3");
-                    audio.volume = PARAMS.hit_volume;
-                    audio.play();
-                    if(that.hp.current <= 0) {
-                        that.state = 3;
-                    }
-                } else {
-                    //nothing really.
+        if(this.state !== 5) {    
+            var that = this;
+            var rutherform = 0;
+            this.game.entities.forEach(function (entity) {
+                if(entity instanceof Rutherford) {
+                    rutherform = entity.form;
                 }
-            }
-        })
+                if (entity.bound && that.bound.collide(entity.bound)) {
+                    if(entity instanceof Projectiles && entity.friendly) {
+                        that.hp.current -= entity.damage;
+                        if(rutherform == 0) {
+                            that.game.addEntity(new star(that.game, entity.x, entity.y-22));
+                        } else {
+                            that.game.addEntity(new burn(that.game, entity.x-50, entity.y-40));
+                        }
+                        that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y + that.bound.h / 2, entity.damage));
+                        entity.removeFromWorld = true;
+                        var audio = new Audio("./sounds/Hit.mp3");
+                        audio.volume = PARAMS.hit_volume;
+                        audio.play();
+                        if(that.hp.current <= 0) {
+                            that.state = 3;
+                        }
+                    } else {
+                        //nothing really.
+                    }
+                }
+            })
+        }
     }
 
     draw(ctx) {

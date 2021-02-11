@@ -46,7 +46,12 @@ class Healthmp {
                                 entity.hp.current += that.regen[that.type];
                             }
                         } else {
-                            //No mana for now..
+                            if(entity.hp.currMana + that.regen[that.type] > entity.hp.max) {
+                                var heal = entity.hp.max - entity.hp.currMana;
+                                entity.hp.currMana += heal;
+                            } else {
+                                entity.hp.currMana += that.regen[that.type];
+                            }
                         }
                         var audio = new Audio("./sounds/health.mp3");
                         audio.volume = that.healthsound;

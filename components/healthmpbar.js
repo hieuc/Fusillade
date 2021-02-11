@@ -1,8 +1,9 @@
-class HealthBar {
-    constructor( game, x, y, w, max) {
-        Object.assign(this, { game, x, y, w, max});
+class HealthMpBar {
+    constructor( game, x, y, w, max, mc) {
+        Object.assign(this, { game, x, y, w, max, mc});
         
         this.current = max;
+        this.currMana = max;
         this.h = 6;
     }
 
@@ -16,6 +17,14 @@ class HealthBar {
         if (percentage < 0) percentage = 0;
         ctx.fillStyle = this.getColor(percentage);
         ctx.fillRect(this.x - this.game.camera.x, this.y - this.game.camera.y, this.w * percentage, this.h);
+        
+        if(this.mc) {
+            ctx.strokeRect(this.x - this.game.camera.x, this.y + 5 - this.game.camera.y, this.w, this.h);
+            var percentageMana = this.currMana / this.max;
+            if (percentageMana < 0) percentageMana = 0;
+            ctx.fillStyle = "rgb(30, 100, 255)";
+            ctx.fillRect(this.x - this.game.camera.x, this.y + 5 - this.game.camera.y, this.w * percentageMana, this.h);
+        }
     }
 
     /**
