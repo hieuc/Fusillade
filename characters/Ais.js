@@ -157,7 +157,7 @@ class Ais {
        this.updateBound();
 
 
-        if(this.state !== 3) {    
+        if(this.state != 3) {    
             var that = this;
             var rutherform = 0;
             this.game.entities.forEach(function (entity) {
