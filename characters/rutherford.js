@@ -16,7 +16,9 @@ class Rutherford {
 
         this.regen = 0.01;
 
-        this.shinecd = Date.now();
+        this.ascendedmana = 0.0005; //How much is deducted per tick.
+
+        this.shinecd = Date.now(); //Shining particle effect cooldown when in Ascended form.
 
         this.hero = true;
 
@@ -24,7 +26,7 @@ class Rutherford {
 
         this.bound = new BoundingBox(this.game, this.x, this.y, 16, 24);
 
-        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y, 20 * this.scale, 500, true);
+        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y, 20 * this.scale, 500, true); //Has mana field too.
 
         this.animations = [];
 
@@ -42,7 +44,7 @@ class Rutherford {
             }
         }
 
-        
+        //The 3rd dimension refers to whether you're in Ascended form or not.
         // idle
         this.animations[0][0][0] = new Animator(this.spritesheet, 0, 0, 50, 37, 4, 0.25, 0, false, true);
         this.animations[0][1][0] = new Animator(this.spritesheet, 570, 0, 50, 37, 4, 0.25, 0, true, true);
@@ -103,7 +105,7 @@ class Rutherford {
             this.action = 3;
         }
 
-        // animation
+        //Did the user press G? If yes, transform and do the animation.
         if(this.action == 3) {
             if(this.animations[this.action][this.face][this.form].isAlmostDone(this.game.clockTick)) {
                 this.transform();
@@ -135,7 +137,7 @@ class Rutherford {
 
         //If we are Ascended, subtract mana each tick.
         if (this.form == 1) {
-            this.hp.currMana -= this.hp.max * 0.0005;
+            this.hp.currMana -= this.hp.max * this.ascendedmana;
             if(this.hp.currMana < 0) {
                 this.hp.currMana = 0;
                 this.action = 3;
@@ -163,6 +165,7 @@ class Rutherford {
         this.hp.y = this.bound.y + 25 * this.scale;;
     }
 
+    //Transforms Rutherford into Ascended Rutherford.
     transform() {
         var whatform = this.form == 0? 1: 0;
         this.form = whatform;
@@ -171,6 +174,7 @@ class Rutherford {
         this.animations[this.action][this.face][this.form].elapsedTime = 0;
     }
 
+    //Creates the shine particle effect around Rutherford.
     createshine() {
         this.game.addEntity(new shine(this.game, this.x, this.y));
         this.game.addEntity(new shine(this.game, this.x-40, this.y-60));
@@ -184,7 +188,7 @@ class Rutherford {
         else 
             this.face = 0;
         var velocity = this.calculateVel(click);
-        //In case we are ascended, we want to know our coordinates.
+        //In case we are ascended, we want to know fire projectile's coordinates.
         var pp = {sx: 96, sy: 336, size: 16};
         var p = this.form == 0? new Projectiles(this.game, true, this.x, this.y, velocity, 5, 1200, 10 + randomInt(10)) : new Projectiles(this.game, true, this.x, this.y, velocity, 5, 1200, 15 + randomInt(10), pp)
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
@@ -195,6 +199,7 @@ class Rutherford {
     checkCollision() {
         this.game.entities.forEach(e => {
             if (e instanceof Projectiles && this.bound.collide(e.bound) && !e.friendly) {
+                //If ascended take 80% of the intended damage.
                 if(this.form == 1) {
                     this.hp.current -= e.damage * 0.8;
                 } else {

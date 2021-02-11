@@ -146,7 +146,7 @@ class Fayere {
 
         //Collision Detection. Check if its fired by enemy or hero.
 
-        if(this.state !== 5) {
+        if(this.state !== 3) {
             var that = this;
             var rutherform = 0;
             this.game.entities.forEach(function (entity) {
