@@ -14,6 +14,8 @@ class Rutherford {
 
         this.speed = 4;
 
+        this.speedtemp = this.speed; //Used to reset back speed when we block it.
+
         this.regen = 0.01;
 
         this.ascendedmana = 0.0005; //How much is deducted per tick.
@@ -21,6 +23,14 @@ class Rutherford {
         this.shinecd = Date.now(); //Shining particle effect cooldown when in Ascended form.
 
         this.hero = true;
+
+        this.slideasc = 15; // Mana cost of Ascended slide.
+
+        this.slidenor = 35; //Mana cost of Normal slide.
+
+        this.speedbump = false;
+
+        this.allow = true; // simply for blocking any button inputs when an event is occuring.
 
         this.velocity = { x : 0, y : 0};
 
@@ -34,7 +44,7 @@ class Rutherford {
     }
 
     loadAnimations() {
-        for (var i = 0; i < 4; i++) { // 4 states as of now.
+        for (var i = 0; i < 5; i++) { // 4 states as of now.
             this.animations.push([]);
             for (var j = 0; j < 2; j++) { // two directions
                 this.animations[i].push([]);
@@ -46,20 +56,20 @@ class Rutherford {
 
         //The 3rd dimension refers to whether you're in Ascended form or not.
         // idle
-        this.animations[0][0][0] = new Animator(this.spritesheet, 0, 0, 50, 37, 4, 0.25, 0, false, true);
-        this.animations[0][1][0] = new Animator(this.spritesheet, 570, 0, 50, 37, 4, 0.25, 0, true, true);
-        this.animations[0][0][1] = new Animator(this.spritesheet, 0, 592, 50, 37, 4, 0.25, 0, false, true);
-        this.animations[0][1][1] = new Animator(this.spritesheet, 570, 592, 50, 37, 4, 0.25, 0, true, true);
+        this.animations[0][0][0] = new Animator(this.spritesheet, 0, 0, 50, 37, 4, 0.2, 0, false, true);
+        this.animations[0][1][0] = new Animator(this.spritesheet, 570, 0, 50, 37, 4, 0.2, 0, true, true);
+        this.animations[0][0][1] = new Animator(this.spritesheet, 0, 592, 50, 37, 4, 0.2, 0, false, true);
+        this.animations[0][1][1] = new Animator(this.spritesheet, 570, 592, 50, 37, 4, 0.2, 0, true, true);
         /*
         // walk
         this.animations[1][0] = new Animator(this.spritesheet, 0, 592, 50, 37, 6, 0.15, 0, false, true);
         this.animations[1][1] = new Animator(this.spritesheet, 50, 1221, 50, 37, 6, 0.15, 0, true, true);
         */
         // run
-        this.animations[1][0][0] = new Animator(this.spritesheet, 50, 37, 50, 37, 6, 0.15, 0, false, true);
-        this.animations[1][1][0] = new Animator(this.spritesheet, 420, 37, 50, 37, 6, 0.15, 0, true, true);
-        this.animations[1][0][1] = new Animator(this.spritesheet, 50, 629, 50, 37, 6, 0.15, 0, false, true);
-        this.animations[1][1][1] = new Animator(this.spritesheet, 420, 629, 50, 37, 6, 0.15, 0, true, true);
+        this.animations[1][0][0] = new Animator(this.spritesheet, 50, 37, 50, 37, 6, 0.1, 0, false, true);
+        this.animations[1][1][0] = new Animator(this.spritesheet, 420, 37, 50, 37, 6, 0.1, 0, true, true);
+        this.animations[1][0][1] = new Animator(this.spritesheet, 50, 629, 50, 37, 6, 0.1, 0, false, true);
+        this.animations[1][1][1] = new Animator(this.spritesheet, 420, 629, 50, 37, 6, 0.1, 0, true, true);
 
         // attack
         this.animations[2][0][0] = new Animator(this.spritesheet, 0, 222, 50, 37, 7, 0.05, 0, false, false);
@@ -72,9 +82,18 @@ class Rutherford {
         this.animations[3][1][0] = new Animator(this.spritesheet, 420, 444, 50, 37, 5, 0.1, 0, true, false);
         this.animations[3][0][1] = new Animator(this.spritesheet, 100, 1036, 50, 37, 5, 0.1, 0, false, false);
         this.animations[3][1][1] = new Animator(this.spritesheet, 420, 1036, 50, 37, 5, 0.1, 0, true, false);
+
+        //slide
+        this.animations[4][0][0] = new Animator(this.spritesheet, 150, 111, 50, 37, 4, 0.15, 0, false, false);
+        this.animations[4][1][0] = new Animator(this.spritesheet, 420, 111, 50, 37, 4, 0.15, 0, false, false);
+        this.animations[4][0][1] = new Animator(this.spritesheet, 150, 703, 50, 37, 4, 0.15, 0, false, false);
+        this.animations[4][1][1] = new Animator(this.spritesheet, 420, 703, 50, 37, 4, 0.15, 0, false, false);
+
     }
 
     update() {
+        console.log(this.velocity.x);
+        console.log(this.velocity.y);
         //shine effect
         if(this.form == 1) {
             if(Date.now() - this.shinecd > 500) {
@@ -84,33 +103,60 @@ class Rutherford {
         }
 
         // movement
-        var g = this.game;
-        if (g.left && !g.right) {
-            this.velocity.x = -1;
-        } else if (g.right && !g.left) {
-            this.velocity.x = 1;
-        } else {
-            this.velocity.x = 0;
-        }
+        if(this.allow) { 
+            var g = this.game;
+            if (g.left && !g.right) {
+                this.velocity.x = -1;
+            } else if (g.right && !g.left) {
+                this.velocity.x = 1;
+            } else {
+                this.velocity.x = 0;
+            }
 
-        if (g.up && !g.down) {
-            this.velocity.y = -1;
-        } else if (g.down && !g.up) {
-            this.velocity.y = 1;
-        } else {
-            this.velocity.y = 0;
-        }
+            if (g.up && !g.down) {
+                this.velocity.y = -1;
+            } else if (g.down && !g.up) {
+                this.velocity.y = 1;
+            } else {
+                this.velocity.y = 0;
+            }
 
-        if(g.gkey) {
-            this.action = 3;
+            if(g.gkey) {
+                this.action = 3;
+                this.allow = false;
+            } else if(g.qkey) { 
+                if(this.velocity.x != 0 || this.velocity.y != 0) {
+                    if(this.form == 1 && this.hp.currMana >= this.slideasc || this.form == 0 && this.hp.currMana >= this.slidenor) {
+                        this.action = 4;
+                        this.allow = false;
+                    }
+                }
+            }
         }
 
         //Did the user press G? If yes, transform and do the animation.
         if(this.action == 3) {
+            this.speed = 0;
             if(this.animations[this.action][this.face][this.form].isAlmostDone(this.game.clockTick)) {
                 this.transform();
                 this.action = 0;
+                this.allow = true;
+                this.speed = this.speedtemp;
             }
+        } else if (this.action == 4) {
+            if(!this.speedbump) {
+                this.speed = this.speed * 1.5;
+                this.speedbump = true;
+                let manadeduction = this.form == 1? this.slideasc : this.slidenor;
+                this.hp.currMana -= manadeduction;
+            }
+            if(this.animations[this.action][this.face][this.form].isAlmostDone(this.game.clockTick)) {
+                this.animations[this.action][this.face][this.form].elapsedTime = 0;
+                this.action = 0;
+                this.speed = this.speed / 1.5;
+                this.speedbump = false;
+                this.allow = true;
+            }   
         } else {
             if(this.action !== 2 || this.animations[this.action][this.face][this.form].isAlmostDone(this.game.clockTick)) {
                 if (this.velocity.x !== 0 || this.velocity.y !== 0) {
@@ -131,6 +177,11 @@ class Rutherford {
         if (this.hp.current > this.hp.max) {
             this.hp.current = this.hp.max;
         }
+
+        if (this.hp.currMana > this.hp.max) {
+            this.hp.currMana = this.hp.max;
+        }
+
         if (this.hp.current < 0) {
             this.hp.current = 0;
         }
