@@ -57,8 +57,8 @@ class SceneManager {
         this.game.addEntity(aisCharacter);
         /*
         this.game.addEntity(fayereCharacter);
-        this.game.addEntity(new Propportal(this.game, 100, 0, "Cyclops"));
         */
+        this.game.addEntity(new Propportal(this.game, 200, 300, "Cyclops"));
         this.game.addEntity(character);
     };
 

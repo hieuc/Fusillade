@@ -1,5 +1,5 @@
 class HealthMpBar {
-    constructor( game, x, y, w, max, mc) {
+    constructor( game, x, y, w, max, mc) { // x, y where you want to draw, width, max health (a number), false
         Object.assign(this, { game, x, y, w, max, mc});
         
         this.current = max;
