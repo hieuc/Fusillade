@@ -2,9 +2,12 @@ class Obstacle {
     // p: property
     constructor (game, x, y, p) {
         Object.assign(this, {game, x, y, p});
+        // bound width and height
+        var bw = p.width * p.scale * p.bound.w;
+        var bh = p.height * p.scale * p.bound.h;
 
-        this.bound = new BoundingBox(game, x + p.bound.x, y + p.bound.y, 
-                p.width * p.scale * p.bound.w, p.height * p.scale * p.bound.h);
+        this.bound = new BoundingBox(game, x + p.bound.x ,
+            y + p.bound.y , bw, bh);
     }
 
     update() {

@@ -24,6 +24,7 @@ class Projectiles {
         if (!this.proj.scale)
             this.proj.scale = 2;
 
+        // create sprite on start to draw
         this.rotatedSprite = this.rotate(Math.atan(this.velocity.y / this.velocity.x) + (this.velocity.x <= 0 ? Math.PI : 0));
         
         this.timestamp = Date.now();
