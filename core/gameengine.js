@@ -3,6 +3,7 @@
 class GameEngine {
     constructor() {
         this.entities = [];
+        this.background = [];
         this.showOutlines = false;
         this.ctx = null;
         this.click = null;
@@ -13,6 +14,7 @@ class GameEngine {
         this.up = false;
         this.down = false;
         this.gkey = false;
+        this.qkey = false;
     };
 
     init(ctx) {
@@ -59,6 +61,9 @@ class GameEngine {
                 case 'g':
                     this.gkey = true;
                     break;
+                case 'q':
+                    this.qkey = true;
+                    break;
                 case 'c':
                     that.camera.camlock = !that.camera.camlock;
                 default:
@@ -82,6 +87,9 @@ class GameEngine {
                     break;
                 case 'g':
                     this.gkey = false;
+                    break;
+                case 'q':
+                    this.qkey = false;
                     break;
                 default:
                     break;
@@ -117,17 +125,37 @@ class GameEngine {
         this.entities.push(entity);
     };
 
+    // add background
+    addBg(bg) {
+        this.background.push(bg);
+    }
+
     draw() {
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
         
-        for (var i = 0; i < this.entities.length; i++) {
-            this.entities[i].draw(this.ctx);
+        for (var i = 0; i < this.background.length; i++) {
+            if (this.isInWindow(this.background[i]))
+                this.background[i].draw(this.ctx);
         }
-        this.camera.draw(this.ctx);
+
+        for (var i = 0; i < this.entities.length; i++) {
+            if (this.isInWindow(this.entities[i]))
+                this.entities[i].draw(this.ctx);
+        }
+        //this.camera.draw(this.ctx);
     };
+
+    // check if entity is on screen, relative to camera
+    isInWindow(e) {
+        var padding = 100;
+        return e.x - this.camera.x > -padding && e.x - this.camera.x < PARAMS.canvas_width + padding
+        && e.y - this.camera.y > -padding && e.y - this.camera.y < PARAMS.canvas_height + padding;
+    }
 
     update() {
         var entitiesCount = this.entities.length;
+
+        // background needs no update
 
         for (var i = 0; i < entitiesCount; i++) {
             var entity = this.entities[i];
