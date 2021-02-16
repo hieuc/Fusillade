@@ -14,6 +14,7 @@ class GameEngine {
         this.down = false;
         this.gkey = false;
         this.qkey = false;
+        this.ekey = false;
     };
 
     init(ctx) {
@@ -63,6 +64,9 @@ class GameEngine {
                 case 'q':
                     this.qkey = true;
                     break;
+                case 'e':
+                    this.ekey = true;
+                    break;
                 case 'c':
                     that.camera.camlock = !that.camera.camlock;
                 default:
@@ -89,6 +93,9 @@ class GameEngine {
                     break;
                 case 'q':
                     this.qkey = false;
+                    break;
+                case 'e':
+                    this.ekey = false;
                     break;
                 default:
                     break;

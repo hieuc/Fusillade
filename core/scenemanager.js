@@ -10,6 +10,8 @@ class SceneManager {
         this.char;
         this.camlock = true;
 
+
+
         this.loadSandbox(50, 50);
     };
     
@@ -27,7 +29,6 @@ class SceneManager {
                 this.game.addEntity(bg);
             }
         }
-        
 
         var character = new Rutherford(this.game, x, y); 
         this.char = character;

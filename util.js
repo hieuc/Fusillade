@@ -28,5 +28,5 @@ window.requestAnimFrame = (function () {
 // add global parameters here
 
 var PARAMS = {
-    hit_volume: 0.2
+    hit_volume: 0.1
 };
