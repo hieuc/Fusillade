@@ -34,6 +34,8 @@ class Rutherford {
 
         this.luckyticktimer = 0;
 
+        this.playaudio = 0;
+
         this.redbeamcost = 200;
         
         this.bluebeamcost = 130;
@@ -161,11 +163,18 @@ class Rutherford {
         //Did the user press G? If yes, transform and do the animation.
         if(this.action == 3) {
             this.speed = 0;
+            if(this.playaudio == 0) {
+                var audio = new Audio("./sounds/Ascend.mp3");
+                audio.volume = 0.3;
+                audio.play();
+                this.playaudio = 1;
+            }
             if(this.animations[this.action][this.face][this.form].isDone(this.game.clockTick)) {
                 this.transform();
                 this.action = 0;
                 this.allow = true;
                 this.speed = this.speedtemp;
+                this.playaudio = 0;
             }
         } else if (this.action == 4) {
             if(!this.speedbump) {
@@ -183,9 +192,12 @@ class Rutherford {
             }   
         } else if(this.action == 5) {
             if(this.animations[this.action][this.face][this.form].isAlmostDone(this.game.clockTick)) {
-                var audio = new Audio("./sounds/slam.mp3");
-                audio.volume = 0.1;
-                audio.play();
+                if(this.playaudio == 0) {
+                    var audio = new Audio("./sounds/slam.mp3");
+                    audio.volume = 0.1;
+                    audio.play();
+                    this.playaudio = 1;
+                }
             }
             if(this.animations[this.action][this.face][this.form].isDone(this.game.clockTick)) {
                 this.animations[this.action][this.face][this.form].elapsedTime = 0;
@@ -201,6 +213,7 @@ class Rutherford {
                     this.hp.currMana = 0;
                 }
                 this.allow = true;
+                this.playaudio = 0;
             }           
         } else {
             if(this.action !== 2 || this.animations[this.action][this.face][this.form].isAlmostDone(this.game.clockTick)) {
