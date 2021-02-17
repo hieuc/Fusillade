@@ -188,7 +188,7 @@ class Rutherford {
                 audio.play();
             }
             if(this.animations[this.action][this.face][this.form].isDone(this.game.clockTick)) {
-                this.animations[this.action][this.face][this.form].elapsedTime = 0;
+                this.animations[this.action][this.face][this.form].elapsedTime = 0; // take animation back to starting point
                 this.action = 0;
                 if(this.form == 1) {
                     this.createRbeam();
