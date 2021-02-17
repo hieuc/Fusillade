@@ -27,13 +27,13 @@ class Cyclops
 
         this.attackbuffer = Date.now(); //Used to calculate when the last shot was fired.
 
-        this.fireRate = 300; //in milliseconds.
+        this.fireRate = 150; //in milliseconds.
 
         this.enemypos = { enemyX: 0, enemyY: 0};
 
-        this.bound = new BoundingBox(this.game, this.x, this.y, 68, 66);
+        this.bound = new BoundingBox(this.game, this.x, this.y, 64, 64);
 
-        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y,  16 * this.scale, 300, false);
+        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y , 34 * this.scale, 300, false);
 
         this.animations = [];
 
@@ -203,20 +203,10 @@ class Cyclops
 
         if(this.state != 3) {
             var that = this;
-            var rutherform = 0;
             this.game.entities.forEach(function (entity) {
-                if(entity instanceof Rutherford) {
-                    rutherform = entity.form;
-                }
                 if (entity.bound && that.bound.collide(entity.bound)) {
                     if(entity instanceof Projectiles && entity.friendly) {
-                        that.hp.current -= entity.damage;
-                        if(rutherform == 0) {
-                            that.game.addEntity(new star(that.game, entity.x, entity.y-22));
-                        } else {
-                            that.game.addEntity(new burn(that.game, entity.x-50, entity.y-40));
-                        }                 
-                        that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y + that.bound.h / 2, entity.damage));
+                        that.hp.current -= entity.damage;             
                         entity.removeFromWorld = true;
                         var audio = new Audio("./sounds/Hit.mp3");
                         audio.volume = PARAMS.hit_volume;
@@ -224,8 +214,27 @@ class Cyclops
                         if(that.hp.current <= 0) {
                             that.state = 3;
                         }
-                    } else {
-                        //nothing really.
+                    } 
+                    else if(entity instanceof bluebeam) {
+                        that.hp.current -= entity.damage;
+                        that.game.addEntity(new star(that.game, entity.x, entity.y + 180));
+                        that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, entity.damage));
+                        //var audio = new Audio("./sounds/Hit.mp3");
+                        //audio.volume = PARAMS.hit_volume;
+                        //audio.play();
+                        if(that.hp.current <= 0) {
+                            that.state = 3;   
+                        }
+                    } else if(entity instanceof redbeam) {
+                        that.hp.current -= entity.damage;
+                        that.game.addEntity(new burn(that.game, entity.x, entity.y + 180));
+                        that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, entity.damage));
+                        if(that.hp.current <= 0) {
+                            that.state = 3;   
+                        }
+                        //var audio = new Audio("./sounds/Hit.mp3");
+                        //audio.volume = PARAMS.hit_volume;
+                        //audio.play();
                     }
                 }
             })
@@ -235,13 +244,17 @@ class Cyclops
     draw(ctx)
     {
         this.animations[this.state][this.face].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale);
+        this.hp.draw();
+        if (PARAMS.debug) {
+            this.bound.draw();
+        }
     }
 
     updateBound() {
-        this.bound.update(this.x + 10, this.y + 5);
+        this.bound.update(this.x + 34, this.y + 64);
 
-        this.hp.x = this.x + 2 * this.scale;
-        this.hp.y = this.y + 16 * this.scale;
+        this.hp.x = this.x + 16 * this.scale;
+        this.hp.y = this.y + 68 * this.scale;
     }
 
     // get position of Rutherford
@@ -271,8 +284,8 @@ class Cyclops
 
     attack() {
         var velocity = this.calculateVel();
-        var pp = { sx: 80, sy: 96, size: 16};
-        var p = new Projectiles(this.game, false, this.x, this.y, velocity, 3, 2000, 10, pp);
+        var pp = { spritesheet: ASSET_MANAGER.getAsset("./sprites/Cyclops.png"), sx: 285, sy: 608, size: 37};
+        var p = new Projectiles(this.game, false, this.x, this.y + 40, velocity, 3, 2000, 10, pp);
         p.bound.r = 10;
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }
