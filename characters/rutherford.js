@@ -54,7 +54,7 @@ class Rutherford {
     }
 
     loadAnimations() {
-        for (var i = 0; i < 6; i++) { // 4 states as of now.
+        for (var i = 0; i < 7; i++) { // 4 states as of now.
             this.animations.push([]);
             for (var j = 0; j < 2; j++) { // two directions
                 this.animations[i].push([]);
@@ -101,6 +101,12 @@ class Rutherford {
         this.animations[5][1][0] = new Animator(this.spritesheet, 420, 518, 50, 37, 7, 0.15, 0, true, false);
         this.animations[5][0][1] = new Animator(this.spritesheet, 0, 1110, 50, 37, 7, 0.15, 0, false, false);
         this.animations[5][1][1] = new Animator(this.spritesheet, 420, 1110, 50, 37, 7, 0.15, 0, true, false);
+
+        //RunAttack
+        this.animations[6][0][0] = new Animator(this.spritesheet, 0, 518, 50, 37, 5, 0.05, 0, false, false);
+        this.animations[6][1][0] = new Animator(this.spritesheet, 520, 518, 50, 37, 5, 0.05, 0, true, false);
+        this.animations[6][0][1] = new Animator(this.spritesheet, 0, 1110, 50, 37, 5, 0.05, 0, false, false);
+        this.animations[6][1][1] = new Animator(this.spritesheet, 520, 1110, 50, 37, 5, 0.05, 0, true, false);
     }
 
     update() {
@@ -215,6 +221,14 @@ class Rutherford {
                 this.allow = true;
                 this.playaudio = 0;
             }           
+        } else if(this.action == 6) {
+            if(this.animations[this.action][this.face][this.form].isAlmostDone(this.game.clockTick)) {
+                if (this.velocity.x !== 0 || this.velocity.y !== 0) {
+                    this.action = 1;
+                } else {
+                    this.action = 0;
+                }
+            }
         } else {
             if(this.action !== 2 || this.animations[this.action][this.face][this.form].isAlmostDone(this.game.clockTick)) {
                 if (this.velocity.x !== 0 || this.velocity.y !== 0) {
@@ -225,9 +239,9 @@ class Rutherford {
             }
         }
 
-        if (this.velocity.x > 0 && this.action !== 2)
+        if (this.velocity.x > 0 && this.action !== 2 && this.action !== 6)
             this.face = 0;
-        if (this.velocity.x < 0 && this.action !== 2)
+        if (this.velocity.x < 0 && this.action !== 2 && this.action !== 6)
             this.face = 1;
 
         this.hp.current += this.regen;
@@ -348,7 +362,6 @@ class Rutherford {
 
 
     startAttack(click) {
-        this.action = 2;
         if (click.x - this.x  + this.game.camera.x - 25 < 0)
             this.face = 1;
         else 
