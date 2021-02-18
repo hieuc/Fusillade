@@ -5,6 +5,7 @@ class GameEngine {
         this.entities = [];
         this.background = [];
         this.showOutlines = false;
+
         this.ctx = null;
         this.click = null;
         this.mouse = null;
@@ -15,6 +16,8 @@ class GameEngine {
         this.down = false;
         this.gkey = false;
         this.qkey = false;
+
+        this.started = false;
         this.ekey = false;
     };
 
@@ -46,32 +49,42 @@ class GameEngine {
         }
 
         this.ctx.canvas.addEventListener("keydown", e => {
-            switch (e.key) {
-                case 'd':
-                    that.right = true;
-                    break;
-                case 'a':
-                    that.left = true;
-                    break;
-                case 's':
-                    that.down = true;
-                    break;
-                case 'w':
-                    that.up = true;
-                    break;
-                case 'g':
-                    this.gkey = true;
-                    break;
-                case 'q':
-                    this.qkey = true;
-                    break;
-                case 'e':
-                    this.ekey = true;
-                    break;
-                case 'c':
-                    that.camera.camlock = !that.camera.camlock;
-                default:
-                    break;
+            if (!this.started) {
+                this.started = true;
+                this.camera.loadLevel1();
+            } else {
+                switch (e.key) {
+                    case 'd':
+                        that.right = true;
+                        break;
+                    case 'a':
+                        that.left = true;
+                        break;
+                    case 's':
+                        that.down = true;
+                        break;
+                    case 'w':
+                        that.up = true;
+                        break;
+                    case 'g':
+                        this.gkey = true;
+                        break;
+                    case 'q':
+                        this.qkey = true;
+                        break;
+                    case 'e':
+                        this.ekey = true;
+                        break;
+                    case 'c':
+                        that.camera.camlock = !that.camera.camlock;
+                        break;
+                    case 'x': {
+                        that.camera.offsetx = 0;
+                        that.camera.offsety = 0;
+                    }
+                    default:
+                        break;
+                }
             }
         }, false);
 
@@ -111,13 +124,15 @@ class GameEngine {
 
         this.ctx.canvas.addEventListener("click", function (e) {
             that.click = getXandY(e);
-            if(c.allow) { 
-                if(c.velocity.x != 0 || c.velocity.y != 0) {
-                    c.action = 6;
+            if (that.started) {
+                if(that.camera.char.allow) {
+                if(that.camera.char.velocity.x != 0 || that.camera.char.velocity.y != 0) {
+                    that.camera.char.action = 6;
                 } else {
-                    c.action = 2;
+                    that.camera.char.action = 2;
                 }
-                c.startAttack(that.click);
+                that.camera.char.startAttack(that.click);
+            }
             }
         }, false);
 
@@ -156,7 +171,7 @@ class GameEngine {
             if (this.isInWindow(this.entities[i]))
                 this.entities[i].draw(this.ctx);
         }
-        //this.camera.draw(this.ctx);
+        this.camera.draw(this.ctx);
     };
 
     // check if entity is on screen, relative to camera

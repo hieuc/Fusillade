@@ -12,7 +12,7 @@ class Rutherford {
 
         this.face = 0; // 0 = right, 1 = left
 
-        this.speed = 10;
+        this.speed = 6;
 
         this.speedtemp = this.speed; //Used to reset back speed when we block it.
 
@@ -67,16 +67,16 @@ class Rutherford {
         //The 3rd dimension refers to whether you're in Ascended form or not.
         // idle
         
-        this.animations[0][0][0] = new Animator(this.spritesheet, 0, 0, 50, 37, 4, 0.2, 0, false, true);
-        this.animations[0][1][0] = new Animator(this.spritesheet, 570, 0, 50, 37, 4, 0.2, 0, true, true);
-        this.animations[0][0][1] = new Animator(this.spritesheet, 0, 592, 50, 37, 4, 0.2, 0, false, true);
-        this.animations[0][1][1] = new Animator(this.spritesheet, 570, 592, 50, 37, 4, 0.2, 0, true, true);
+        this.animations[0][0][0] = new Animator(this.spritesheet, 0, 0, 50, 37, 4, 0.225, 0, false, true);
+        this.animations[0][1][0] = new Animator(this.spritesheet, 570, 0, 50, 37, 4, 0.225, 0, true, true);
+        this.animations[0][0][1] = new Animator(this.spritesheet, 0, 592, 50, 37, 4, 0.225, 0, false, true);
+        this.animations[0][1][1] = new Animator(this.spritesheet, 570, 592, 50, 37, 4, 0.225, 0, true, true);
         
         // run
-        this.animations[1][0][0] = new Animator(this.spritesheet, 50, 37, 50, 37, 6, 0.1, 0, false, true);
-        this.animations[1][1][0] = new Animator(this.spritesheet, 420, 37, 50, 37, 6, 0.1, 0, true, true);
-        this.animations[1][0][1] = new Animator(this.spritesheet, 50, 629, 50, 37, 6, 0.1, 0, false, true);
-        this.animations[1][1][1] = new Animator(this.spritesheet, 420, 629, 50, 37, 6, 0.1, 0, true, true);
+        this.animations[1][0][0] = new Animator(this.spritesheet, 50, 37, 50, 37, 6, 0.125, 0, false, true);
+        this.animations[1][1][0] = new Animator(this.spritesheet, 420, 37, 50, 37, 6, 0.125, 0, true, true);
+        this.animations[1][0][1] = new Animator(this.spritesheet, 50, 629, 50, 37, 6, 0.125, 0, false, true);
+        this.animations[1][1][1] = new Animator(this.spritesheet, 420, 629, 50, 37, 6, 0.125, 0, true, true);
 
         // attack
         this.animations[2][0][0] = new Animator(this.spritesheet, 0, 222, 50, 37, 7, 0.05, 0, false, false);
@@ -110,7 +110,6 @@ class Rutherford {
     }
 
     update() {
-
         //shine effect
         if(this.form == 1) {
             if(Date.now() - this.shinecd > 500) {

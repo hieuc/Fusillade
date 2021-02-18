@@ -14,9 +14,11 @@ class Barrel {
 
         this.scale = 2;
 
-        this.bound = new BoundingBox(this.game, this.x+44, this.y+48, 50, 50);
+        this.offset = 19 * this.scale;
 
-        this.hp = new HealthMpBar(this.game, this.x + 25.5 * this.scale, this.y + 50 * this.scale, 16 * this.scale, 25);
+        this.bound = new BoundingBox(this.game, this.x+10, this.y+14, 38, 44);
+
+        this.hp = new HealthMpBar(this.game, this.bound.x + 3, this.bound.y + 48, 16 * this.scale, 25);
 
         this.loadAnimations();
     } 
@@ -72,7 +74,8 @@ class Barrel {
     }
 
     draw(ctx) {
-        this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale);
+        this.animations[this.state].drawFrame(this.game.clockTick, ctx, 
+            this.x - this.offset - this.game.camera.x, this.y - this.offset - this.game.camera.y, this.scale);
         this.hp.draw();
         if (PARAMS.debug) {
             this.bound.draw();
@@ -82,19 +85,19 @@ class Barrel {
     spawnItem() {
         switch(this.drop.toLowerCase()) {
             case "fayere":
-                this.game.addEntity(new Fayere(this.game, this.x+46, this.y+46)); //Offset with sprite size.
+                this.game.addEntity(new Fayere(this.game, this.bound.x, this.bound.y)); //Offset with sprite size.
                 break;
             case "red":
-                this.game.entities.splice(this.game.entities.length - 1, 0, new Healthmp(this.game, this.x+50, this.y+55, 0));;
+                this.game.entities.splice(this.game.entities.length - 1, 0, new Healthmp(this.game, this.bound.x+5, this.bound.y, 0));;
                 break;
             case "blue":
-                this.game.addEntity(new Healthmp(this.game, this.x+50, this.y+55, 1));
+                this.game.addEntity(new Healthmp(this.game, this.bound.x+5, this.bound.y, 1));
                 break;
             case "sred":
-                this.game.addEntity(new Healthmp(this.game, this.x+50, this.y+55, 2));
+                this.game.addEntity(new Healthmp(this.game, this.bound.x+5, this.bound.y, 2));
                 break;
             case "sblue":
-                this.game.addEntity(new Healthmp(this.game, this.x+50, this.y+55, 3));
+                this.game.addEntity(new Healthmp(this.game, this.bound.x+5, this.bound.y, 3));
                 break;
             default:
         }
