@@ -111,12 +111,14 @@ class GameEngine {
 
         this.ctx.canvas.addEventListener("click", function (e) {
             that.click = getXandY(e);
-            if(c.velocity.x != 0 || c.velocity.y != 0) {
-                c.action = 6;
-            } else {
-                c.action = 2;
+            if(c.allow) { 
+                if(c.velocity.x != 0 || c.velocity.y != 0) {
+                    c.action = 6;
+                } else {
+                    c.action = 2;
+                }
+                c.startAttack(that.click);
             }
-            c.startAttack(that.click);
         }, false);
 
         this.ctx.canvas.addEventListener("wheel", function (e) {
