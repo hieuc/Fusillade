@@ -135,26 +135,7 @@ class Cyclops
             } 
            else if(Math.abs(this.x - this.enemyX) > 300 || Math.abs(this.y - this.enemyY) > 100) 
            {
-               if(this.x - this.enemyX > 0) 
-               {
-                   this.x += -1 * this.speed;
-                   this.face = 1;
-                   this.state = 1;
-               } 
-               else 
-               {
-                   this.x += 1 * this.speed;
-                   this.face = 0;
-                   this.state = 1;
-               }
-               if(this.y - this.enemyY > 0) 
-               {
-                   this.y += -1 * this.speed;
-               } 
-               else 
-               {
-                   this.y += 1 * this.speed;
-               }
+               this.attack();
             //Once we are in a decent attack range, Do something now. 
             } 
             else 
@@ -251,7 +232,7 @@ class Cyclops
     }
 
     updateBound() {
-        this.bound.update(this.x + 34, this.y + 64);
+        this.bound.update(this.x + 37, this.y + 37);
 
         this.hp.x = this.x + 16 * this.scale;
         this.hp.y = this.y + 68 * this.scale;
@@ -284,7 +265,11 @@ class Cyclops
 
     attack() {
         var velocity = this.calculateVel();
+<<<<<<< HEAD
         var pp = { spritesheet: ASSET_MANAGER.getAsset("./sprites/Cyclops.png"), sx: 285, sy: 608, size: 37};
+=======
+        var pp = { spritesheet: ASSET_MANAGER.getAsset("./sprites/Cyclops.png"), sx: 285, sy: 608, size: 7};
+>>>>>>> a8afba9dbeae064d17aa269300cf43dca48131ac
         var p = new Projectiles(this.game, false, this.x, this.y, velocity, 3, 2000, 10, pp);
         p.bound.r = 10;
         this.game.entities.splice(this.game.entities.length - 1, 0, p);

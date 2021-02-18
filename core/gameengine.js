@@ -125,12 +125,14 @@ class GameEngine {
         this.ctx.canvas.addEventListener("click", function (e) {
             that.click = getXandY(e);
             if (that.started) {
+                if(that.camera.char.allow) {
                 if(that.camera.char.velocity.x != 0 || that.camera.char.velocity.y != 0) {
                     that.camera.char.action = 6;
                 } else {
                     that.camera.char.action = 2;
                 }
                 that.camera.char.startAttack(that.click);
+            }
             }
         }, false);
 
