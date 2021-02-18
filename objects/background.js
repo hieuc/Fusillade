@@ -1,8 +1,6 @@
 class Ground {
-    constructor(game, x, y, scale) {
-        Object.assign(this, { game, x, y, scale});
-
-        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/forest.png");
+    constructor(game, x, y, p) {
+        Object.assign(this, { game, x, y, p});
     };
 
     update() {
@@ -10,6 +8,8 @@ class Ground {
     }
 
     draw(ctx) {
-        ctx.drawImage(this.spritesheet, 96, 0, 96, 96, this.x - this.game.camera.x, this.y - this.game.camera.y, 96 * this.scale, 96 * this.scale);
+        ctx.drawImage(this.p.spritesheet, this.p.sx, this.p.sy, this.p.width, this.p.height, 
+            this.x - this.game.camera.x, this.y - this.game.camera.y, 
+            this.p.width * this.p.scale, this.p.height * this.p.scale);
     }
 }

@@ -35,6 +35,7 @@
     <script type="text/javascript" src="./objects/barrel.js"></script>
     <script type="text/javascript" src="./objects/healthmp.js"></script>
     <script type="text/javascript" src="./objects/obstacle.js"></script>
+    <script type="text/javascript" src="./maps.js"></script>
     <script type="text/javascript" src="./main.js"></script>
     
 
@@ -70,11 +71,16 @@
         </ul>
     </div>
 
-    <label for="debug">Debug</label>
-    <input type="checkbox" id="debug" onclick="check()" checked>
+    <label for="debug">Debug:</label>
+    <input type="checkbox" id="debug" onclick="check()">
+    <label for="music">Music:</label>
+    <input type="range" min="1" max="100" value="50" class="slider" id="music" onchange="changeVolume()">
     <script>
         function check() {
             PARAMS.debug = document.getElementById('debug').checked;
+        }
+        function changeVolume() {
+            gameEngine.camera.audio.volume = document.getElementById('music').value/100;
         }
     </script>
 </body>
