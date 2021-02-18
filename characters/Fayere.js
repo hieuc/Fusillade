@@ -114,6 +114,7 @@ class Fayere {
                 } else {
                     this.y += 1 * this.speed;
                 }
+                this.x += 2;
             //Once we are in a decent attack range, Do something now. 
             } else {
                 this.attackbehavior = Date.now() - this.attackpatterntime;
@@ -147,34 +148,56 @@ class Fayere {
         //Collision Detection. Check if its fired by enemy or hero.
 
         if(this.state != 3) {
-            var that = this;
-            var rutherform = 0;
-            this.game.entities.forEach(function (entity) {
-                if(entity instanceof Rutherford) {
-                    rutherform = entity.form;
-                }
-                if (entity.bound && that.bound.collide(entity.bound)) {
-                    if(entity instanceof Projectiles && entity.friendly) {
-                        that.hp.current -= entity.damage;
-                        if(rutherform == 0) {
-                            that.game.addEntity(new star(that.game, entity.x, entity.y-22));
-                        } else {
-                            that.game.addEntity(new burn(that.game, entity.x-50, entity.y-40));
-                        }                 
-                        that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y + that.bound.h / 2, entity.damage));
-                        entity.removeFromWorld = true;
-                        var audio = new Audio("./sounds/Hit.mp3");
-                        audio.volume = PARAMS.hit_volume;
-                        audio.play();
-                        if(that.hp.current <= 0) {
-                            that.state = 3;
-                        }
+            this.checkCollisions();
+        }
+    }
+
+    checkCollisions() {
+        var that = this;
+        var rutherform = 0;
+        this.game.entities.forEach(function (entity) {
+            if(entity instanceof Rutherford) {
+                rutherform = entity.form;
+            }
+            if (entity.bound && that.bound.collide(entity.bound)) {
+                if(entity instanceof Projectiles && entity.friendly) {
+                    that.hp.current -= entity.damage;
+                    if(rutherform == 0) {
+                        that.game.addEntity(new star(that.game, entity.x, entity.y-22));
                     } else {
-                        //nothing really.
+                        that.game.addEntity(new burn(that.game, entity.x-50, entity.y-40));
+                    }                 
+                    that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y + that.bound.h / 2, entity.damage));
+                    entity.removeFromWorld = true;
+                    var audio = new Audio("./sounds/Hit.mp3");
+                    audio.volume = PARAMS.hit_volume;
+                    audio.play();
+                    if(that.hp.current <= 0) {
+                        that.state = 3;
+                    }
+                } else if(entity instanceof bluebeam) {
+                    that.hp.current -= entity.damage;
+                    that.game.addEntity(new star(that.game, entity.x, entity.y + 180));
+                    that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, entity.damage));
+                    //var audio = new Audio("./sounds/Hit.mp3");
+                    //audio.volume = PARAMS.hit_volume;
+                    //audio.play();
+                    if(that.hp.current <= 0) {
+                        that.state = 3;   
+                    }
+                } else if(entity instanceof redbeam) {
+                    that.hp.current -= entity.damage;
+                    that.game.addEntity(new burn(that.game, entity.x, entity.y + 180));
+                    that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, entity.damage));
+                    //var audio = new Audio("./sounds/Hit.mp3");
+                    //audio.volume = PARAMS.hit_volume;
+                    //audio.play();
+                    if(that.hp.current <= 0) {
+                        that.state = 3;   
                     }
                 }
-            })
-        }
+            }
+        })    
     }
 
     draw(ctx) {

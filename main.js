@@ -20,6 +20,9 @@ ASSET_MANAGER.queueDownload("./sprites/star.png");
 ASSET_MANAGER.queueDownload("./sprites/Thunder.png");
 ASSET_MANAGER.queueDownload("./sprites/Shine.png");
 ASSET_MANAGER.queueDownload("./sprites/Burn.png");
+ASSET_MANAGER.queueDownload("./sprites/ThunEffect.png");
+ASSET_MANAGER.queueDownload("./sprites/BBeam.png");
+ASSET_MANAGER.queueDownload("./sprites/RBeam.png");
 
 
 ASSET_MANAGER.downloadAll(function () {

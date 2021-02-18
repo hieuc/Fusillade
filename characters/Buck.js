@@ -184,14 +184,14 @@ class Buck {
                     var timer = Date.now() - this.patterntimer;
                     if(timer < this.patternduration) {
                         this.decideDir();
-                        if(this.whichattack >= 0 && this.whichattack < 0.45) { 
+                        if(this.whichattack >= 0 && this.whichattack < 0.35) { 
                             var timepassed = Date.now() - this.attackbuffer;
                             if(timepassed > this.fireRate) {
                                 this.state = 2;
                                 this.attack();
                                 this.attackbuffer = Date.now();
                             }
-                        } else if(this.whichattack >= 0.45 && this.whichattack < 0.55) {
+                        } else if(this.whichattack >= 0.35 && this.whichattack < 0.45) {
                             this.state = 6;
                             if(Date.now() - this.healtimer > this.healcd) {
                                 this.heal();
@@ -218,35 +218,57 @@ class Buck {
 
         //Collision detection and damage type detection.
         if(this.state !== 5) {
-            var rutherform = 0;
-            var that = this;
-            this.game.entities.forEach(function (entity) {
-                if(entity instanceof Rutherford) {
-                    rutherform = entity.form;
-                }
-                if (entity.bound && that.bound.collide(entity.bound)) {
-                    if(entity instanceof Projectiles && entity.friendly) {
-                        that.hp.current -= entity.damage;
-                        //SUBJECT TO CHANGE
-                        if(rutherform == 0) {
-                            that.game.addEntity(new star(that.game, entity.x, entity.y - 22));
-                        } else {
-                            that.game.addEntity(new burn(that.game, entity.x-32, entity.y - 32));
-                        }
-                        that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, entity.damage));
-                        entity.removeFromWorld = true;
-                        var audio = new Audio("./sounds/Hit.mp3");
-                        audio.volume = PARAMS.hit_volume;
-                        audio.play();
-                        if(that.hp.current <= 0) {
-                            that.state = 5;
-                        }
+            this.checkCollisions();
+        }
+    }
+
+    checkCollisions() {
+        var rutherform = 0;
+        var that = this;
+        this.game.entities.forEach(function (entity) {
+            if(entity instanceof Rutherford) {
+                rutherform = entity.form;
+            }
+            if (entity.bound && that.bound.collide(entity.bound)) {
+                if(entity instanceof Projectiles && entity.friendly) {
+                    that.hp.current -= entity.damage;
+                    //SUBJECT TO CHANGE
+                    if(rutherform == 0) {
+                        that.game.addEntity(new star(that.game, entity.x, entity.y - 22));
                     } else {
-                        //nothing really.
+                        that.game.addEntity(new burn(that.game, entity.x-32, entity.y - 32));
+                    }
+                    that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, entity.damage));
+                    entity.removeFromWorld = true;
+                    //var audio = new Audio("./sounds/Hit.mp3");
+                    //audio.volume = PARAMS.hit_volume;
+                    //audio.play();
+                    if(that.hp.current <= 0) {
+                        that.state = 5;
+                    }
+                } else if(entity instanceof bluebeam) {
+                    that.hp.current -= entity.damage;
+                    that.game.addEntity(new star(that.game, entity.x, entity.y + 180));
+                    that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, entity.damage));
+                    //var audio = new Audio("./sounds/Hit.mp3");
+                    //audio.volume = PARAMS.hit_volume;
+                    //audio.play();
+                    if(that.hp.current <= 0) {
+                        that.state = 5;   
+                    }
+                } else if(entity instanceof redbeam) {
+                    that.hp.current -= entity.damage;
+                    that.game.addEntity(new burn(that.game, entity.x, entity.y + 180));
+                    that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, entity.damage));
+                    //var audio = new Audio("./sounds/Hit.mp3");
+                    //audio.volume = PARAMS.hit_volume;
+                    //audio.play();
+                    if(that.hp.current <= 0) {
+                        that.state = 5;   
                     }
                 }
-            })
-        }
+            }
+        })
     }
 
     draw(ctx) {
@@ -326,7 +348,7 @@ class Buck {
     }
 
     decideDir() {
-        if(this.x - this.enemyX > 0) {
+        if(this.x - this.enemyX> 0) {
             this.face = 1;
         } else {
             this.face = 0;

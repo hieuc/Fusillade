@@ -30,6 +30,16 @@ class Rutherford {
 
         this.speedbump = false;
 
+        this.luckytick = false; //Combo on Base Rutherford Special.
+
+        this.luckyticktimer = 0;
+
+        this.playaudio = 0;
+
+        this.redbeamcost = 200;
+        
+        this.bluebeamcost = 130;
+
         this.allow = true; // simply for blocking any button inputs when an event is occuring.
 
         this.velocity = { x : 0, y : 0};
@@ -44,7 +54,7 @@ class Rutherford {
     }
 
     loadAnimations() {
-        for (var i = 0; i < 5; i++) { // 4 states as of now.
+        for (var i = 0; i < 7; i++) { // 4 states as of now.
             this.animations.push([]);
             for (var j = 0; j < 2; j++) { // two directions
                 this.animations[i].push([]);
@@ -86,6 +96,17 @@ class Rutherford {
         this.animations[4][0][1] = new Animator(this.spritesheet, 150, 703, 50, 37, 4, 0.15, 0, false, false);
         this.animations[4][1][1] = new Animator(this.spritesheet, 420, 703, 50, 37, 4, 0.15, 0, false, false);
 
+        //Special
+        this.animations[5][0][0] = new Animator(this.spritesheet, 0, 518, 50, 37, 7, 0.15, 0, false, false);
+        this.animations[5][1][0] = new Animator(this.spritesheet, 420, 518, 50, 37, 7, 0.15, 0, true, false);
+        this.animations[5][0][1] = new Animator(this.spritesheet, 0, 1110, 50, 37, 7, 0.15, 0, false, false);
+        this.animations[5][1][1] = new Animator(this.spritesheet, 420, 1110, 50, 37, 7, 0.15, 0, true, false);
+
+        //RunAttack
+        this.animations[6][0][0] = new Animator(this.spritesheet, 0, 518, 50, 37, 5, 0.05, 0, false, false);
+        this.animations[6][1][0] = new Animator(this.spritesheet, 520, 518, 50, 37, 5, 0.05, 0, true, false);
+        this.animations[6][0][1] = new Animator(this.spritesheet, 0, 1110, 50, 37, 5, 0.05, 0, false, false);
+        this.animations[6][1][1] = new Animator(this.spritesheet, 520, 1110, 50, 37, 5, 0.05, 0, true, false);
     }
 
     update() {
@@ -94,6 +115,14 @@ class Rutherford {
             if(Date.now() - this.shinecd > 500) {
                 this.createshine();
                 this.shinecd = Date.now();
+            }
+        }
+        
+        //If we got the lucky tick, create a beam.
+        if(this.luckytick) {
+            if(Date.now() - this.luckyticktimer > 600) {
+                this.createanotherbbeam();
+                this.luckytick = false;
             }
         }
 
@@ -126,32 +155,79 @@ class Rutherford {
                         this.allow = false;
                     }
                 }
+            } else if(g.ekey) {
+                if(this.velocity.x == 0 && this.velocity.y == 0) { 
+                    if(this.form == 1 && this.hp.currMana >= this.redbeamcost || this.form == 0 && this.hp.currMana >= this.bluebeamcost) {
+                        this.action = 5;
+                        this.allow = false;
+                    }
+                }
             }
         }
 
         //Did the user press G? If yes, transform and do the animation.
         if(this.action == 3) {
             this.speed = 0;
-            if(this.animations[this.action][this.face][this.form].isAlmostDone(this.game.clockTick)) {
+            if(this.playaudio == 0) {
+                var audio = new Audio("./sounds/Ascend.mp3");
+                audio.volume = 0.3;
+                audio.play();
+                this.playaudio = 1;
+            }
+            if(this.animations[this.action][this.face][this.form].isDone(this.game.clockTick)) {
                 this.transform();
                 this.action = 0;
                 this.allow = true;
                 this.speed = this.speedtemp;
+                this.playaudio = 0;
             }
         } else if (this.action == 4) {
             if(!this.speedbump) {
-                this.speed = this.speed * 1.5;
+                this.speed = this.speed * 2;
                 this.speedbump = true;
                 let manadeduction = this.form == 1? this.slideasc : this.slidenor;
                 this.hp.currMana -= manadeduction;
             }
-            if(this.animations[this.action][this.face][this.form].isAlmostDone(this.game.clockTick)) {
+            if(this.animations[this.action][this.face][this.form].isDone(this.game.clockTick)) {
                 this.animations[this.action][this.face][this.form].elapsedTime = 0;
                 this.action = 0;
-                this.speed = this.speed / 1.5;
+                this.speed = this.speed / 2;
                 this.speedbump = false;
                 this.allow = true;
             }   
+        } else if(this.action == 5) {
+            if(this.animations[this.action][this.face][this.form].isAlmostDone(this.game.clockTick)) {
+                if(this.playaudio == 0) {
+                    var audio = new Audio("./sounds/slam.mp3");
+                    audio.volume = 0.1;
+                    audio.play();
+                    this.playaudio = 1;
+                }
+            }
+            if(this.animations[this.action][this.face][this.form].isDone(this.game.clockTick)) {
+                this.animations[this.action][this.face][this.form].elapsedTime = 0; // take animation back to starting point
+                this.action = 0;
+                if(this.form == 1) {
+                    this.createRbeam();
+                    this.hp.currMana -= this.redbeamcost;
+                } else {
+                    this.createbbeam();
+                    this.hp.currMana -= this.bluebeamcost;
+                }
+                if(this.hp.currMana < 0) {
+                    this.hp.currMana = 0;
+                }
+                this.allow = true;
+                this.playaudio = 0;
+            }           
+        } else if(this.action == 6) {
+            if(this.animations[this.action][this.face][this.form].isAlmostDone(this.game.clockTick)) {
+                if (this.velocity.x !== 0 || this.velocity.y !== 0) {
+                    this.action = 1;
+                } else {
+                    this.action = 0;
+                }
+            }
         } else {
             if(this.action !== 2 || this.animations[this.action][this.face][this.form].isAlmostDone(this.game.clockTick)) {
                 if (this.velocity.x !== 0 || this.velocity.y !== 0) {
@@ -162,9 +238,9 @@ class Rutherford {
             }
         }
 
-        if (this.velocity.x > 0 && this.action !== 2)
+        if (this.velocity.x > 0 && this.action !== 2 && this.action !== 6)
             this.face = 0;
-        if (this.velocity.x < 0 && this.action !== 2)
+        if (this.velocity.x < 0 && this.action !== 2 && this.action !== 6)
             this.face = 1;
 
         this.hp.current += this.regen;
@@ -227,8 +303,64 @@ class Rutherford {
         this.game.addEntity(new shine(this.game, this.x-45, this.y));
     }
 
+    createRbeam() {
+        for(let i = 1; i < 8; i++) {
+            this.game.addEntity(new redbeam(this.game, this.x+50*i, this.y - 220));
+            this.game.addEntity(new redbeam(this.game, this.x-50-(50*i), this.y - 220));
+        }
+
+        //UpperLower
+        for(let i = 1; i < 6; i++) {
+            this.game.addEntity(new redbeam(this.game, this.x - 10, this.y - 470 + 50*i));
+            this.game.addEntity(new redbeam(this.game, this.x - 10, this.y - 170 + 50*i));
+        }
+
+        //X Shape
+        for(let i = 1; i < 8; i++) {
+            this.game.addEntity(new redbeam(this.game, this.x+25*i, this.y - 220+(25*i)));
+            this.game.addEntity(new redbeam(this.game, this.x-25-(25*i), this.y - 220-(25*i)));
+        }
+
+        for(let i = 1; i < 8; i++) {
+            this.game.addEntity(new redbeam(this.game, this.x + 25*i, this.y - 220 - 25*i));
+            this.game.addEntity(new redbeam(this.game, this.x - 10 -25*i, this.y - 220 + 25*i));
+        }
+    }
+
+    createbbeam() {
+        //Sideways
+        this.luckyticktimer = Date.now();
+        for(let i = 1; i < 8; i++) {
+            this.game.addEntity(new bluebeam(this.game, this.x+25*i, this.y - 220));
+            this.game.addEntity(new bluebeam(this.game, this.x-25-(25*i), this.y - 220));
+        }
+
+        //UpperLower
+        for(let i = 1; i < 4; i++) {
+            this.game.addEntity(new bluebeam(this.game, this.x - 10, this.y - 470 + 50*i));
+            this.game.addEntity(new bluebeam(this.game, this.x - 10, this.y - 170 + 50*i));
+        }
+
+        if(this.game.ekey) {
+            this.luckytick = true;
+            this.game.ekey = false; //If we get the lucky tick, don't trigger the move again.
+        }
+    }
+
+    createanotherbbeam() {
+        for(let i = 1; i < 8; i++) {
+            this.game.addEntity(new bluebeam(this.game, this.x+25*i, this.y - 220+(25*i)));
+            this.game.addEntity(new bluebeam(this.game, this.x-25-(25*i), this.y - 220-(25*i)));
+        }
+
+        for(let i = 1; i < 8; i++) {
+            this.game.addEntity(new bluebeam(this.game, this.x + 25*i, this.y - 220 - 25*i));
+            this.game.addEntity(new bluebeam(this.game, this.x - 10 -25*i, this.y - 220 + 25*i));
+        }
+    }
+
+
     startAttack(click) {
-        this.action = 2;
         if (click.x - this.x  + this.game.camera.x - 25 < 0)
             this.face = 1;
         else 

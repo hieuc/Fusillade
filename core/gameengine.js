@@ -18,6 +18,7 @@ class GameEngine {
         this.qkey = false;
 
         this.started = false;
+        this.ekey = false;
     };
 
     init(ctx) {
@@ -71,6 +72,9 @@ class GameEngine {
                     case 'q':
                         this.qkey = true;
                         break;
+                    case 'e':
+                        this.ekey = true;
+                        break;
                     case 'c':
                         that.camera.camlock = !that.camera.camlock;
                         break;
@@ -104,6 +108,9 @@ class GameEngine {
                 case 'q':
                     this.qkey = false;
                     break;
+                case 'e':
+                    this.ekey = false;
+                    break;
                 default:
                     break;
             }
@@ -117,8 +124,14 @@ class GameEngine {
 
         this.ctx.canvas.addEventListener("click", function (e) {
             that.click = getXandY(e);
-            if (that.started)
+            if (that.started) {
+                if(that.camera.char.velocity.x != 0 || that.camera.char.velocity.y != 0) {
+                    that.camera.char.action = 6;
+                } else {
+                    that.camera.char.action = 2;
+                }
                 that.camera.char.startAttack(that.click);
+            }
         }, false);
 
         this.ctx.canvas.addEventListener("wheel", function (e) {
