@@ -102,9 +102,9 @@ class Cyclops
         else 
         {
             //console.log("here")
-            //console.log("x: " + Math.abs(this.x - this.enemyX) + ", y: " + Math.abs(this.y - this.enemyY))
+            console.log("x: " + Math.abs(this.x - this.enemyX) + ", y: " + Math.abs(this.y - this.enemyY))
             // if Cyclops x-value greater than 200 and y-value greater than 100 away from Rutherford then do the walking animation
-           if(Math.abs(this.x - this.enemyX) > 200 || Math.abs(this.y - this.enemyY) > 100) 
+           if(Math.abs(this.x - this.enemyX) > 600 || Math.abs(this.y - this.enemyY) > 200) 
            {
                this.howlong = Date.now() - this.toofarmovement;
                if(this.howlong < 1500) 
@@ -133,7 +133,7 @@ class Cyclops
                }
                //If we are in trigger range, get closer to the main character
             } 
-           else if(Math.abs(this.x - this.enemyX) > 100 || Math.abs(this.y - this.enemyY) > 80) 
+           else if(Math.abs(this.x - this.enemyX) > 300 || Math.abs(this.y - this.enemyY) > 100) 
            {
                if(this.x - this.enemyX > 0) 
                {
@@ -285,7 +285,7 @@ class Cyclops
     attack() {
         var velocity = this.calculateVel();
         var pp = { spritesheet: ASSET_MANAGER.getAsset("./sprites/Cyclops.png"), sx: 285, sy: 608, size: 37};
-        var p = new Projectiles(this.game, false, this.x, this.y + 40, velocity, 3, 2000, 10, pp);
+        var p = new Projectiles(this.game, false, this.x, this.y, velocity, 3, 2000, 10, pp);
         p.bound.r = 10;
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }
