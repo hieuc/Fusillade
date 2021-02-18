@@ -27,7 +27,7 @@ class Cyclops
 
         this.attackbuffer = Date.now(); //Used to calculate when the last shot was fired.
 
-        this.fireRate = 150; //in milliseconds.
+        this.fireRate = 500; //in milliseconds.
 
         this.enemypos = { enemyX: 0, enemyY: 0};
 
@@ -102,7 +102,7 @@ class Cyclops
         else 
         {
             //console.log("here")
-            console.log("x: " + Math.abs(this.x - this.enemyX) + ", y: " + Math.abs(this.y - this.enemyY))
+            //console.log("x: " + Math.abs(this.x - this.enemyX) + ", y: " + Math.abs(this.y - this.enemyY))
             // if Cyclops x-value greater than 200 and y-value greater than 100 away from Rutherford then do the walking animation
            if(Math.abs(this.x - this.enemyX) > 600 || Math.abs(this.y - this.enemyY) > 200) 
            {
@@ -265,12 +265,8 @@ class Cyclops
 
     attack() {
         var velocity = this.calculateVel();
-<<<<<<< HEAD
-        var pp = { spritesheet: ASSET_MANAGER.getAsset("./sprites/Cyclops.png"), sx: 285, sy: 608, size: 37};
-=======
         var pp = { spritesheet: ASSET_MANAGER.getAsset("./sprites/Cyclops.png"), sx: 285, sy: 608, size: 7};
->>>>>>> a8afba9dbeae064d17aa269300cf43dca48131ac
-        var p = new Projectiles(this.game, false, this.x, this.y, velocity, 3, 2000, 10, pp);
+        var p = new Projectiles(this.game, false, this.x + 55, this.y + 50, velocity, 3, 2000, 10, pp);
         p.bound.r = 10;
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }
