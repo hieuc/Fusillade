@@ -109,7 +109,7 @@ class Fayere {
                     this.state = 1;
                 } else if (this.x - this.enemyX < 75) {
                     console.log("HELLOWORLD")
-                    this.x += 11 * this.speed;
+                    this.x += 1 * this.speed;
                     this.face = 0;
                     this.state = 1;
                 }
@@ -120,31 +120,31 @@ class Fayere {
                 }
             //Once we are in a decent attack range, Do something now. 
              } 
-            //else {
-            //     this.attackbehavior = Date.now() - this.attackpatterntime;
-            //     if(this.attackbehavior < 1500) {
-            //         this.state = 0;
-            //         if(this.x - this.enemyX > 0) {
-            //             this.face = 1;
-            //         } else {
-            //             this.face = 0;
-            //         }
-            //     } else if (this.attackbehavior >= 1500 && this.attackbehavior < 4200) {
-            //         this.state = 2;
-            //         if(this.x - this.enemyX > 0) {
-            //             this.face = 1;
-            //         } else {
-            //             this.face = 0;
-            //         }
-            //         var timepassed = Date.now() - this.attackbuffer;
-            //         if(timepassed > this.fireRate) {
-            //             this.attack();
-            //             this.attackbuffer = Date.now();
-            //         }
-            //     } else {
-            //         this.attackpatterntime = Date.now();
-            //     }
-            // }
+            else {
+                this.attackbehavior = Date.now() - this.attackpatterntime;
+                if(this.attackbehavior < 1500) {
+                    this.state = 0;
+                    if(this.x - this.enemyX > 0) {
+                        this.face = 1;
+                    } else {
+                        this.face = 0;
+                    }
+                } else if (this.attackbehavior >= 1500 && this.attackbehavior < 4200) {
+                    this.state = 2;
+                    if(this.x - this.enemyX > 0) {
+                        this.face = 1;
+                    } else {
+                        this.face = 0;
+                    }
+                    var timepassed = Date.now() - this.attackbuffer;
+                    if(timepassed > this.fireRate) {
+                        this.attack();
+                        this.attackbuffer = Date.now();
+                    }
+                } else {
+                    this.attackpatterntime = Date.now();
+                }
+            }
         }
 
         this.updateBound();
