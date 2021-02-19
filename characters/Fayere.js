@@ -17,6 +17,8 @@ class Fayere {
 
         this.isEnemy = true;
 
+        this.cooldown = false;
+
         this.toofarmovement = Date.now(); //We want to give a behavior pattern when enemy is too far.
 
         this.attackpatterntime = Date.now(); //When are in attack range, do time interval patterns.
@@ -75,13 +77,14 @@ class Fayere {
     }
 
     update() {
+        this.speed = 1.2;
         //As long as we don't trigger the enemy, do a pattern movement.
         if(this.state == 3) {
              if(this.animations[this.state][this.face].isDone()) {
                 this.removeFromWorld = true;
              }
         } else {
-            if(Math.abs(this.x - this.enemyX) > 800 || Math.abs(this.y - this.enemyY) > 600) {
+            if(Math.abs(this.x - this.enemyX) > 800 || Math.abs(this.y - this.enemyY) > 600 || this.cooldown) {
                 this.howlong = Date.now() - this.toofarmovement;
                 if(this.howlong < 1500) {
                     this.face = 1;
@@ -89,6 +92,7 @@ class Fayere {
                     this.state = 1;
                 } else if (this.howlong >= 1500 && this.howlong < 3000) {
                     this.state = 0;
+                    this.cooldown = false;
                 } else if(this.howlong >= 3000 && this.howlong < 4500) {
                     this.face = 0;
                     this.x += 1 * this.speed;
@@ -200,14 +204,20 @@ class Fayere {
                 } else if(entity instanceof Obstacle) {
                     if(that.bound.left < entity.bound.left && that.bound.right >= entity.bound.left) {
                         that.x -= that.speed;
+                        that.speed = 0;
                     } else if(that.bound.right > entity.bound.right && that.bound.left <= entity.bound.right) {
                         that.x += that.speed;
+                        that.speed = 0;
                     }
                     if(that.bound.top  < entity.bound.top && that.bound.bottom >= entity.bound.top) {
                         that.y -= that.speed;
+                        that.speed = 0;
                     } else if(that.bound.bottom > entity.bound.bottom && that.bound.top <= entity.bound.bottom) {
                         that.y += that.speed;
+                        that.speed = 0;
                     }
+
+                    that.cooldown = true;
                 }
             }
         })    
