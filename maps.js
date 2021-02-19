@@ -26,8 +26,8 @@ function lockRoom(game, room, m, p) {
     // locking top side
     for(var i = 0; i <= room.w; i++) {
         // if open space, lock it
-        if (m[room.y][room.x + i] === 1) {
-            var e = new Obstacle(game, (room.x + i)*64, room.y*64, p);
+        if (m[room.y-1][room.x + i] === 1) {
+            var e = new Obstacle(game, (room.x + i)*64, (room.y-1)*64, p);
             game.addEntity(e);
             r.push(e);
         }
@@ -46,12 +46,13 @@ function lockRoom(game, room, m, p) {
     // locking left side
     for(var i = 0; i <= room.h; i++) {
         // if open space, lock it
-        if (m[room.y + i][room.x] === 1) {
-            var e = new Obstacle(game, room.x*64, (room.y + i)*64, p);
+        if (m[room.y + i][room.x-1] === 1) {
+            var e = new Obstacle(game, (room.x-1)*64, (room.y + i)*64, p);
             game.addEntity(e);
             r.push(e);
         }
     }
+
     // locking right side
     for(var i = 0; i <= room.h; i++) {
         // if open space, lock it
@@ -61,6 +62,7 @@ function lockRoom(game, room, m, p) {
             r.push(e);
         }
     }
+    console.log(r.length);
     return r;
 }
 
@@ -221,7 +223,7 @@ function createDungeon(w, h) {
     var boss = new Room(Math.floor(w * 0.1), 0, 30, 30, "boss");
     createPath(rooms[0], boss, true);
     rooms[0].key = "miniboss";
-    rooms[7].key = "miniboss"; // delete this line since it was just for placing Cyclops next to Rutherford for debugging purposes
+    //rooms[7].key = "miniboss"; // delete this line since it was just for placing Cyclops next to Rutherford for debugging purposes
     rooms.push(boss);
 
     fillEnemiesLevel1(rooms);
