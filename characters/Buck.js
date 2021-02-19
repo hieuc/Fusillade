@@ -49,7 +49,7 @@ class Buck {
 
         this.bound = new BoundingBox(this.game, this.x, this.y, 50, 86);
 
-        this.hp = new HealthMpBar(this.game, this.x + 16 * this.scale, this.y + 44 * this.scale, 32 * this.scale, 3000);
+        this.hp = new HealthMpBar(this.game, this.x + 16 * this.scale, this.y + 44 * this.scale, 32 * this.scale, 300);
 
         this.portal = true;
 
@@ -134,6 +134,11 @@ class Buck {
     update() { 
         if(this.state == 5) {
             if(this.animations[this.state][this.face].isDone()) {
+               for(let i = 0; i < this.game.entities.length; i++) {
+                   if(this.game.entities[i] instanceof Buckportal) {
+                       this.game.entities[i].removeFromWorld = true;
+                   }
+               } 
                this.removeFromWorld = true;
             }
        } else {
@@ -318,7 +323,7 @@ class Buck {
         for(var i = 0; i < partitions; i++) {
             var pp = {sx: 96, sy: 112, size: 16};
             var p = new ScaleBoomerProjectiles(this.game, false, this.x+80, this.y+80, {x :Math.cos(this.blitz), y:Math.sin(this.blitz)}, 
-                        this.projspeed, 3000, 10, 0.012, true, pp);
+                        this.projspeed, 5500, 10, 0.012, true, pp);
             this.blitz += Math.PI/partitions;
             this.game.entities.splice(this.game.entities.length - 1, 0, p);        
         }

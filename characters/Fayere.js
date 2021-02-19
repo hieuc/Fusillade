@@ -29,7 +29,7 @@ class Fayere {
 
         this.animations = [];
 
-        this.bound = new BoundingBox(this.game, this.x, this.y, 22, 20);
+        this.bound = new BoundingBox(this.game, this.x, this.y, 24, 20);
 
         this.hp = new HealthMpBar(this.game, this.x + 2 * this.scale, this.y + 16 * this.scale, 16 * this.scale, 100, false);
 
@@ -100,7 +100,9 @@ class Fayere {
                 }
             //If we are in trigger range, get closer to the main character
             } else if(Math.abs(this.x - this.enemyX) > 350 || Math.abs(this.y - this.enemyY) > 300) {
-                if(this.x - this.enemyX > 0) {
+                if(this.x - this.enemyX < 2 && this.x - this.enemyX > -2) {
+                    this.face = 0;
+                } else if(this.x - this.enemyX > 0) {
                     this.x += -1 * this.speed;
                     this.face = 1;
                     this.state = 1;
@@ -114,7 +116,6 @@ class Fayere {
                 } else {
                     this.y += 1 * this.speed;
                 }
-                this.x += 2;
             //Once we are in a decent attack range, Do something now. 
             } else {
                 this.attackbehavior = Date.now() - this.attackpatterntime;
@@ -194,6 +195,17 @@ class Fayere {
                     //audio.play();
                     if(that.hp.current <= 0) {
                         that.state = 3;   
+                    }
+                } else if(entity instanceof Obstacle) {
+                    if(that.bound.left < entity.bound.left && that.bound.right >= entity.bound.left) {
+                        that.x -= that.speed;
+                    } else if(that.bound.right > entity.bound.right && that.bound.left <= entity.bound.right) {
+                        that.x += that.speed;
+                    }
+                    if(that.bound.top  < entity.bound.top && that.bound.bottom >= entity.bound.top) {
+                        that.y -= that.speed;
+                    } else if(that.bound.bottom > entity.bound.bottom && that.bound.top <= entity.bound.bottom) {
+                        that.y += that.speed;
                     }
                 }
             }
