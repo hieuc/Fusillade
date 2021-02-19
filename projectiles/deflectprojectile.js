@@ -6,8 +6,6 @@ class deflectprojectile extends Projectiles {
         super(game, friendly, x, y, velocity, speed, lifetime, damage, proj);
         Object.assign(this, {});
 
-        this.tempspeed = 0;
-
         this.timeshit = 0; 
 
         this.rotatedSprite = this.rotate(Math.atan(this.velocity.y / this.velocity.x) + (this.velocity.x <= 0 ? Math.PI : 0) + Math.PI/5);
@@ -19,17 +17,12 @@ class deflectprojectile extends Projectiles {
         this.game.entities.forEach(function (entity) {
             if(entity.bound && that.bound.collide(entity.bound)) {    
                 if(entity instanceof Obstacle) {
-                    that.tempspeed = that.speed;
-                    that.speed = 0;
+                    that.speed = that.speed * -1;
                     that.timeshit++;
                     that.rotatedSprite = that.rotate(Math.atan(that.velocity.y / that.velocity.x) + (that.velocity.x <= 0 ? Math.PI : 0) + Math.PI/5 - Math.PI*that.timeshit);
                 }
             }
         })
-
-        if(this.speed == 0) {
-            this.speed = -1*this.tempspeed;
-        }
 
         if (Date.now() - this.timestamp > this.lifetime) {
             this.removeFromWorld = true;
