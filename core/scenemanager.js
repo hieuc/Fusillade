@@ -10,6 +10,12 @@ class SceneManager {
         this.char;
         this.camlock = true;
         this.debug = false;
+        this.rooms = null;
+        this.map = null;
+        this.tree = null;
+        this.tempObstacles = null;
+        this.locked = false;
+        this.stage = 1; // stage 1 = start, stage 2 = miniboss, stage 3 = boss
 
         if (this.debug) {
             var t = createDungeon(100, 75);
@@ -35,10 +41,14 @@ class SceneManager {
         var rooms = createDungeon(w, h);
         var m = rooms[0];
         rooms = rooms[1];
+        this.rooms = rooms;
+        this.map = m;
         // property for the trees
         var scale = 2;
         var p = { spritesheet: ASSET_MANAGER.getAsset("./sprites/forest_tiles.png"), sx: 0, sy: 192, width: 64, height: 64, scale: scale/ (64/32), 
                     bound: {x: 0, y: 0, w: 1, h: 1}};
+
+        this.tree = p;
 
         for (var i = 0; i < m.length; i++) {
             for (var j = 0; j < m[0].length; j++) {
@@ -172,24 +182,43 @@ class SceneManager {
     };
 
     update() {
-        if (!this.debug && this.game.started) {
-            this.x = this.char.x - PARAMS.canvas_width/2 + 25;
-            this.y = this.char.y - PARAMS.canvas_height/2 + 25;
+        if (this.game.started) {
+            // update camera
+            if (!this.debug) {
+                this.x = this.char.x - PARAMS.canvas_width/2 + 25;
+                this.y = this.char.y - PARAMS.canvas_height/2 + 25;
 
-            if (this.game.mouse && !this.camlock) {
-                var dx = this.game.mouse.x - PARAMS.canvas_width/2;
-                if (Math.abs(dx) / 100 > 1 && Math.abs(this.offsetx + dx / 100) < PARAMS.canvas_width / 5) {
-                    this.offsetx += dx / 100;
-                }
+                if (this.game.mouse && !this.camlock) {
+                    var dx = this.game.mouse.x - PARAMS.canvas_width/2;
+                    if (Math.abs(dx) / 100 > 1 && Math.abs(this.offsetx + dx / 100) < PARAMS.canvas_width / 5) {
+                        this.offsetx += dx / 100;
+                    }
 
-                var dy = this.game.mouse.y - PARAMS.canvas_height/2;
-                if (Math.abs(dy) / 100 > 1 && Math.abs(this.offsety + dy / 100) < PARAMS.canvas_height / 5) {
-                    this.offsety += dy / 100;
+                    var dy = this.game.mouse.y - PARAMS.canvas_height/2;
+                    if (Math.abs(dy) / 100 > 1 && Math.abs(this.offsety + dy / 100) < PARAMS.canvas_height / 5) {
+                        this.offsety += dy / 100;
+                    }
                 }
+                this.x += this.offsetx;
+                this.y += this.offsety;
             }
-            this.x += this.offsetx;
-            this.y += this.offsety;
-        }
+
+            // check if rutherford is in boss room
+            if (this.isInRoom(this.rooms[8])) {
+                    lockRoom(this.game, this.rooms[8], this.map, this.tree);
+                    this.locked = true;
+                }
+
+            if (this.stage === 1 && this.isInRoom(this.rooms[0])) {
+                this.audio.pause();
+                var vol = this.audio.volume;
+                this.audio = new Audio("./sounds/greenpath-action.mp3");
+                this.audio.loop = true;
+                this.audio.volume = vol;
+                this.audio.play();
+                this.stage = 2;
+            }
+        }  
     };
 
     draw(ctx) {
@@ -208,6 +237,20 @@ class SceneManager {
             ctx.fillStyle = "red";
             ctx.fillText("press any key to start", PARAMS.canvas_width/6, PARAMS.canvas_height/2);
         } 
+    }
+
+    releaseLock() {
+        this.tempObstacles.forEach(e => {
+            e.removeFromWorld = true;
+        });
+        this.locked = false;
+    }
+
+    isInRoom(room) {
+        return (this.char !== undefined && room !== undefined &&
+            this.char.x / 64 > room.x && this.char.x/64 < room.x + room.w &&
+            this.char.y / 64 > room.y && this.char.y/64 < room.y + room.h &&
+            !this.locked);
     }
 };
 
