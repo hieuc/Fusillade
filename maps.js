@@ -167,6 +167,7 @@ function createDungeon(w, h) {
     var boss = new Room(Math.floor(w * 0.1), 0, 30, 30, "boss");
     createPath(rooms[0], boss, true);
     rooms[0].key = "miniboss";
+    rooms[7].key = "miniboss"; // delete this line since it was just for placing Cyclops next to Rutherford for debugging purposes
     rooms.push(boss);
 
     fillEnemiesLevel1(rooms);
