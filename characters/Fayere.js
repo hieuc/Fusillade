@@ -81,7 +81,6 @@ class Fayere {
                 this.removeFromWorld = true;
              }
         } else {
-            console.log("x: " + Math.abs(this.x - this.enemyX) + ", y: " + Math.abs(this.y - this.enemyY))
             if(Math.abs(this.x - this.enemyX) > 800 || Math.abs(this.y - this.enemyY) > 600) {
                 this.howlong = Date.now() - this.toofarmovement;
                 if(this.howlong < 1500) {
@@ -108,7 +107,6 @@ class Fayere {
                     this.face = 1;
                     this.state = 1;
                 } else if (this.x - this.enemyX < 75) {
-                    console.log("HELLOWORLD")
                     this.x += 1 * this.speed;
                     this.face = 0;
                     this.state = 1;
