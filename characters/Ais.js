@@ -13,7 +13,7 @@ class Ais {
 
         this.face = 0; // 0 = right, 1 = left
 
-        this.speed = 1.9;
+        this.speed = 2;
 
         this.isEnemy = true;
 
@@ -98,10 +98,11 @@ class Ais {
                } else {
                    this.toofarmovement = Date.now();
                }
-               this.x =+ 2;
            //If we are in trigger range, get closer to the main character
            } else if(Math.abs(this.x - this.enemyX) > 350 || Math.abs(this.y - this.enemyY) > 100) {
-                if(this.x - this.enemyX > 0) {
+                if(this.x - this.enemyX < 1 && this.x - this.enemyX > -1) {
+                    this.face = 0;
+                } else if(this.x - this.enemyX > 0) {
                     this.x += -1 * this.speed;
                     this.face = 1;
                     this.state = 1;
@@ -115,9 +116,6 @@ class Ais {
                 } else {
                     this.y += 1 * this.speed;
                 }
-
-                let add = this.x - this.enemyX > 0? -1: 1;
-                this.x = Math.floor(this.x) + add;
             //Once we are in a decent attack range, Do something now. 
            } else if(Math.abs(this.y - this.enemyY) > 50) {
                 if(this.y - this.enemyY > 0) {
@@ -172,6 +170,19 @@ class Ais {
                 rutherform = entity.form;
             }
             if (entity.bound && that.bound.collide(entity.bound)) {
+                if(entity instanceof Obstacle) {
+                    if(that.bound.left < entity.bound.left && that.bound.right >= entity.bound.left) {
+                        that.x -= that.speed*1.2;
+                    } else if(that.bound.right > entity.bound.right && that.bound.left <= entity.bound.right) {
+                        that.x += that.speed*1.2;
+                    }
+                    if(that.bound.top < entity.bound.top && that.bound.bottom >= entity.bound.top) {
+                        that.y -= that.speed*1.2;
+                    } else if(that.bound.bottom > entity.bound.bottom && that.bound.top <= entity.bound.bottom) {
+                        that.y += that.speed*1.2;
+                    }
+                }
+
                 if(entity instanceof Projectiles && entity.friendly) {
                     that.hp.current -= entity.damage;
                     if(rutherform == 0) {
@@ -207,7 +218,7 @@ class Ais {
                     if(that.hp.current <= 0) {
                         that.state = 3;   
                     }
-                }
+                } 
             }
         })      
     }

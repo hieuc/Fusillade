@@ -27,7 +27,7 @@ class Cyclops
 
         this.attackbuffer = Date.now(); //Used to calculate when the last shot was fired.
 
-        this.fireRate = 150; //in milliseconds.
+        this.fireRate = 250; //in milliseconds.
 
         this.enemypos = { enemyX: 0, enemyY: 0};
 
@@ -42,7 +42,7 @@ class Cyclops
 
     loadAnimations() 
     {
-        for (var i = 0; i < 5; i++) { // 4 states
+        for (var i = 0; i < 6; i++) { // 4 states
             this.animations.push([]);
             for (var j = 0; j < 2; j++) { // 2 directions
                 this.animations[i].push([]);
@@ -85,6 +85,14 @@ class Cyclops
         // facing left
         this.animations[4][1] = new Animator(this.spritesheet, 0, 1152, 64, 64, 6, 0.1, 0, false, true);
 
+        // tired animation
+        // facing right
+        this.animations[5][0] = new Animator(this.spritesheet, 0, 448, 64, 64, 4, 0.33, 0, false, true);
+
+        // tired animation
+        // facing left
+        this.animations[5][1] = new Animator(this.spritesheet, 0, 1088, 64, 64, 4, 0.05, 0, false, false);
+
     }
 
 
@@ -101,100 +109,94 @@ class Cyclops
         } 
         else 
         {
-            //console.log("here")
-            //console.log("x: " + Math.abs(this.x - this.enemyX) + ", y: " + Math.abs(this.y - this.enemyY))
-            // if Cyclops x-value greater than 200 and y-value greater than 100 away from Rutherford then do the walking animation
-           if(Math.abs(this.x - this.enemyX) > 200 || Math.abs(this.y - this.enemyY) > 100) 
-           {
-               this.howlong = Date.now() - this.toofarmovement;
-               if(this.howlong < 1500) 
-               {
-                   this.face = 1;
-                   this.x += -1 * this.speed;
-                   this.state = 1;
-               } 
-               else if (this.howlong >= 1500 && this.howlong < 3000) 
-               {
-                   this.state = 0;
-               } 
-               else if(this.howlong >= 3000 && this.howlong < 4500) 
-               {
-                   this.face = 0;
-                   this.x += 1 * this.speed;
-                   this.state = 1;
-               } 
-               else if (this.howlong >= 4500 && this.howlong < 6000) 
-               {
-                   this.state = 0;
-               } 
-               else 
-               {
-                   this.toofarmovement = Date.now();
-               }
-               //If we are in trigger range, get closer to the main character
-            } 
-           else if(Math.abs(this.x - this.enemyX) > 100 || Math.abs(this.y - this.enemyY) > 80) 
-           {
-               if(this.x - this.enemyX > 0) 
-               {
-                   this.x += -1 * this.speed;
-                   this.face = 1;
-                   this.state = 1;
-               } 
-               else 
-               {
-                   this.x += 1 * this.speed;
-                   this.face = 0;
-                   this.state = 1;
-               }
-               if(this.y - this.enemyY > 0) 
-               {
-                   this.y += -1 * this.speed;
-               } 
-               else 
-               {
-                   this.y += 1 * this.speed;
-               }
-            //Once we are in a decent attack range, Do something now. 
-            } 
-            else 
+            
+            if(Math.abs(this.x - this.enemyX) > 700 || Math.abs(this.y - this.enemyY) > 500) 
             {
-               this.attackbehavior = Date.now() - this.attackpatterntime;
-               if(this.attackbehavior < 1500) 
-               {
-                   this.state = 0;
-                   if(this.x - this.enemyX > 0) 
-                   {
-                       this.face = 1;
-                   } 
-                   else 
-                   {
-                       this.face = 0;
-                   }
-               } 
-               else if (this.attackbehavior >= 1500 && this.attackbehavior < 4200) 
-               {
-                   this.state = 4;
-                   if(this.x - this.enemyX > 0) 
-                   {
-                       this.face = 1;
-                   } 
-                   else 
-                   {
-                       this.face = 0;
-                   }
-                   var timepassed = Date.now() - this.attackbuffer;
-                   if(timepassed > this.fireRate) 
-                   {
-                       this.attack();
-                       this.attackbuffer = Date.now();
-                   }
-               } 
-               else 
-               {
-                   this.attackpatterntime = Date.now();
-               }
-           }
+                this.howlong = Date.now() - this.toofarmovement;
+                if(this.howlong < 1500) 
+                {
+                    this.face = 1;
+                    this.x += -1 * this.speed;
+                    this.state = 1;
+                } 
+                else if (this.howlong >= 1500 && this.howlong < 3000) 
+                {
+                    this.state = 0;
+                } 
+                else if(this.howlong >= 3000 && this.howlong < 4500) 
+                {
+                    this.face = 0;
+                    this.x += 1 * this.speed;
+                    this.state = 1;
+                } 
+                else if (this.howlong >= 4500 && this.howlong < 6000) 
+                {
+                    this.state = 0;
+                } 
+                else 
+                {
+                    this.toofarmovement = Date.now();
+                }
+                //If we are in trigger range, get closer to the main character
+             } 
+            else if(Math.abs(this.x - this.enemyX) > 200 || Math.abs(this.y - this.enemyY) > 150) 
+            {
+
+                if(this.x - this.enemyX > 100) {
+                    this.x += -1 * this.speed;
+                    this.face = 1;
+                    this.state = 1;
+                } else {
+                    this.x += 1 * this.speed;
+                    this.face = 0;
+                    this.state = 1;
+                }
+                if(this.y - this.enemyY > 50) {
+                    this.y += -1 * this.speed;
+                } else {
+                    this.y += 1 * this.speed;
+                }
+                this.x += 2;
+             //Once we are in a decent attack range, Do something now. 
+             } 
+             else 
+             {
+                this.attackbehavior = Date.now() - this.attackpatterntime;
+                if(this.attackbehavior < 1500) 
+                {
+                    this.state = 0;
+                    if(this.x - this.enemyX > 0) 
+                    {
+                        this.face = 1;
+                    } 
+                    else 
+                    {
+                        this.face = 0;
+                    }
+                } 
+                else if (this.attackbehavior >= 1500 && this.attackbehavior < 4200) 
+                {
+                    this.state = 4;
+                    if(this.x - this.enemyX > 0) 
+                    {
+                        this.face = 1;
+                    } 
+                    else 
+                    {
+                        this.face = 0;
+                    }
+                    var timepassed = Date.now() - this.attackbuffer;
+                    if(timepassed > this.fireRate) 
+                    {
+                        this.attack();
+                        this.attackbuffer = Date.now();
+                    }
+                } 
+                else 
+                {
+                    this.attackpatterntime = Date.now();
+                }
+            }
         }
 
        this.updateBound();
@@ -251,7 +253,7 @@ class Cyclops
     }
 
     updateBound() {
-        this.bound.update(this.x + 34, this.y + 64);
+        this.bound.update(this.x + 37, this.y + 37);
 
         this.hp.x = this.x + 16 * this.scale;
         this.hp.y = this.y + 68 * this.scale;
@@ -267,7 +269,7 @@ class Cyclops
     calculateVel() 
     {
         var dx = this.enemyX - this.x;
-        var dy = this.enemyY - this.y;
+        var dy = this.enemyY - this.y - 27;
         var angle = Math.atan(dy/dx);
 
         var v = { x: Math.cos(angle),
@@ -284,8 +286,8 @@ class Cyclops
 
     attack() {
         var velocity = this.calculateVel();
-        var pp = { spritesheet: ASSET_MANAGER.getAsset("./sprites/Cyclops.png"), sx: 285, sy: 608, size: 37};
-        var p = new Projectiles(this.game, false, this.x, this.y + 40, velocity, 3, 2000, 10, pp);
+        var pp = { spritesheet: ASSET_MANAGER.getAsset("./sprites/Cyclops.png"), sx: 285, sy: 608, size: 7};
+        var p = new Projectiles(this.game, false, this.x + 55, this.y + 50, velocity, 3, 2000, 10, pp);
         p.bound.r = 10;
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }

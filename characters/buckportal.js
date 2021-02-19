@@ -14,7 +14,7 @@ class Buckportal {
 
         this.angle = 0;
 
-        this.unitsaway = 500;
+        this.unitsaway = 800;
 
         this.attack = false;
 

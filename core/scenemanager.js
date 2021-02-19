@@ -150,6 +150,7 @@ class SceneManager {
         var theBarrel3 = new Barrel(this.game, 550, 50, "SRed");
         var theBarrel4 = new Barrel(this.game, 50, 800, "SBlue");
         var aisCharacter = new Ais(this.game, 900, 200);
+        var slimeCharacter = new Slippey(this.game, 500, 500);
         var buckCharacter = new Buck(this.game, 400, 300);
         */
         
