@@ -2,13 +2,13 @@ class deflectprojectile extends Projectiles {
     /*
     * returnpoint is a scale of lifetime at the point projectiles start returning.
     */
-    constructor(game, friendly, x, y, velocity, speed, lifetime, damage, proj) {
+    constructor(game, friendly, x, y, velocity, speed, lifetime, damage, turnangle, proj) {
         super(game, friendly, x, y, velocity, speed, lifetime, damage, proj);
-        Object.assign(this, {});
+        Object.assign(this, {turnangle});
 
         this.timeshit = 0; 
 
-        this.rotatedSprite = this.rotate(Math.atan(this.velocity.y / this.velocity.x) + (this.velocity.x <= 0 ? Math.PI : 0) + Math.PI/5);
+        this.rotatedSprite = this.rotate(Math.atan(this.velocity.y / this.velocity.x) + (this.velocity.x <= 0 ? Math.PI : 0) + this.turnangle);
     }
 
     update() {
@@ -19,7 +19,7 @@ class deflectprojectile extends Projectiles {
                 if(entity instanceof Obstacle) {
                     that.speed = that.speed * -1;
                     that.timeshit++;
-                    that.rotatedSprite = that.rotate(Math.atan(that.velocity.y / that.velocity.x) + (that.velocity.x <= 0 ? Math.PI : 0) + Math.PI/5 - Math.PI*that.timeshit);
+                    that.rotatedSprite = that.rotate(Math.atan(that.velocity.y / that.velocity.x) + (that.velocity.x <= 0 ? Math.PI : 0) + that.turnangle - Math.PI*that.timeshit);
                 }
             }
         })

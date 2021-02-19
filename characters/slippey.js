@@ -114,6 +114,7 @@ class Slippey {
                     this.attack();
                     this.attacking = false;
                     this.attacktimer = Date.now();
+                    this.animations[this.state][this.face][this.transform].elapsedTime = 0;
                 }
             } else if(Math.abs(this.x - this.enemyX) > 300 || Math.abs(this.y - this.enemyY > 300)) {
                 if(Math.abs(this.x - this.enemyX) > 2) {
@@ -173,7 +174,7 @@ class Slippey {
     attack() {
         var velocity = this.calculateVel();
         var pp = { sx: 34, sy: 144, size: 16};
-        var p = new deflectprojectile(this.game, false, this.x+20, this.y+18, velocity, 8, 6000, 25, pp);
+        var p = new deflectprojectile(this.game, false, this.x+20, this.y+18, velocity, 8, 6000, 25, Math.PI/5, pp);
         p.bound.r = 10;
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }
