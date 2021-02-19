@@ -27,7 +27,7 @@ class Cyclops
 
         this.attackbuffer = Date.now(); //Used to calculate when the last shot was fired.
 
-        this.fireRate = 250; //in milliseconds.
+        this.fireRate = 50; //in milliseconds.
 
         this.enemypos = { enemyX: 0, enemyY: 0};
 
@@ -286,7 +286,7 @@ class Cyclops
 
     attack() {
         var velocity = this.calculateVel();
-        var pp = { spritesheet: ASSET_MANAGER.getAsset("./sprites/Cyclops.png"), sx: 285, sy: 608, size: 7};
+        var pp = { spritesheet: ASSET_MANAGER.getAsset("./sprites/Cyclops.png"), sx: 285, sy: 608, size: 15};
         var p = new Projectiles(this.game, false, this.x + 55, this.y + 50, velocity, 3, 2000, 10, pp);
         p.bound.r = 10;
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
