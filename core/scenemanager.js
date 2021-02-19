@@ -163,6 +163,8 @@ class SceneManager {
         this.game.addEntity(new Propportal(this.game, 200, 300, "Cyclops"));
         this.game.addEntity(character);
 
+        this.game.addEntity(new Slippey(this.game, character.x- 40, character.y));
+
         this.audio = new Audio("./sounds/greenpath-ambient.mp3");
         this.audio.volume = 0.5;
         this.audio.loop = true;
