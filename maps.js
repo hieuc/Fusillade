@@ -52,7 +52,7 @@ function lockRoom(game, room, m, p) {
             r.push(e);
         }
     }
-    // locking top side
+    // locking right side
     for(var i = 0; i <= room.h; i++) {
         // if open space, lock it
         if (m[room.y + i][room.x + room.w] === 1) {
