@@ -10,6 +10,11 @@ class SceneManager {
         this.char;
         this.camlock = true;
         this.debug = false;
+        this.rooms = null;
+        this.map = null;
+        this.tree = null;
+        this.tempObstacles = null;
+        this.locked = false;
 
         if (this.debug) {
             var t = createDungeon(100, 75);
@@ -35,10 +40,14 @@ class SceneManager {
         var rooms = createDungeon(w, h);
         var m = rooms[0];
         rooms = rooms[1];
+        this.rooms = rooms;
+        this.map = m;
         // property for the trees
         var scale = 2;
         var p = { spritesheet: ASSET_MANAGER.getAsset("./sprites/forest_tiles.png"), sx: 0, sy: 192, width: 64, height: 64, scale: scale/ (64/32), 
                     bound: {x: 0, y: 0, w: 1, h: 1}};
+
+        this.tree = p;
 
         for (var i = 0; i < m.length; i++) {
             for (var j = 0; j < m[0].length; j++) {
@@ -169,6 +178,8 @@ class SceneManager {
     };
 
     update() {
+
+        // update camera
         if (!this.debug && this.game.started) {
             this.x = this.char.x - PARAMS.canvas_width/2 + 25;
             this.y = this.char.y - PARAMS.canvas_height/2 + 25;
@@ -187,6 +198,15 @@ class SceneManager {
             this.x += this.offsetx;
             this.y += this.offsety;
         }
+
+        // check if rutherford is in boss room
+        if (this.char !== undefined && this.rooms !== undefined &&
+            this.char.x / 64 > this.rooms[8].x && this.char.x/64 < this.rooms[8].x + this.rooms[8].w &&
+            this.char.y / 64 > this.rooms[8].y && this.char.y/64 < this.rooms[8].y + this.rooms[8].h &&
+            !this.locked) {
+                lockRoom(this.game, this.rooms[8], this.map, this.tree);
+                this.locked = true;
+            }
     };
 
     draw(ctx) {
@@ -205,6 +225,12 @@ class SceneManager {
             ctx.fillStyle = "red";
             ctx.fillText("press any key to start", PARAMS.canvas_width/6, PARAMS.canvas_height/2);
         } 
+    }
+
+    releaseLock() {
+        this.tempObstacles.forEach(e => {
+            e.removeFromWorld = true;
+        });
     }
 };
 

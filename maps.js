@@ -11,6 +11,60 @@ function createPerlinMap(w, h) {
 }
 
 /**
+ * lock the room with obstacles
+ * return an array of newly created obstacles
+ * (useful for releasing lock after)
+ * 
+ * @param {*} game 
+ * @param {*} room 
+ * @param {*} m 
+ * @param {*} p property of obstacles
+ */
+function lockRoom(game, room, m, p) {
+    var r = [];
+    // 4 loops, locking 4 sides
+    // locking top side
+    for(var i = 0; i <= room.w; i++) {
+        // if open space, lock it
+        if (m[room.y][room.x + i] === 1) {
+            var e = new Obstacle(game, (room.x + i)*64, room.y*64, p);
+            game.addEntity(e);
+            r.push(e);
+        }
+    }
+
+    // locking bottom side
+    for(var i = 0; i <= room.w; i++) {
+        // if open space, lock it
+        if (m[room.y + room.h][room.x + i] === 1) {
+            var e = new Obstacle(game, (room.x + i)*64, (room.y + room.h)*64, p);
+            game.addEntity(e);
+            r.push(e);
+        }
+    }
+
+    // locking left side
+    for(var i = 0; i <= room.h; i++) {
+        // if open space, lock it
+        if (m[room.y + i][room.x] === 1) {
+            var e = new Obstacle(game, room.x*64, (room.y + i)*64, p);
+            game.addEntity(e);
+            r.push(e);
+        }
+    }
+    // locking top side
+    for(var i = 0; i <= room.h; i++) {
+        // if open space, lock it
+        if (m[room.y + i][room.x + room.w] === 1) {
+            var e = new Obstacle(game, (room.x + room.w)*64, (room.y + i)*64, p);
+            game.addEntity(e);
+            r.push(e);
+        }
+    }
+    return r;
+}
+
+/**
  * Attach rooms object with enemy names + amount
  * 
  * @param {*} rooms 
