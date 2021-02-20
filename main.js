@@ -24,7 +24,7 @@ ASSET_MANAGER.queueDownload("./sprites/ThunEffect.png");
 ASSET_MANAGER.queueDownload("./sprites/BBeam.png");
 ASSET_MANAGER.queueDownload("./sprites/RBeam.png");
 ASSET_MANAGER.queueDownload("./sprites/Slime.png");
-ASSET_MANAGER.queueDownload("./sprites/Slimeford.png");
+ASSET_MANAGER.queueDownload("./sprites/SlimeRuther.png");
 
 
 ASSET_MANAGER.downloadAll(function () {

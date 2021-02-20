@@ -5,6 +5,8 @@ class Slippey {
         Object.assign(this, {game, x, y});
 
         this.state = 0;
+
+        this.start = false;
         
         this.face = 0;
 
@@ -14,11 +16,15 @@ class Slippey {
 
         this.transform = 0;
 
-        this.speed = 5;
+        this.speed = 1;
+
+        this.projectiletimer = 0;
 
         this.attacking = false;
 
         this.firerate = 900;
+
+        this.triggered = false;
 
         this.attacktimer = Date.now();
 
@@ -33,7 +39,7 @@ class Slippey {
     }
 
     loadAnimations() {
-        for (var i = 0; i < 4; i++) { // 4 states
+        for (var i = 0; i < 5; i++) { // 4 states
             this.animations.push([]);
             for (var j = 0; j < 2; j++) { // 2 directions
                 this.animations[i].push([]);
@@ -43,6 +49,7 @@ class Slippey {
             }
         }
 
+        //Slime exploding animation.
         
         // idle animation for state = 0   
         // facing right = 0
@@ -93,51 +100,85 @@ class Slippey {
         //facing left
         this.animations[2][1][1] = new Animator(this.spritesheet, 0, 74, 50, 37, 9, 0.1, 0, true, true);
 
+        //explode for slime rutherford
+        this.animations[4][0][1] = new Animator(this.spritesheet, 0, 148, 37, 37, 11, 0.1, 0, false, false);
+        this.animations[4][1][1] = new Animator(this.spritesheet, 0, 148, 37, 37, 11, 0.1, 0, false, false);
+
     }
 
     update() {
-        if(this.morphcheck) {
-            this.transform = Math.random() < 0.99? 1:0;
-            if(this.transform == 1) {
-                this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Slimeford.png");
-                this.loadAnimations();
+        if(Math.abs(this.x - this.enemyX) < 300 && Math.abs(this.y - this.enemyY) < 200 || (this.triggered)) {
+            this.triggered = true;
+            if(this.morphcheck) {
+                this.transform = Math.random() < 0.51? 1:0;
+                if(this.transform == 1) {
+                    this.state = 4;
+                    this.start = true;
+                    this.speed = 5;
+                    this.spritesheet = ASSET_MANAGER.getAsset("./sprites/SlimeRuther.png");
+                    this.loadAnimations();
+                }
+                this.morphcheck = false;
             }
-            this.morphcheck = false;
-        }
 
-        if(this.transform == 1) {
-            if((Math.abs(this.x - this.enemyX) <= 300 && Math.abs(this.y - this.enemyY <= 300)) || this.attacking) {
-                this.attacking = true;
-                this.state = 2;
-                this.decideDir();
-                if(Date.now() - this.attacktimer > this.firerate) {
-                    this.attack();
-                    this.attacking = false;
-                    this.attacktimer = Date.now();
-                    this.animations[this.state][this.face][this.transform].elapsedTime = 0;
-                }
-            } else if(Math.abs(this.x - this.enemyX) > 300 || Math.abs(this.y - this.enemyY > 300)) {
-                if(Math.abs(this.x - this.enemyX) > 2) {
+            if(this.transform == 1) {
+                if(this.state == 4 && !this.start) {
+                    //if Slippey is dead.
+                } else if(this.state == 4 && this.start){
+                    if(this.animations[this.state][this.face][this.transform].isAlmostDone(this.game.clockTick)) {
+                        this.state = 0;
+                        this.start = false;
+                    }
+                } else if((Math.abs(this.x - this.enemyX) <= 300 && Math.abs(this.y - this.enemyY <= 300)) || this.attacking) {
+                    this.attacking = true;
+                    this.state = 2;
+                    this.decideDir();
+                    if(Date.now() - this.attacktimer > this.firerate) {
+                        this.attack();
+                        this.attacking = false;
+                        this.attacktimer = Date.now();
+                        this.animations[this.state][this.face][this.transform].elapsedTime = 0;
+                    }
+                } else if(Math.abs(this.x - this.enemyX) > 300 || Math.abs(this.y - this.enemyY > 300)) {
+                    if(Math.abs(this.x - this.enemyX) > 2) {
+                        if(this.x < this.enemyX) {
+                            this.x += this.speed;
+                        } else {
+                            this.x -= this.speed;
+                        }
+                    }
+                    if(Math.abs(this.y - this.enemyY) > 2) {
+                        if(this.y < this.enemyY) {
+                            this.y += this.speed;
+                        } else {
+                            this.y -= this.speed;
+                        }
+                    }
+                    this.state = 1;
+                    this.decideDir();
+                } 
+            } else {
+                if(Math.abs(this.x - this.enemyX) > 400 || Math.abs(this.y - this.enemyY) > 200) {
+                    if(Date.now() - this.attacktimer > this.firerate) {
+                        this.slimeattack();
+                        this.attacktimer = Date.now();
+                    }
+                    this.decideDir();
+                } else {
                     if(this.x < this.enemyX) {
-                        this.x += this.speed;
-                    } else {
                         this.x -= this.speed;
-                    }
-                }
-                if(Math.abs(this.y - this.enemyY) > 2) {
-                    if(this.y < this.enemyY) {
-                        this.y += this.speed;
+                        this.face = 0;
                     } else {
-                        this.y -= this.speed;
+                        this.x += this.speed;
+                        this.face = 1;
                     }
                 }
-                this.state = 1;
-                this.decideDir();
-            } 
+            }
         }
     }   
 
     draw(ctx) {
+
         this.animations[this.state][this.face][this.transform].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale);
     }
 
@@ -176,6 +217,13 @@ class Slippey {
         var pp = { sx: 34, sy: 144, size: 16};
         var p = new deflectprojectile(this.game, false, this.x+20, this.y+18, velocity, 8, 6000, 25, Math.PI/5, pp);
         p.bound.r = 10;
+        this.game.entities.splice(this.game.entities.length - 1, 0, p);
+    }
+
+    slimeattack() {
+        var velocity = this.calculateVel();
+        var pp = { sx: 98, sy: 144, size: 16};
+        var p = new dividingprojectile(this.game, false, this.x, this.y, velocity, 5, 2000, 12, pp);
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }
 

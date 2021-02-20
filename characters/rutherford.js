@@ -187,6 +187,9 @@ class Rutherford {
                 this.speedbump = true;
                 let manadeduction = this.form == 1? this.slideasc : this.slidenor;
                 this.hp.currMana -= manadeduction;
+                var audio = new Audio("./sounds/slide.mp3");
+                audio.volume = 0.3;
+                audio.play();
             }
             if(this.animations[this.action][this.face][this.form].isDone(this.game.clockTick)) {
                 this.animations[this.action][this.face][this.form].elapsedTime = 0;
