@@ -5,7 +5,11 @@ class Cyclops
         Object.assign(this, { game, x, y });
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Cyclops.png");
 
-        this.damage = 8;
+        // sprite size
+        this.ss = 64;
+
+        // damage for each shot 
+        this.damage = 20;
         
         this.removeFromWorld = false;
 
@@ -21,19 +25,19 @@ class Cyclops
 
         this.isEnemy = true;
 
-        this.toofarmovement = Date.now(); //We want to give a behavior pattern when enemy is too far.
+        this.toofarmovement = Date.now(); // We want to give a behavior pattern when enemy is too far.
 
-        this.attackpatterntime = Date.now(); //When are in attack range, do time interval patterns.
+        this.attackpatterntime = Date.now(); // When are in attack range, do time interval patterns.
 
-        this.attackbuffer = Date.now(); //Used to calculate when the last shot was fired.
+        this.attackbuffer = Date.now(); // Used to calculate when the last shot was fired.
 
-        this.fireRate = 50; //in milliseconds.
+        this.fireRate = 500; //in milliseconds.
 
         this.enemypos = { enemyX: 0, enemyY: 0};
 
-        this.bound = new BoundingBox(this.game, this.x, this.y, 64, 64);
+        this.bound = new BoundingBox(this.game, this.x, this.y, this.ss / 2, this.ss);
 
-        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y , 34 * this.scale, 300, false);
+        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y , 34 * this.scale, 1000, false);
 
         this.animations = [];
 
@@ -51,53 +55,55 @@ class Cyclops
 
         // idle animation for state = 0
         // facing right = 0
-        this.animations[0][0] = new Animator(this.spritesheet, 0, 0, 64, 64, 15, 0.25, 0, false, true);
+        this.animations[0][0] = new Animator(this.spritesheet, 0, 0, this.ss, this.ss, 15, 0.25, 0, false, true);
 
         // facing left = 1
-        this.animations[0][1] = new Animator(this.spritesheet, 0, 640, 64, 64, 15, 0.25, 0, false, true);
+        this.animations[0][1] = new Animator(this.spritesheet, 0, 640, this.ss, this.ss, 15, 0.25, 0, false, true);
 
         //walking animation for state = 1
         //facing right = 0
-        this.animations[1][0] = new Animator(this.spritesheet, 0, 64, 64, 64, 12, 0.1, 0, false, true);
+        this.animations[1][0] = new Animator(this.spritesheet, 0, 64, this.ss, this.ss, 12, 0.1, 0, false, true);
 
         //facing left = 1
-        this.animations[1][1] = new Animator(this.spritesheet, 0, 704, 64, 64, 12, 0.1, 0, false, true);
+        this.animations[1][1] = new Animator(this.spritesheet, 0, 704, this.ss, this.ss, 12, 0.1, 0, false, true);
 
         //attack animation for state = 2
         //facing right = 0
-        this.animations[2][0] = new Animator(this.spritesheet, 0, 192, 64, 64, 13, 0.1, 0, false, true);
+        this.animations[2][0] = new Animator(this.spritesheet, 0, 192, this.ss, this.ss, 13, 0.1, 0, false, true);
 
         //facing left = 1
-        this.animations[2][1] = new Animator(this.spritesheet, 0, 832, 64, 64, 13, 0.1, 0, false, true);
+        this.animations[2][1] = new Animator(this.spritesheet, 0, 832, this.ss, this.ss, 13, 0.1, 0, false, true);
 
         //die animation for state = 3
         //facing right = 0
-        this.animations[3][0] = new Animator(this.spritesheet, 0, 384, 64, 64, 9, 0.1, 0, false, false);
+        this.animations[3][0] = new Animator(this.spritesheet, 0, 384, this.ss, this.ss, 9, 0.1, 0, false, false);
 
         //facing left = 1
-        this.animations[3][1] = new Animator(this.spritesheet, 0, 1024, 64, 64, 9, 0.1, 0, false, false);
+        this.animations[3][1] = new Animator(this.spritesheet, 0, 1024, this.ss, this.ss, 9, 0.1, 0, false, false);
 
         // laser attack animation
         // facing right
-        this.animations[4][0] = new Animator(this.spritesheet, 0, 512, 64, 64, 6, 0.1, 0, false, true);
+        this.animations[4][0] = new Animator(this.spritesheet, 0, 512, this.ss, this.ss, 6, 0.1, 0, false, true);
 
         // laser attack animation
         // facing left
-        this.animations[4][1] = new Animator(this.spritesheet, 0, 1152, 64, 64, 6, 0.1, 0, false, true);
+        this.animations[4][1] = new Animator(this.spritesheet, 0, 1152, this.ss, this.ss, 6, 0.1, 0, false, true);
 
         // tired animation
         // facing right
-        this.animations[5][0] = new Animator(this.spritesheet, 0, 448, 64, 64, 4, 0.33, 0, false, true);
+        this.animations[5][0] = new Animator(this.spritesheet, 0, 448, this.ss, this.ss, 4, 0.33, 0, false, true);
 
         // tired animation
         // facing left
-        this.animations[5][1] = new Animator(this.spritesheet, 0, 1088, 64, 64, 4, 0.05, 0, false, false);
+        this.animations[5][1] = new Animator(this.spritesheet, 0, 1088, this.ss, this.ss, 4, 0.05, 0, false, false);
 
     }
-
+aa
 
     update()
-    {
+    {   
+        // fire rate increases as hp decreases, to  a minimum of 100ms
+        this.fireRate = (this.hp.current + 300) / 3;
         //As long as we don't trigger the enemy, do a pattern movement.
         //Death Animation for state of 3
         if(this.state == 3) 
@@ -109,7 +115,7 @@ class Cyclops
         } 
         else 
         {
-            
+            /*
             if(Math.abs(this.x - this.enemyX) > 700 || Math.abs(this.y - this.enemyY) > 500) 
             {
                 this.howlong = Date.now() - this.toofarmovement;
@@ -160,7 +166,7 @@ class Cyclops
              //Once we are in a decent attack range, Do something now. 
              } 
              else 
-             {
+             {*/
                 this.attackbehavior = Date.now() - this.attackpatterntime;
                 if(this.attackbehavior < 1500) 
                 {
@@ -196,7 +202,7 @@ class Cyclops
                 {
                     this.attackpatterntime = Date.now();
                 }
-            }
+            //}
         }
 
        this.updateBound();
@@ -253,7 +259,7 @@ class Cyclops
     }
 
     updateBound() {
-        this.bound.update(this.x + 37, this.y + 37);
+        this.bound.update(this.x + this.ss * this.scale / 3 + 7, this.y + this.ss * this.scale / 2);
 
         this.hp.x = this.x + 16 * this.scale;
         this.hp.y = this.y + 68 * this.scale;
@@ -266,29 +272,28 @@ class Cyclops
         this.enemyY = eneY;
     }
 
+    /**
+     * Calculate direction from a starting point to enemy's position
+     */
     calculateVel() 
     {
-        var dx = this.enemyX - this.x;
-        var dy = this.enemyY - this.y - 27;
-        var angle = Math.atan(dy/dx);
+        var enemy = this.game.camera.char;
+        var dx = enemy.bound.x - (this.x + 55);
+        var dy = enemy.bound.y - (this.y + 50);
 
-        var v = { x: Math.cos(angle),
-                 y: Math.sin(angle)};
-        
-        if (dx < 0)
-            v.x *= -1;
-
-        if ((angle > 0 && dy < 0) || (angle < 0 && dy > 0))
-            v.y *= -1;
+        // find unit vector
+        var length = Math.sqrt(dx * dx + dy * dy);
+        var v = { x: dx / length,
+                 y: dy / length};
         
         return v;
     }
 
     attack() {
         var velocity = this.calculateVel();
-        var pp = { spritesheet: ASSET_MANAGER.getAsset("./sprites/Cyclops.png"), sx: 285, sy: 608, size: 15};
-        var p = new Projectiles(this.game, false, this.x + 55, this.y + 50, velocity, 3, 2000, 10, pp);
-        p.bound.r = 10;
+        var pp = { spritesheet: ASSET_MANAGER.getAsset("./sprites/Cyclops.png"), sx: 256, sy: 1236, size: 35, scale : 1};
+        var p = new Projectiles(this.game, false, this.x + 55, this.y + 50, velocity, 25, 2000, this.damage, pp);
+        p.bound.r = p.bound.r / 1.5;
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }
 

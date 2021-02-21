@@ -18,11 +18,14 @@ class Projectiles {
             this.proj.spritesheet = PARAMS.default_p_sheet;
         }
 
-        this.bound = new BoundingCircle(this.game, this.x, this.y, this.proj.size);
         
-
         if (!this.proj.scale)
             this.proj.scale = 2;
+
+        this.bound = new BoundingCircle(this.game, this.x + this.proj.size * this.proj.scale /2, 
+            this.y + this.proj.size * this.proj.scale/2, this.proj.size * this.proj.scale /2);
+        
+
 
         // create sprite on start to draw
         this.rotatedSprite = this.rotate(Math.atan(this.velocity.y / this.velocity.x) + (this.velocity.x <= 0 ? Math.PI : 0));
@@ -46,7 +49,7 @@ class Projectiles {
     }
 
     updateBound() {
-        this.bound.update(this.x + this.proj.size, this.y + this.proj.size);
+        this.bound.update(this.x + this.proj.size * this.proj.scale /2, this.y + this.proj.size * this.proj.scale/2);
     }
 
     draw(ctx) {

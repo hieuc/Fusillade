@@ -7,7 +7,7 @@ class SceneManager {
         this.offsetx = 0;
         this.offsety = 0;
         this.rotation = 0;
-        this.char;
+        this.char = null;
         this.camlock = true;
         this.debug = false;
         this.rooms = null;
@@ -173,7 +173,7 @@ class SceneManager {
         this.game.addEntity(new Propportal(this.game, 200, 300, "Cyclops"));
         this.game.addEntity(character);
 
-        this.game.addEntity(new Slippey(this.game, character.x- 500, character.y));
+        //this.game.addEntity(new Slippey(this.game, character.x- 500, character.y));
 
         this.audio = new Audio("./sounds/greenpath-ambient.mp3");
         this.audio.volume = 0.5;
