@@ -25,7 +25,8 @@ ASSET_MANAGER.queueDownload("./sprites/BBeam.png");
 ASSET_MANAGER.queueDownload("./sprites/RBeam.png");
 ASSET_MANAGER.queueDownload("./sprites/Slime.png");
 ASSET_MANAGER.queueDownload("./sprites/SlimeRuther.png");
-
+ASSET_MANAGER.queueDownload("./sprites/GUI.png");
+ASSET_MANAGER.queueDownload("./sprites/minimap.png");
 
 ASSET_MANAGER.downloadAll(function () {
 	var canvas = document.getElementById('gameWorld');

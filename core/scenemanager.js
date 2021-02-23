@@ -2,6 +2,11 @@ class SceneManager {
     constructor(game) {
         this.game = game;
         this.game.camera = this;
+
+        this.minimap = new Minimap(game, 0, 0);
+        this.minimap.x = Math.round(PARAMS.canvas_width * (1 - 1/20) - this.minimap.size * this.minimap.scale);
+        this.minimap.y = Math.round(PARAMS.canvas_height / 20);
+
         this.x = 0;
         this.y = 0;
         this.offsetx = 0;
@@ -11,7 +16,7 @@ class SceneManager {
         this.camlock = true;
         this.debug = false;
         this.rooms = null;
-        this.map = null;
+        this.map = null; // map of terrain: 0 = obstacles, 1 = open space
         this.tree = null;
         this.tempObstacles = null;
         this.locked = false;
@@ -237,6 +242,10 @@ class SceneManager {
             ctx.fillStyle = "red";
             ctx.fillText("press any key to start", PARAMS.canvas_width/6, PARAMS.canvas_height/2);
         } 
+
+        if(this.game.started) {
+            this.minimap.draw(ctx);
+        }
     }
 
     releaseLock() {
@@ -256,10 +265,14 @@ class SceneManager {
 
 
 
-/*
+
 class Minimap {
-    constructor(game, x, y, w) {
-        Object.assign(this, { game, x, y, w });
+    constructor(game, x, y) {
+        Object.assign(this, { game, x, y});
+
+        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/minimap.png");
+        this.size = 29; // map pixel size, how many things gonna be on the screen
+        this.scale = 7;  // size of each pixel
     };
 
     update() {
@@ -267,10 +280,76 @@ class Minimap {
     };
 
     draw(ctx) {
-        ctx.strokeStyle = "Black";
-        ctx.strokeRect(this.x, this.y, this.w, PARAMS.BLOCKWIDTH);
-        for (var i = 0; i < this.game.entities.length; i++) {
-            this.game.entities[i].drawMinimap(ctx, this.x, this.y);
+        
+        
+        // calculate rutherford current coordinatea
+        var cx = this.game.camera.char.x / 64;
+        var cy = this.game.camera.char.y / 64;
+
+        // use the generated map to draw the terrain first
+        for(var i = Math.round(cy) - (this.size-1)/2; i <= Math.round(cy) + (this.size-1)/2; i++) {
+            for (var j = Math.round(cx) - (this.size-1)/2; j <= Math.round(cx) + (this.size-1)/2; j++) {
+                if (this.game.camera.map[i] !== undefined && this.game.camera.map[i][j] === 1)
+                    ctx.fillStyle = "#00b530";
+                else 
+                    ctx.fillStyle = "darkgreen";
+                ctx.fillRect(this.x + (j - cx + (this.size-1)/2) * this.scale, 
+                    this.y + (i- cy + (this.size-1)/2) * this.scale, this.scale, this.scale);
+            }
         }
-    };
-};*/
+        
+        // draw entities
+        this.game.entities.forEach(e => {
+            if ((e instanceof Ais || e instanceof Fayere || e instanceof Buck || e instanceof Cyclops) &&
+                    this.isInMapRange(cx, cy, e.x, e.y)) {
+                ctx.fillStyle = "red";
+                ctx.fillRect(this.x + (e.x/64 - cx + (this.size-1)/2) * this.scale, 
+                        this.y + (e.y/64 - cy + (this.size-1)/2) * this.scale, this.scale, this.scale);
+            } else if (e instanceof Barrel && this.isInMapRange(cx, cy, e.x, e.y)) {
+                ctx.fillStyle = "yellow";
+                ctx.fillRect(this.x + (e.x/64 - cx + (this.size-1)/2) * this.scale, 
+                        this.y + (e.y/64 - cy + (this.size-1)/2) * this.scale, this.scale, this.scale);
+            }
+
+            /*
+            if (e instanceof Obstacle) {
+                var x = Math.round(e.x/64);
+                var y = Math.round(e.y/64);
+                if (x >= cx - (this.size-1)/2 && x <= cx + (this.size-1)/2 &&
+                    y >= cy - (this.size-1)/2 && y <= cy + (this.size-1)/2) {
+
+                    if (this.game.camera.map[y] !== undefined && this.game.camera.map[y][x] === 1) {
+                        ctx.fillStyle = "green";
+                    } else {
+                        ctx.fillStyle = "darkgreen";
+                    }
+
+                    ctx.fillRect(this.x + (x - cx + (this.size-1)/2) * this.scale, 
+                        this.y + (y - cy + (this.size-1)/2) * this.scale, this.scale, this.scale);
+                }
+            }
+            */
+        });
+
+        // draw rutherford
+        ctx.fillStyle = "darkblue";
+
+        ctx.fillRect(this.x + ((this.size-1)/2) * this.scale, 
+                    this.y + ((this.size-1)/2) * this.scale, this.scale, this.scale);
+
+        // draw map frame
+        ctx.drawImage(this.spritesheet, 0, 0, this.size + 4, this.size + 4, this.x - this.scale * 2, this.y - this.scale * 2, (this.size + 4) * this.scale, (this.size + 4) * this.scale);
+        ctx.strokeStyle = "Black";
+        ctx.lineWidth = 5; // to cover the map bug lmaooooooo
+        ctx.strokeRect(this.x, this.y, this.size * this.scale, this.size * this.scale);
+        ctx.lineWidth = 2; // return the stroke size back
+    }
+
+    // check if entity is within rutherford range to draw in map
+    isInMapRange(cx, cy, ex, ey) {
+        var x = ex/64;
+        var y = ey/64;
+        return x >= cx - (this.size-1)/2 && x <= cx + (this.size-1)/2 &&
+            y >= cy - (this.size-1)/2 && y <= cy + (this.size-1)/2;
+    }
+};
