@@ -3,25 +3,21 @@ class Ais {
         Object.assign(this, { game, x, y });
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Ais.png");
 
-        this.damage = 10;
-
-        this.removeFromWorld = false;
-
-        this.scale = 2;
+        this.scale = 2; //size of Ais
 
         this.state = 0; //0 = idle, 1 = move, 2 = attack, 3 = die
 
         this.face = 0; // 0 = right, 1 = left
+ 
+        this.speed = 2; //Ais movement speed
 
-        this.speed = 2;
-
-        this.isEnemy = true;
+        this.isEnemy = true; //Are we an enemy, used for checks.
         
-        this.cooldown = false;
+        this.cooldown = false; //In environment collision, go on cooldown for normal patterns.
 
-        this.atkleftorright = 0;
+        this.atkleftorright = 0; //Attack left or right depending on player's location.
 
-        this.toofarmovement = Date.now(); //We want to give a behavior pattern when enemy is too far.
+        this.toofarmovement = Date.now(); //If we're not triggered, use this variable to do timed pattern.
 
         this.attackpatterntime = Date.now(); //When are in attack range, do time interval patterns.
 
@@ -29,7 +25,7 @@ class Ais {
 
         this.fireRate = 300; //in milliseconds.
 
-        this.enemypos = { enemyX: this.game.camera.char.x, enemyY: this.game.camera.char.y};
+        this.enemypos = { enemyX: this.game.camera.char.x, enemyY: this.game.camera.char.y}; //Rutherford's position.
 
         this.bound = new BoundingBox(this.game, this.x, this.y, 22, 20);
 
@@ -77,7 +73,9 @@ class Ais {
     }
 
     update() {
+        //Reset speed always in case we hit an obstacle.
         this.speed = 2;
+        //Get newest position of Rutherford.
         this.enemyX = this.game.camera.char.x;
         this.enemyY = this.game.camera.char.y;
         //As long as we don't trigger the enemy, do a pattern movement.
@@ -86,6 +84,7 @@ class Ais {
                this.removeFromWorld = true;
             }
        } else {
+           //If we are too far away, move left, stand still, move right, stand still, repeat.
            if(Math.abs(this.x - this.enemyX) > 800 || Math.abs(this.y - this.enemyY) > 600 || this.cooldown) {
                this.howlong = Date.now() - this.toofarmovement;
                if(this.howlong < 1500) {
@@ -122,7 +121,7 @@ class Ais {
                 } else {
                     this.y += 1 * this.speed;
                 }
-            //Once we are in a decent attack range, Do something now. 
+            //If we are too far away in Y-axis, close the distance as our move depends on Y-Position.
            } else if(Math.abs(this.y - this.enemyY) > 50) {
                 if(this.y - this.enemyY > 0) {
                     this.y += -1 * this.speed;
@@ -134,6 +133,7 @@ class Ais {
                     this.state = 1;
                 }
            } else {
+            //If we're in range, first stand still to allow player to react, then attack.
                this.attackbehavior = Date.now() - this.attackpatterntime;
                if(this.attackbehavior < 1500) {
                    this.state = 0;
@@ -162,12 +162,13 @@ class Ais {
 
        this.updateBound();
 
-
+       //If we are dead, then dont check for collisions.
         if(this.state != 3) {    
             this.checkCollisions();
         }
     }
 
+    //Check for projectile, environmental or other collisions.
     checkCollisions() {
         var that = this;
         var rutherform = 0;
@@ -256,10 +257,8 @@ class Ais {
         
         var p = new Projectiles(this.game, false, this.x, this.y, {x: Math.cos(this.atkleftorright), y:Math.sin(this.atkleftorright)}, 3, 2000, 10, pp);
         this.atkleftorright += Math.PI/4;
-        //console.log(this.atkleftorright);
         var p2 = new Projectiles(this.game, false, this.x, this.y, {x: Math.cos(this.atkleftorright), y:Math.sin(this.atkleftorright)}, 3, 2000, 10, pp);
         this.atkleftorright -= Math.PI/2;
-        //console.log(this.atkleftorright);
         var p3 = new Projectiles(this.game, false, this.x, this.y, {x: Math.cos(this.atkleftorright), y:Math.sin(this.atkleftorright)}, 3, 2000, 10, pp);
 
         p.bound.r = 10;

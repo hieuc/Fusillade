@@ -3,11 +3,11 @@ class Buck {
         Object.assign(this, { game, x, y });
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Buck.png");
 
-        this.projspeed = 5;
+        this.projspeed = 5; //Buck's projectiles speed.
         
         this.removeFromWorld = false;
 
-        this.scale = 2.1;
+        this.scale = 2.1; //Buck's size.
 
         this.state = 0; //0 = idle, 1 = move, 2 = attack SLASH, 3 = Summon, LATER(4 = Fury Attack, 5 = die)
 
@@ -17,11 +17,11 @@ class Buck {
 
         this.triggered = false; //Are you aggro-d/triggered?
 
-        this.summoned = false;
+        this.summoned = false; //Has buck used his summon move? If not keep counting timer.
 
-        this.isEnemy = true;
+        this.isEnemy = true; //Are we an enemy
 
-        this.summontime = Date.now();
+        this.summontime = Date.now(); //Used for keeping track of how long ago we used Summon.
         
         this.attackbuffer = Date.now(); //Used to calculate when the last shot was fired.
 
@@ -31,7 +31,7 @@ class Buck {
 
         this.createone = Date.now(); //create one enemy
 
-        this.createonecd = 18000;
+        this.createonecd = 18000; //Create an Ais enemy cooldown.
 
         this.whichattack = Math.random(); //Deciding attack among 3 possibilites.
 
@@ -39,23 +39,19 @@ class Buck {
 
         this.patternduration = 6000; // 6 seconds.
 
-        this.walkaroundtimer = Date.now(); 
+        this.healcd = 1200; //After how many milliseconds we get a "tick" of heal on Buck.
 
-        this.healcd = 1200;
-
-        this.healtimer = Date.now();
-
-        this.moreleftoright = 0; //Should we walk more to left or right?
+        this.healtimer = Date.now(); //Used for calculating if we should heal "tick"
 
         this.bound = new BoundingBox(this.game, this.x, this.y, 50, 86);
 
         this.hp = new HealthMpBar(this.game, this.x + 16 * this.scale, this.y + 44 * this.scale, 32 * this.scale, 1000);
 
-        this.portal = true;
+        this.portal = true; //Should we create a Buckportal for Buck's special. False if it's already created.
 
-        this.myportal;
+        this.myportal; //Later becomes BuckPortal when created.
 
-        this.blitz = 0;
+        this.blitz = 0; //Buck's semi-circular attack angle calculator.
 
         this.enemypos = { enemyX: this.game.camera.x, enemyY: this.game.camera.y};
 
@@ -239,7 +235,7 @@ class Buck {
             if (entity.bound && that.bound.collide(entity.bound)) {
                 if(entity instanceof Projectiles && entity.friendly) {
                     that.hp.current -= entity.damage;
-                    //SUBJECT TO CHANGE
+                    //Did we get hit by Rutherford or Asc Rutherford?
                     if(rutherform == 0) {
                         that.game.addEntity(new Star(that.game, entity.x, entity.y - 22));
                     } else {
@@ -250,9 +246,6 @@ class Buck {
                     //var audio = new Audio("./sounds/Hit.mp3");
                     //audio.volume = PARAMS.hit_volume;
                     //audio.play();
-                    if(that.hp.current <= 0) {
-                        that.state = 5;
-                    }
                 } else if(entity instanceof Bluebeam) {
                     that.hp.current -= entity.damage;
                     that.game.addEntity(new Star(that.game, entity.x, entity.y + 180));
@@ -260,9 +253,6 @@ class Buck {
                     //var audio = new Audio("./sounds/Hit.mp3");
                     //audio.volume = PARAMS.hit_volume;
                     //audio.play();
-                    if(that.hp.current <= 0) {
-                        that.state = 5;   
-                    }
                 } else if(entity instanceof Redbeam) {
                     that.hp.current -= entity.damage;
                     that.game.addEntity(new Burn(that.game, entity.x, entity.y + 180));
@@ -270,9 +260,9 @@ class Buck {
                     //var audio = new Audio("./sounds/Hit.mp3");
                     //audio.volume = PARAMS.hit_volume;
                     //audio.play();
-                    if(that.hp.current <= 0) {
-                        that.state = 5;   
-                    }
+                }
+                if(that.hp.current <= 0) {
+                    that.state = 5;
                 }
             }
         })
@@ -295,7 +285,10 @@ class Buck {
     }
 
     calculateVel() {
-        var dx = this.enemyX - this.x;
+        //Buck's sprite is BIG. We wanna make sure we fire correctly aestheically but also have correct
+        //angle calculation in case we switch our projectile's location.
+        let offset = this.face == 0? 100 : 0;
+        var dx = this.enemyX - this.x - offset;
         var dy = this.enemyY - this.y;
         var angle = Math.atan(dy/dx);
 
@@ -327,11 +320,14 @@ class Buck {
         this.blitz += 50; //Keep changing starting angle
     }
 
+    /**
+     * Normal attack of buck where he attacks exactly where you are standing.
+     */
     attack() {
         var velocity = this.calculateVel();
         var offset = this.face == 0? 100: 0;
         var pp = {sx: 96, sy: 112, size: 16};
-        var p = new ScaleBoomerProjectiles(this.game, false, this.x + offset, this.y, velocity, this.projspeed, 2500, 10, 0.005, false, pp);
+        var p = new ScaleBoomerProjectiles(this.game, false, this.x+offset, this.y, velocity, this.projspeed, 2500, 10, 0.005, false, pp);
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }
 

@@ -22,7 +22,7 @@ class Rutherford {
 
         this.shinecd = Date.now(); //Shining particle effect cooldown when in Ascended form.
 
-        this.hero = true;
+        this.hero = true; //Used for checks.
 
         this.slideasc = 15; // Mana cost of Ascended slide.
 
@@ -30,11 +30,11 @@ class Rutherford {
 
         this.speedbump = false;
 
-        this.luckytick = false; //Combo on Base Rutherford Special.
+        this.luckytick = false; //Used to check if we got the timing right on Base rutherford's special.
 
         this.luckyticktimer = 0;
 
-        this.playaudio = 0;
+        this.playaudio = 0; //used in playing audios only once.
 
         this.redbeamcost = 200;
         
@@ -127,6 +127,9 @@ class Rutherford {
         }
 
         // movement
+        /**
+         * Are we performing an action where we should block user's interruption i.e. special, slide?.
+         */
         if(this.allow) { 
             var g = this.game;
             if (g.left && !g.right) {
@@ -145,18 +148,26 @@ class Rutherford {
                 this.velocity.y = 0;
             }
 
+            //If the user wants to go ascended.
             if(g.gkey) {
                 this.action = 3;
+                //block further input
                 this.allow = false;
+            //If the user wants to slide.
             } else if(g.qkey) { 
+                //Are we idle or moving? 
                 if(this.velocity.x != 0 || this.velocity.y != 0) {
+                    //If we're moving AND we have enough mana for that form's cost then block input and set action state.
                     if(this.form == 1 && this.hp.currMana >= this.slideasc || this.form == 0 && this.hp.currMana >= this.slidenor) {
                         this.action = 4;
                         this.allow = false;
                     }
                 }
+            //Does the user want to use special?
             } else if(g.ekey) {
+                //Are we idle?
                 if(this.velocity.x == 0 && this.velocity.y == 0) { 
+                    //If we have enough mana then set action state and block further input.
                     if(this.form == 1 && this.hp.currMana >= this.redbeamcost || this.form == 0 && this.hp.currMana >= this.bluebeamcost) {
                         this.action = 5;
                         this.allow = false;
@@ -174,6 +185,8 @@ class Rutherford {
                 audio.play();
                 this.playaudio = 1;
             }
+
+            //If our animation is done, transform and start allowing input again. Default back to action state 0.
             if(this.animations[this.action][this.face][this.form].isDone(this.game.clockTick)) {
                 this.transform();
                 this.action = 0;
@@ -181,7 +194,9 @@ class Rutherford {
                 this.speed = this.speedtemp;
                 this.playaudio = 0;
             }
+        //If the user has pressed Q with all the prerequisites completed, then slide.
         } else if (this.action == 4) {
+            //Increase our speed, Only ONCE
             if(!this.speedbump) {
                 this.speed = this.speed * 2;
                 this.speedbump = true;
@@ -191,13 +206,15 @@ class Rutherford {
                 audio.volume = 0.3;
                 audio.play();
             }
+            //After performing the slide, default back to normal state and values.
             if(this.animations[this.action][this.face][this.form].isDone(this.game.clockTick)) {
                 this.animations[this.action][this.face][this.form].elapsedTime = 0;
                 this.action = 0;
                 this.speed = this.speed / 2;
                 this.speedbump = false;
                 this.allow = true;
-            }   
+            }
+        //If we wanna use our special.
         } else if(this.action == 5) {
             if(this.animations[this.action][this.face][this.form].isAlmostDone(this.game.clockTick)) {
                 if(this.playaudio == 0) {
