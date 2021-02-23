@@ -223,7 +223,7 @@ function createDungeon(w, h) {
     var boss = new Room(Math.floor(w * 0.1), 0, 30, 30, "boss");
     createPath(rooms[0], boss, true);
     rooms[0].key = "miniboss";
-    //rooms[7].key = "miniboss"; // delete this line since it was just for placing Cyclops next to Rutherford for debugging purposes
+    rooms[7].key = "miniboss"; // delete this line since it was just for placing Cyclops next to Rutherford for debugging purposes
     rooms.push(boss);
 
     fillEnemiesLevel1(rooms);
@@ -565,6 +565,7 @@ class UnionFind {
        return this.find(a) === this.find(b);
     }
 
+    // need to fix this
     allConnected() {
         for (var i = 0; i < this.count - 1; i++) {
             if (this.find(this.elements[i]) !== this.find(this.elements[i+1]))
