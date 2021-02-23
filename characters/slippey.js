@@ -28,7 +28,7 @@ class Slippey {
 
         this.attacktimer = Date.now();
 
-        this.enemypos = { enemyX: 0, enemyY: 0};
+        this.enemypos = { enemyX: this.game.camera.x, enemyY: this.game.camera.y};
 
         this.animations = [];
 
@@ -101,12 +101,14 @@ class Slippey {
         this.animations[2][1][1] = new Animator(this.spritesheet, 0, 74, 50, 37, 9, 0.1, 0, true, true);
 
         //explode for slime rutherford
-        this.animations[4][0][1] = new Animator(this.spritesheet, 0, 148, 37, 37, 11, 0.1, 0, false, false);
-        this.animations[4][1][1] = new Animator(this.spritesheet, 0, 148, 37, 37, 11, 0.1, 0, false, false);
+        this.animations[4][0][1] = new Animator(this.spritesheet, 0, 148, 37.5, 37.5, 11, 0.1, 0, false, false);
+        this.animations[4][1][1] = new Animator(this.spritesheet, 0, 148, 37.5, 37.5, 11, 0.1, 0, false, false);
 
     }
 
     update() {
+        this.enemyX = this.game.camera.char.x;
+        this.enemyY = this.game.camera.char.y;
         if(Math.abs(this.x - this.enemyX) < 300 && Math.abs(this.y - this.enemyY) < 200 || (this.triggered)) {
             this.triggered = true;
             if(this.morphcheck) {
@@ -128,6 +130,8 @@ class Slippey {
                     if(this.animations[this.state][this.face][this.transform].isAlmostDone(this.game.clockTick)) {
                         this.state = 0;
                         this.start = false;
+                        this.x -= 10;
+                        this.y -= 20;
                     }
                 } else if((Math.abs(this.x - this.enemyX) <= 300 && Math.abs(this.y - this.enemyY <= 300)) || this.attacking) {
                     this.attacking = true;
@@ -182,10 +186,6 @@ class Slippey {
         this.animations[this.state][this.face][this.transform].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale);
     }
 
-    getEnemyPos(eneX, eneY) {
-        this.enemyX = eneX; 
-        this.enemyY = eneY;
-    }
     
     decideDir() {
         if(this.x - this.enemyX> 0) {
@@ -215,7 +215,7 @@ class Slippey {
     attack() {
         var velocity = this.calculateVel();
         var pp = { sx: 34, sy: 144, size: 16};
-        var p = new deflectprojectile(this.game, false, this.x+20, this.y+18, velocity, 8, 6000, 25, Math.PI/5, pp);
+        var p = new Deflectprojectile(this.game, false, this.x+20, this.y+18, velocity, 8, 6000, 25, Math.PI/5, pp);
         p.bound.r = 10;
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }
@@ -223,7 +223,7 @@ class Slippey {
     slimeattack() {
         var velocity = this.calculateVel();
         var pp = { sx: 98, sy: 144, size: 16};
-        var p = new dividingprojectile(this.game, false, this.x, this.y, velocity, 5, 2000, 12, pp);
+        var p = new Dividingprojectile(this.game, false, this.x, this.y, velocity, 5, 2000, 12, pp);
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }
 

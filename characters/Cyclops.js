@@ -29,7 +29,7 @@ class Cyclops
 
         this.fireRate = 50; //in milliseconds.
 
-        this.enemypos = { enemyX: 0, enemyY: 0};
+        this.enemypos = { enemyX: this.game.camera.x, enemyY: this.game.camera.y};
 
         this.bound = new BoundingBox(this.game, this.x, this.y, 64, 64);
 
@@ -98,6 +98,8 @@ class Cyclops
 
     update()
     {
+        this.enemyX = this.game.camera.char.x;
+        this.enemyY = this.game.camera.char.y;
         //As long as we don't trigger the enemy, do a pattern movement.
         //Death Animation for state of 3
         if(this.state == 3) 
@@ -217,9 +219,9 @@ class Cyclops
                             that.state = 3;
                         }
                     } 
-                    else if(entity instanceof bluebeam) {
+                    else if(entity instanceof Bluebeam) {
                         that.hp.current -= entity.damage;
-                        that.game.addEntity(new star(that.game, entity.x, entity.y + 180));
+                        that.game.addEntity(new Star(that.game, entity.x, entity.y + 180));
                         that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, entity.damage));
                         //var audio = new Audio("./sounds/Hit.mp3");
                         //audio.volume = PARAMS.hit_volume;
@@ -227,9 +229,9 @@ class Cyclops
                         if(that.hp.current <= 0) {
                             that.state = 3;   
                         }
-                    } else if(entity instanceof redbeam) {
+                    } else if(entity instanceof Redbeam) {
                         that.hp.current -= entity.damage;
-                        that.game.addEntity(new burn(that.game, entity.x, entity.y + 180));
+                        that.game.addEntity(new Burn(that.game, entity.x, entity.y + 180));
                         that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, entity.damage));
                         if(that.hp.current <= 0) {
                             that.state = 3;   
@@ -257,13 +259,6 @@ class Cyclops
 
         this.hp.x = this.x + 16 * this.scale;
         this.hp.y = this.y + 68 * this.scale;
-    }
-
-    // get position of Rutherford
-    getEnemyPos(eneX, eneY) 
-    {
-        this.enemyX = eneX;
-        this.enemyY = eneY;
     }
 
     calculateVel() 

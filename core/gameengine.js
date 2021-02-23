@@ -189,15 +189,6 @@ class GameEngine {
         for (var i = 0; i < entitiesCount; i++) {
             var entity = this.entities[i];
 
-            if(entity.isEnemy == true) {
-                for(var j = 0; j < entitiesCount; j++) {
-                    if(this.entities[j] instanceof Rutherford) {
-                        entity.getEnemyPos(this.entities[j].x, this.entities[j].y);
-                        break;
-                    }
-                }
-            }
-
             if (!entity.removeFromWorld) {
                 entity.update();
             }

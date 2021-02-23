@@ -27,7 +27,7 @@ class Fayere {
 
         this.fireRate = 300; //in milliseconds.
 
-        this.enemypos = { enemyX: 0, enemyY: 0};
+        this.enemypos = { enemyX: this.game.camera.x, enemyY: this.game.camera.y};
 
         this.animations = [];
 
@@ -78,6 +78,8 @@ class Fayere {
 
     update() {
         this.speed = 1.2;
+        this.enemyX = this.game.camera.char.x;
+        this.enemyY = this.game.camera.char.y;
         //As long as we don't trigger the enemy, do a pattern movement.
         if(this.state == 3) {
              if(this.animations[this.state][this.face].isDone()) {
@@ -169,9 +171,9 @@ class Fayere {
                 if(entity instanceof Projectiles && entity.friendly) {
                     that.hp.current -= entity.damage;
                     if(rutherform == 0) {
-                        that.game.addEntity(new star(that.game, entity.x, entity.y-22));
+                        that.game.addEntity(new Star(that.game, entity.x, entity.y-22));
                     } else {
-                        that.game.addEntity(new burn(that.game, entity.x-50, entity.y-40));
+                        that.game.addEntity(new Burn(that.game, entity.x-50, entity.y-40));
                     }                 
                     that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y + that.bound.h / 2, entity.damage));
                     entity.removeFromWorld = true;
@@ -181,9 +183,9 @@ class Fayere {
                     if(that.hp.current <= 0) {
                         that.state = 3;
                     }
-                } else if(entity instanceof bluebeam) {
+                } else if(entity instanceof Bluebeam) {
                     that.hp.current -= entity.damage;
-                    that.game.addEntity(new star(that.game, entity.x, entity.y + 180));
+                    that.game.addEntity(new Star(that.game, entity.x, entity.y + 180));
                     that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, entity.damage));
                     //var audio = new Audio("./sounds/Hit.mp3");
                     //audio.volume = PARAMS.hit_volume;
@@ -191,9 +193,9 @@ class Fayere {
                     if(that.hp.current <= 0) {
                         that.state = 3;   
                     }
-                } else if(entity instanceof redbeam) {
+                } else if(entity instanceof Redbeam) {
                     that.hp.current -= entity.damage;
-                    that.game.addEntity(new burn(that.game, entity.x, entity.y + 180));
+                    that.game.addEntity(new Burn(that.game, entity.x, entity.y + 180));
                     that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, entity.damage));
                     //var audio = new Audio("./sounds/Hit.mp3");
                     //audio.volume = PARAMS.hit_volume;
@@ -236,11 +238,6 @@ class Fayere {
 
         this.hp.x = this.x + 2 * this.scale;
         this.hp.y = this.y + 16 * this.scale;
-    }
-
-    getEnemyPos(eneX, eneY) {
-        this.enemyX = eneX;
-        this.enemyY = eneY;
     }
 
     calculateVel() {

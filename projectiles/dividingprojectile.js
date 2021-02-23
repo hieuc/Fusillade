@@ -1,4 +1,4 @@
-class dividingprojectile extends Projectiles {
+class Dividingprojectile extends Projectiles {
     /*
     * returnpoint is a scale of lifetime at the point projectiles start returning.
     */

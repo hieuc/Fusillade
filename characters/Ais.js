@@ -29,7 +29,7 @@ class Ais {
 
         this.fireRate = 300; //in milliseconds.
 
-        this.enemypos = { enemyX: 0, enemyY: 0};
+        this.enemypos = { enemyX: this.game.camera.char.x, enemyY: this.game.camera.char.y};
 
         this.bound = new BoundingBox(this.game, this.x, this.y, 22, 20);
 
@@ -78,6 +78,8 @@ class Ais {
 
     update() {
         this.speed = 2;
+        this.enemyX = this.game.camera.char.x;
+        this.enemyY = this.game.camera.char.y;
         //As long as we don't trigger the enemy, do a pattern movement.
         if(this.state == 3) {
             if(this.animations[this.state][this.face].isDone()) {
@@ -196,9 +198,9 @@ class Ais {
                 if(entity instanceof Projectiles && entity.friendly) {
                     that.hp.current -= entity.damage;
                     if(rutherform == 0) {
-                        that.game.addEntity(new star(that.game, entity.x, entity.y-22));
+                        that.game.addEntity(new Star(that.game, entity.x, entity.y-22));
                     } else {
-                        that.game.addEntity(new burn(that.game, entity.x-50, entity.y-40));
+                        that.game.addEntity(new Burn(that.game, entity.x-50, entity.y-40));
                     }
                     that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y + that.bound.h / 2, entity.damage));
                     entity.removeFromWorld = true;
@@ -208,7 +210,7 @@ class Ais {
                     if(that.hp.current <= 0) {
                         that.state = 3;
                     }
-                } else if(entity instanceof bluebeam) {
+                } else if(entity instanceof Bluebeam) {
                     that.hp.current -= entity.damage;
                     that.game.addEntity(new star(that.game, entity.x, entity.y + 180));
                     that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, entity.damage));
@@ -218,9 +220,9 @@ class Ais {
                     if(that.hp.current <= 0) {
                         that.state = 3;   
                     }
-                } else if(entity instanceof redbeam) {
+                } else if(entity instanceof Redbeam) {
                     that.hp.current -= entity.damage;
-                    that.game.addEntity(new burn(that.game, entity.x, entity.y + 180));
+                    that.game.addEntity(new Burn(that.game, entity.x, entity.y + 180));
                     that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, entity.damage));
                     //var audio = new Audio("./sounds/Hit.mp3");
                     //audio.volume = PARAMS.hit_volume;
@@ -239,11 +241,6 @@ class Ais {
         if (PARAMS.debug) {
             this.bound.draw();
         }
-    }
-
-    getEnemyPos(eneX, eneY) {
-        this.enemyX = eneX + 2; //Minor issue where you look left/right but fire in opposite direction. This fixes it.
-        this.enemyY = eneY;
     }
 
     updateBound() {

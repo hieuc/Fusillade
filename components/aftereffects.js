@@ -1,4 +1,4 @@
-class star {
+class Star {
     constructor(game, x, y) {
         Object.assign(this, {game, x, y});
 
@@ -27,7 +27,7 @@ class star {
     }
 }
 
-class thunder {
+class Thunder {
     constructor(game, x, y) {
         Object.assign(this, {game, x, y});
 
@@ -56,7 +56,7 @@ class thunder {
     }
 }
 
-class shine {
+class Shine {
     constructor(game, x, y) {
         Object.assign(this, {game, x, y});
 
@@ -85,7 +85,7 @@ class shine {
     }
 }
 
-class burn {
+class Burn {
     constructor(game, x, y) {
         Object.assign(this, {game, x, y});
 
@@ -114,7 +114,7 @@ class burn {
     }
 }
 
-class thuneffect {
+class Thuneffect {
     constructor(game, x, y) {
         Object.assign(this, {game, x, y});
 
@@ -143,7 +143,7 @@ class thuneffect {
     }
 }
 
-class bluebeam {
+class Bluebeam {
     constructor(game, x, y) {
         Object.assign(this, {game, x, y});
 
@@ -180,7 +180,7 @@ class bluebeam {
     }
 }
 
-class redbeam {
+class Redbeam {
     constructor(game, x, y) {
         Object.assign(this, {game, x, y});
 

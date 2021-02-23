@@ -57,7 +57,7 @@ class Buck {
 
         this.blitz = 0;
 
-        this.enemypos = { enemyX: 0, enemyY: 0};
+        this.enemypos = { enemyX: this.game.camera.x, enemyY: this.game.camera.y};
 
         this.animations = [];
 
@@ -132,6 +132,8 @@ class Buck {
      * i.e. Math random class.
      */
     update() { 
+        this.enemyX = this.game.camera.char.x;
+        this.enemyY = this.game.camera.char.y;
         if(this.state == 5) {
             if(this.animations[this.state][this.face].isDone()) {
                for(let i = 0; i < this.game.entities.length; i++) {
@@ -239,9 +241,9 @@ class Buck {
                     that.hp.current -= entity.damage;
                     //SUBJECT TO CHANGE
                     if(rutherform == 0) {
-                        that.game.addEntity(new star(that.game, entity.x, entity.y - 22));
+                        that.game.addEntity(new Star(that.game, entity.x, entity.y - 22));
                     } else {
-                        that.game.addEntity(new burn(that.game, entity.x-32, entity.y - 32));
+                        that.game.addEntity(new Burn(that.game, entity.x-32, entity.y - 32));
                     }
                     that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, entity.damage));
                     entity.removeFromWorld = true;
@@ -251,9 +253,9 @@ class Buck {
                     if(that.hp.current <= 0) {
                         that.state = 5;
                     }
-                } else if(entity instanceof bluebeam) {
+                } else if(entity instanceof Bluebeam) {
                     that.hp.current -= entity.damage;
-                    that.game.addEntity(new star(that.game, entity.x, entity.y + 180));
+                    that.game.addEntity(new Star(that.game, entity.x, entity.y + 180));
                     that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, entity.damage));
                     //var audio = new Audio("./sounds/Hit.mp3");
                     //audio.volume = PARAMS.hit_volume;
@@ -261,9 +263,9 @@ class Buck {
                     if(that.hp.current <= 0) {
                         that.state = 5;   
                     }
-                } else if(entity instanceof redbeam) {
+                } else if(entity instanceof Redbeam) {
                     that.hp.current -= entity.damage;
-                    that.game.addEntity(new burn(that.game, entity.x, entity.y + 180));
+                    that.game.addEntity(new Burn(that.game, entity.x, entity.y + 180));
                     that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, entity.damage));
                     //var audio = new Audio("./sounds/Hit.mp3");
                     //audio.volume = PARAMS.hit_volume;
@@ -283,11 +285,6 @@ class Buck {
         if (PARAMS.debug) {
             this.bound.draw();
         }
-    }
-
-    getEnemyPos(eneX, eneY) {
-        this.enemyX = eneX;
-        this.enemyY = eneY;
     }
 
     updateBound() {

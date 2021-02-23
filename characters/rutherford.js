@@ -294,39 +294,39 @@ class Rutherford {
     transform() {
         var whatform = this.form == 0? 1: 0;
         this.form = whatform;
-        this.game.addEntity(new thunder(this.game, this.x-25, this.y-230));
+        this.game.addEntity(new Thunder(this.game, this.x-25, this.y-230));
         this.createshine();
         this.animations[this.action][this.face][this.form].elapsedTime = 0;
     }
 
     //Creates the shine particle effect around Rutherford.
     createshine() {
-        this.game.addEntity(new shine(this.game, this.x, this.y));
-        this.game.addEntity(new shine(this.game, this.x-40, this.y-60));
-        this.game.addEntity(new shine(this.game, this.x-45, this.y));
+        this.game.addEntity(new Shine(this.game, this.x, this.y));
+        this.game.addEntity(new Shine(this.game, this.x-40, this.y-60));
+        this.game.addEntity(new Shine(this.game, this.x-45, this.y));
     }
 
     createRbeam() {
         for(let i = 1; i < 8; i++) {
-            this.game.addEntity(new redbeam(this.game, this.x+50*i, this.y - 220));
-            this.game.addEntity(new redbeam(this.game, this.x-50-(50*i), this.y - 220));
+            this.game.addEntity(new Redbeam(this.game, this.x+50*i, this.y - 220));
+            this.game.addEntity(new Redbeam(this.game, this.x-50-(50*i), this.y - 220));
         }
 
         //UpperLower
         for(let i = 1; i < 6; i++) {
-            this.game.addEntity(new redbeam(this.game, this.x - 10, this.y - 470 + 50*i));
-            this.game.addEntity(new redbeam(this.game, this.x - 10, this.y - 170 + 50*i));
+            this.game.addEntity(new Redbeam(this.game, this.x - 10, this.y - 470 + 50*i));
+            this.game.addEntity(new Redbeam(this.game, this.x - 10, this.y - 170 + 50*i));
         }
 
         //X Shape
         for(let i = 1; i < 8; i++) {
-            this.game.addEntity(new redbeam(this.game, this.x+25*i, this.y - 220+(25*i)));
-            this.game.addEntity(new redbeam(this.game, this.x-25-(25*i), this.y - 220-(25*i)));
+            this.game.addEntity(new Redbeam(this.game, this.x+25*i, this.y - 220+(25*i)));
+            this.game.addEntity(new Redbeam(this.game, this.x-25-(25*i), this.y - 220-(25*i)));
         }
 
         for(let i = 1; i < 8; i++) {
-            this.game.addEntity(new redbeam(this.game, this.x + 25*i, this.y - 220 - 25*i));
-            this.game.addEntity(new redbeam(this.game, this.x - 10 -25*i, this.y - 220 + 25*i));
+            this.game.addEntity(new Redbeam(this.game, this.x + 25*i, this.y - 220 - 25*i));
+            this.game.addEntity(new Redbeam(this.game, this.x - 10 -25*i, this.y - 220 + 25*i));
         }
     }
 
@@ -334,14 +334,14 @@ class Rutherford {
         //Sideways
         this.luckyticktimer = Date.now();
         for(let i = 1; i < 8; i++) {
-            this.game.addEntity(new bluebeam(this.game, this.x+25*i, this.y - 220));
-            this.game.addEntity(new bluebeam(this.game, this.x-25-(25*i), this.y - 220));
+            this.game.addEntity(new Bluebeam(this.game, this.x+25*i, this.y - 220));
+            this.game.addEntity(new Bluebeam(this.game, this.x-25-(25*i), this.y - 220));
         }
 
         //UpperLower
         for(let i = 1; i < 4; i++) {
-            this.game.addEntity(new bluebeam(this.game, this.x - 10, this.y - 470 + 50*i));
-            this.game.addEntity(new bluebeam(this.game, this.x - 10, this.y - 170 + 50*i));
+            this.game.addEntity(new Bluebeam(this.game, this.x - 10, this.y - 470 + 50*i));
+            this.game.addEntity(new Bluebeam(this.game, this.x - 10, this.y - 170 + 50*i));
         }
 
         if(this.game.ekey) {
@@ -352,13 +352,13 @@ class Rutherford {
 
     createanotherbbeam() {
         for(let i = 1; i < 8; i++) {
-            this.game.addEntity(new bluebeam(this.game, this.x+25*i, this.y - 220+(25*i)));
-            this.game.addEntity(new bluebeam(this.game, this.x-25-(25*i), this.y - 220-(25*i)));
+            this.game.addEntity(new Bluebeam(this.game, this.x+25*i, this.y - 220+(25*i)));
+            this.game.addEntity(new Bluebeam(this.game, this.x-25-(25*i), this.y - 220-(25*i)));
         }
 
         for(let i = 1; i < 8; i++) {
-            this.game.addEntity(new bluebeam(this.game, this.x + 25*i, this.y - 220 - 25*i));
-            this.game.addEntity(new bluebeam(this.game, this.x - 10 -25*i, this.y - 220 + 25*i));
+            this.game.addEntity(new Bluebeam(this.game, this.x + 25*i, this.y - 220 - 25*i));
+            this.game.addEntity(new Bluebeam(this.game, this.x - 10 -25*i, this.y - 220 + 25*i));
         }
     }
 
