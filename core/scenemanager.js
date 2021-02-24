@@ -301,7 +301,7 @@ class Minimap {
         
         // draw entities
         this.game.entities.forEach(e => {
-            if ((e instanceof Ais || e instanceof Fayere || e instanceof Buck || e instanceof Cyclops) &&
+            if ((e instanceof Enemy) &&
                     this.isInMapRange(cx, cy, e.x, e.y)) {
                 ctx.fillStyle = "red";
                 ctx.fillRect(this.x + (e.x/64 - cx + (this.size-1)/2) * this.scale, 

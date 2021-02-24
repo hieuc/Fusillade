@@ -1,6 +1,6 @@
-class Ais {
+class Ais extends Enemy{
     constructor(game, x, y) {
-        Object.assign(this, { game, x, y });
+        super(game, x, y );
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Ais.png");
 
         this.scale = 2; //size of Ais
@@ -10,8 +10,6 @@ class Ais {
         this.face = 0; // 0 = right, 1 = left
  
         this.speed = 2; //Ais movement speed
-
-        this.isEnemy = true; //Are we an enemy, used for checks.
         
         this.cooldown = false; //In environment collision, go on cooldown for normal patterns.
 
@@ -234,14 +232,6 @@ class Ais {
                 } 
             }
         })      
-    }
-
-    draw(ctx) {
-        this.animations[this.state][this.face].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale);
-        this.hp.draw();
-        if (PARAMS.debug) {
-            this.bound.draw();
-        }
     }
 
     updateBound() {

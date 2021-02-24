@@ -1,6 +1,7 @@
-class Fayere {
+class Fayere extends Enemy {
     constructor(game, x, y) {
-        Object.assign(this, { game, x, y });
+        super(game, x, y );
+        
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Fayere.png");
 
         this.damage = 8;
@@ -14,8 +15,6 @@ class Fayere {
         this.face = 0; // 0 = right, 1 = left
 
         this.speed = 1.2;
-
-        this.isEnemy = true;
 
         this.cooldown = false;
 
@@ -225,36 +224,11 @@ class Fayere {
         })    
     }
 
-    draw(ctx) {
-        this.animations[this.state][this.face].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale);
-        this.hp.draw();
-        if (PARAMS.debug) {
-            this.bound.draw();
-        }
-    }
-
     updateBound() {
         this.bound.update(this.x + 10, this.y + 5);
 
         this.hp.x = this.x + 2 * this.scale;
         this.hp.y = this.y + 16 * this.scale;
-    }
-
-    calculateVel() {
-        var dx = this.enemyX - this.x;
-        var dy = this.enemyY - this.y;
-        var angle = Math.atan(dy/dx);
-
-        var v = { x: Math.cos(angle),
-                 y: Math.sin(angle)};
-        
-        if (dx < 0)
-            v.x *= -1;
-
-        if ((angle > 0 && dy < 0) || (angle < 0 && dy > 0))
-            v.y *= -1;
-        
-        return v;
     }
 
     attack() {

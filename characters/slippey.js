@@ -1,8 +1,8 @@
-class Slippey {
+class Slippey extends Enemy {
     constructor(game, x, y) {
-        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Slime.png");
+        super(game, x, y);
 
-        Object.assign(this, {game, x, y});
+        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Slime.png");
 
         this.state = 0; 
 
@@ -11,8 +11,6 @@ class Slippey {
         this.face = 0;
 
         this.scale = 2;
-
-        this.isEnemy = true;
 
         this.transform = 0;
 

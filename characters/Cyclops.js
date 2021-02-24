@@ -1,8 +1,8 @@
-class Cyclops
+class Cyclops extends Enemy
 {
     constructor(game, x, y) 
     {
-        Object.assign(this, { game, x, y });
+        super(game, x, y);
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Cyclops.png");
 
         // sprite size
@@ -98,7 +98,7 @@ class Cyclops
         this.animations[5][1] = new Animator(this.spritesheet, 0, 1088, this.ss, this.ss, 4, 0.05, 0, false, false);
 
     }
-aa
+
 
     update()
     {
@@ -251,34 +251,11 @@ aa
         }
     }
 
-    draw(ctx)
-    {
-        this.animations[this.state][this.face].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale);
-        this.hp.draw();
-        if (PARAMS.debug) {
-            this.bound.draw();
-        }
-    }
-
     updateBound() {
         this.bound.update(this.x + this.ss * this.scale / 3 + 7, this.y + this.ss * this.scale / 2);
 
         this.hp.x = this.x + 16 * this.scale;
         this.hp.y = this.y + 68 * this.scale;
-    }
-
-    calculateVel() 
-    {
-        var enemy = this.game.camera.char;
-        var dx = enemy.bound.x - (this.x + 55);
-        var dy = enemy.bound.y - (this.y + 50);
-
-        // find unit vector
-        var length = Math.sqrt(dx * dx + dy * dy);
-        var v = { x: dx / length,
-                 y: dy / length};
-        
-        return v;
     }
 
     attack() {

@@ -1,6 +1,7 @@
-class Buckportal {
+class Buckportal extends Enemy {
     constructor(game, x, y, health, totalhealth) {
-        Object.assign(this, { game, x, y, health, totalhealth});
+        super(game, x, y);
+        Object.assign(this, { health, totalhealth});
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Portal.png");
 
