@@ -28,7 +28,9 @@ class Slippey {
 
         this.attacking = false; //Are we attacking at the moment
 
-        this.firerate = 1000; //Attack speed
+        this.firerate = 500; //Attack speed
+
+        this.firerateslime = 1000; //Attack speed in slime form.
 
         this.attacktimer = Date.now(); //Used to keep track of how long ago we last fired.
 
@@ -126,10 +128,6 @@ class Slippey {
         this.speed = this.transform*4 + 1
         this.enemyX = this.game.camera.char.x;
         this.enemyY = this.game.camera.char.y;
-        if(Math.abs(this.x - this.enemyX) > 600 && Math.abs(this.y - this.enemyY) > 300) {
-            this.state = 0;
-        }
-
         //If we have collided to environemnt, go back and opposite to the direction you collided.
         if(this.cooldown) {
             if(Date.now() - this.cooldowntimer < this.cooldownduration) {
@@ -146,7 +144,8 @@ class Slippey {
                 this.cooldown = false;
             }
         //Otherwise, if we're triggered or within range.
-        } else if(Math.abs(this.x - this.enemyX) < 600 && Math.abs(this.y - this.enemyY) < 300) {
+        } else if(Math.abs(this.x - this.enemyX) < 600 && Math.abs(this.y - this.enemyY) < 300 || (this.triggered)) {
+            this.triggered = true;
             //Check once in your existence if you should morph or stay as slime.
             if(this.morphcheck) {
                 this.transform = Math.random() < 0.51? 1:0;
@@ -169,7 +168,7 @@ class Slippey {
                     }
                 } else if(this.state == 4 && this.start){
                     if(this.animations[this.state][this.face][this.transform].isAlmostDone(this.game.clockTick)) {
-                        this.state = 0;
+                        this.state = 1;
                         this.start = false;
                         this.x -= 10;
                         this.y -= 20;
@@ -210,7 +209,7 @@ class Slippey {
                     }
                 }
                 if(Math.abs(this.x - this.enemyX) > 400 || Math.abs(this.y - this.enemyY) > 200) {
-                    if(Date.now() - this.attacktimer > this.firerate) {
+                    if(Date.now() - this.attacktimer > this.firerateslime) {
                         this.slimeattack();
                         this.state = 2;
                         this.attacktimer = Date.now();
@@ -225,7 +224,7 @@ class Slippey {
                         this.x += this.speed;
                         this.face = 1;
                     }
-                    if(Date.now() - this.attacktimer > this.firerate+400) {
+                    if(Date.now() - this.attacktimer > this.firerateslime+400) {
                         this.slimeattack();
                         this.attacktimer = Date.now();
                     }
