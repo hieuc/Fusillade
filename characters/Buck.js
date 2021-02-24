@@ -45,7 +45,7 @@ class Buck {
 
         this.bound = new BoundingBox(this.game, this.x, this.y, 50, 86);
 
-        this.hp = new HealthMpBar(this.game, this.x + 16 * this.scale, this.y + 44 * this.scale, 32 * this.scale, 1000);
+        this.hp = new HealthMpBar(this.game, this.x + 16 * this.scale, this.y + 44 * this.scale, 32 * this.scale, 1600);
 
         this.portal = true; //Should we create a Buckportal for Buck's special. False if it's already created.
 
