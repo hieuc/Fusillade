@@ -200,7 +200,7 @@ class Ais extends Enemy{
                     }
                 } else if(entity instanceof Bluebeam) {
                     that.hp.current -= entity.damage;
-                    that.game.addEntity(new star(that.game, entity.x, entity.y + 180));
+                    that.game.addEntity(new Star(that.game, entity.x, entity.y + 180));
                     that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, entity.damage));
                     //var audio = new Audio("./sounds/Hit.mp3");
                     //audio.volume = PARAMS.hit_volume;

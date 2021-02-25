@@ -1,7 +1,7 @@
 class Buckportal extends Enemy {
-    constructor(game, x, y, health, totalhealth) {
+    constructor(game, x, y, health, totalhealth, form, angle, startX, startY) {
         super(game, x, y);
-        Object.assign(this, { health, totalhealth});
+        Object.assign(this, { health, totalhealth, form, angle, startX, startY});
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Portal.png");
 
@@ -11,9 +11,9 @@ class Buckportal extends Enemy {
 
         this.bound = new BoundingBox(this.game, this.x+45, this.y+50, 40, 60);
 
-        this.centerpos = {x: this.x+350, y:this.y+100}; //We want to center around the map considering where we are called and where we want to move to.
+        this.centerpos = {x: this.x+this.startX, y:this.y+this.startY}; //We want to center around the map considering where we are called and where we want to move to.
 
-        this.angle = 0;
+        //this.angle = 0;
 
         this.unitsaway = 800;
 
@@ -115,8 +115,8 @@ class Buckportal extends Enemy {
 
     fire() {
         var velocity = this.calculateVel();
-        var pp = {sx: 96, sy: 112, size: 16};
-        var p = new Projectiles(this.game, false, this.x+50, this.y+40, velocity, 3, 2500, 10, pp);
+        var pp = this.form == 1? {sx: 96, sy:160, size: 16}:{sx: 96, sy: 112, size: 16};
+        var p = new Projectiles(this.game, false, this.x+50, this.y+40, velocity, 4.5, 2500, 10, pp);
         this.attacks--;
         var audio = new Audio("./sounds/warpO.mp3");
         console.log(this.attacks);
