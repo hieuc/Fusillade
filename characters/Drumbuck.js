@@ -1,8 +1,8 @@
-class Buck extends Enemy {
+class Drumbuck extends Enemy {
     constructor(game, x, y) {
         super(game, x, y);
         
-        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Buck.png");
+        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Drumbuck.png");
 
         this.projspeed = 5; //Buck's projectiles speed.
         
@@ -165,8 +165,9 @@ class Buck extends Enemy {
                     //After 10 seconds of channel, do an attack yourself as well.
                     if(summon >= this.summoncooldown+4500 && summon < this.summoncooldown+6800) {
                         if(this.portal) {
-                            this.myportal = new Buckportal(this.game, this.x-300, this.y - 50, this.hp.current, this.hp.max, 0, 0, 350, 100);
+                            this.myportal = new Buckportal(this.game, this.x-300, this.y - 50, this.hp.current, this.hp.max, 1, 0, 350, 100);
                             this.game.addEntity(this.myportal);
+                            this.game.addEntity(new Buckportal(this.game, this.x+300, this.y - 50, this.hp.current, this.hp.max, 1, Math.PI, -350, 100));
                             this.portal = false;
                         }
                         this.state = 2;
@@ -299,12 +300,12 @@ class Buck extends Enemy {
      * This is the rage attack for buck. Partitions define how many attacks he'll launch in the 180 degree angle.
      */
     rageAttack() {
-        var partitions = 10;
+        var partitions = 15;
         for(var i = 0; i < partitions; i++) {
-            var pp = {sx: 96, sy: 112, size: 16};
+            var pp = {sx: 96, sy: 160, size: 16};
             var p = new ScaleBoomerProjectiles(this.game, false, this.x+80, this.y+80, {x :Math.cos(this.blitz), y:Math.sin(this.blitz)}, 
                         this.projspeed, 5500, 10, 0.012, true, pp);
-            this.blitz += Math.PI/partitions;
+            this.blitz += 2*Math.PI/partitions;
             this.game.entities.splice(this.game.entities.length - 1, 0, p);        
         }
         this.blitz += 50; //Keep changing starting angle
@@ -316,7 +317,7 @@ class Buck extends Enemy {
     attack() {
         var velocity = this.calculateVel();
         var offset = this.face == 0? 100: 0;
-        var pp = {sx: 96, sy: 112, size: 16};
+        var pp = {sx: 96, sy: 160, size: 16};
         var p = new ScaleBoomerProjectiles(this.game, false, this.x+offset, this.y, velocity, this.projspeed, 2500, 10, 0.005, false, pp);
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }
@@ -324,13 +325,15 @@ class Buck extends Enemy {
     attackportal() {
         var pp = {sx: 96, sy: 112, size: 16};
         var p = new Projectiles(this.game, false, this.x, this.y, {x: Math.cos(Math.PI), y:Math.sin(Math.PI)}, 4, 2000, 10, pp);
+        var p2 = new Projectiles(this.game, false, this.x, this.y, {x: Math.cos(0), y:Math.sin(0)}, 4, 2000, 10, pp);
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
+        this.game.entities.splice(this.game.entities.length - 1, 0, p2);
     }
 
     bringSummons() {
         //this.game.addEntity(new Fayere(this.game, this.enemyX - 150, this.enemyY));
-        this.game.addEntity(new Propportal(this.game, this.x - 96, this.y, "Fayere"));
-        this.game.addEntity(new Propportal(this.game, this.x + 180, this.y, "Fayere"));
+        this.game.addEntity(new Propportal(this.game, this.x - 96, this.y, "Ais"));
+        this.game.addEntity(new Propportal(this.game, this.x + 180, this.y, "Ais"));
         this.game.addEntity(new Propportal(this.game, this.x + 44, this.y + 140, "Fayere"));
         this.game.addEntity(new Propportal(this.game, this.x + 44, this.y - 140, "Fayere"));
     }
@@ -353,65 +356,4 @@ class Buck extends Enemy {
             this.hp.current += theHeal;
         } 
     }
-
-    /* 
-
-    DEPRECATED CODE. Might need so don't delete.
-
-    walkaround(rand1, rand2, rand3, rand4) {
-        this.howlong = Date.now() - this.walkaroundtimer;
-        if(this.howlong < 2400) {
-            this.face = 0;
-            this.x += rand1 * (this.speed+1.5);
-            this.state = 1;
-        } else if (this.howlong >= 2400 && this.howlong < 3400) {
-            this.state = 1;
-            this.face = 1;
-            this.x -= rand3 * (this.speed+1.5);
-            var updown = this.y - this.enemyY < 0? 1: -1;
-            this.y += rand3 * (this.speed) * updown;
-        } else if(this.howlong >= 3400 && this.howlong < 5800) {
-            this.state = 1;
-            this.face = 1;
-            this.x += -rand2 * (this.speed+1.5);
-        } else {
-            this.walkaroundtimer = Date.now();
-        }
-    }
-    
-    //Testing code.
-
-     var time = Date.now() - this.patterntimer;
-        if(time < 2500) {
-            this.state = 0;
-            this.face = 0;
-        } else if(time >= 2500 && time < 5000) {
-            this.state = 0;
-            this.face = 1;
-        } else if(time >= 5000 && time < 7500) {
-            this.state = 1;
-            this.face = 0;
-        } else if(time >= 7500 && time < 10000) {
-            this.state = 1;
-            this.face = 1;
-        } else if(time >= 10000 && time < 12500) {
-            this.state = 2;
-            this.face = 0;
-        } else if(time >=12500 && time < 15000) {
-            this.state =2;
-            this.face = 1;
-        } else if(time >= 15000 && time < 17500) {
-            this.state = 3;
-            this.face = 0;
-        } else if(time >=17500 && time < 20000) {
-            this.state = 3;
-            this.face = 1;
-        } else if(time >= 20000 && time < 22500) {
-            this.state = 4;
-            this.face = 0;
-        } else if(time >=22500 && time < 25000) {
-            this.state = 4;
-            this.face = 1;
-        }
-     */
-};
+}
