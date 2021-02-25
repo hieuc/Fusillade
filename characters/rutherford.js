@@ -16,9 +16,11 @@ class Rutherford {
 
         this.speedtemp = this.speed; //Used to reset back speed when we block it.
 
-        this.regen = 0.01;
+        this.hpregen = 0.2;
 
-        this.ascendedmana = 0.0005; //How much is deducted per tick.
+        this.mpregen = 0.05;
+
+        this.ascendedmana = 0.001; //How much is deducted per tick.
 
         this.shinecd = Date.now(); //Shining particle effect cooldown when in Ascended form.
 
@@ -46,7 +48,7 @@ class Rutherford {
 
         this.bound = new BoundingBox(this.game, this.x, this.y, 16, 24);
 
-        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y, 20 * this.scale, 500, true); //Has mana field too.
+        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y, 20 * this.scale, 400, true); //Has mana field too.
 
         this.animations = [];
 
@@ -263,8 +265,8 @@ class Rutherford {
         if (this.velocity.x < 0 && this.action !== 2 && this.action !== 6)
             this.face = 1;
 
-        this.hp.current += this.regen;
-        this.hp.currMana += this.regen;
+        this.hp.current += this.hpregen;
+        this.hp.currMana += this.mpregen;
         if (this.hp.current > this.hp.max) {
             this.hp.current = this.hp.max;
         }
@@ -387,8 +389,10 @@ class Rutherford {
             this.face = 0;
         var velocity = this.calculateVel(click);
         //In case we are ascended, we want to know fire projectile's coordinates.
+        var f = this.form === 0; // condition if form is default, change this to an int if we have more than 2 form
         var pp = {sx: 96, sy: 336, size: 16};
-        var p = this.form == 0? new Projectiles(this.game, true, this.x, this.y, velocity, 5, 1200, 10 + randomInt(10)) : new Projectiles(this.game, true, this.x, this.y, velocity, 5, 1200, 15 + randomInt(10), pp)
+        var p = new Projectiles(this.game, true, this.x, this.y, velocity, 5, 
+            1200, 10 + randomInt(10) + (f ? 0 : 5), f ? undefined : pp, f ? "star" : "burn");
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
         
         this.animations[this.action][this.face][this.form].elapsedTime = 0;
@@ -403,8 +407,7 @@ class Rutherford {
                 } else {
                     this.hp.current -= e.damage;
                 }
-                e.removeFromWorld = true;
-                this.game.addEntity(new Score(this.game, this.bound.x + this.bound.w, this.bound.y, e.damage));
+                e.hit(this);
             } else if (e instanceof Obstacle && this.bound.collide(e.bound)) {
                 var changed = false;
                 // check horizontal

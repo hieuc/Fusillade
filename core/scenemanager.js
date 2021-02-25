@@ -343,7 +343,7 @@ class Minimap {
         ctx.strokeStyle = "Black";
         ctx.lineWidth = 5; // to cover the map bug lmaooooooo
         ctx.strokeRect(this.x, this.y, this.size * this.scale, this.size * this.scale);
-        ctx.lineWidth = 2; // return the stroke size back
+        ctx.lineWidth = 1; // return the stroke size back
     }
 
     // check if entity is within rutherford range to draw in map

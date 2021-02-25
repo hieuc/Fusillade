@@ -216,8 +216,7 @@ class Cyclops extends Enemy
             this.game.entities.forEach(function (entity) {
                 if (entity.bound && that.bound.collide(entity.bound)) {
                     if(entity instanceof Projectiles && entity.friendly) {
-                        that.hp.current -= entity.damage;             
-                        entity.removeFromWorld = true;
+                        entity.hit(that);
                         var audio = new Audio("./sounds/Hit.mp3");
                         audio.volume = PARAMS.hit_volume;
                         audio.play();

@@ -233,15 +233,7 @@ class Buck extends Enemy {
             }
             if (entity.bound && that.bound.collide(entity.bound)) {
                 if(entity instanceof Projectiles && entity.friendly) {
-                    that.hp.current -= entity.damage;
-                    //Did we get hit by Rutherford or Asc Rutherford?
-                    if(rutherform == 0) {
-                        that.game.addEntity(new Star(that.game, entity.x, entity.y - 22));
-                    } else {
-                        that.game.addEntity(new Burn(that.game, entity.x-32, entity.y - 32));
-                    }
-                    that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, entity.damage));
-                    entity.removeFromWorld = true;
+                    entity.hit(that);
                     //var audio = new Audio("./sounds/Hit.mp3");
                     //audio.volume = PARAMS.hit_volume;
                     //audio.play();

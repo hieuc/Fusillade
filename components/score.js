@@ -26,8 +26,12 @@ class Score {
     draw(ctx) {
         var size = this.getSize();
         ctx.font = `${size}px Comic Sans MS`;
-        ctx.fillStyle = "rgb(210, 30, 30)";
+        ctx.fillStyle = "rgb(210, 0, 0)";
         ctx.fillText(`-${this.value}`, this.x - this.game.camera.x, this.y - this.game.camera.y);
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 0.2;
+        ctx.strokeText(`-${this.value}`, this.x - this.game.camera.x, this.y - this.game.camera.y);
+        ctx.lineWidth = 1;
     }
 
     getSize() {
