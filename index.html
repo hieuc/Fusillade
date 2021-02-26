@@ -51,10 +51,42 @@
             text-align: center;
         }
 
-        #instruction ul li
+        table, th, td
+        {
+            border: solid 2px white;
+            margin-top: -10px;
+        }
+
+        .rowh
         {
             color: red;
-            list-style-type: none;
+            padding: 20px;
+        }
+
+        td
+        {
+            color: skyblue;
+            padding: 20px;
+        }
+
+        p
+        {
+            color: white;
+            text-align: center;
+            font-size: 28px;
+            margin-top: 10px;
+        }
+
+        .center
+        {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        span
+        {
+            color: red;
+            margin-right: 30px;
         }
         
     </style>
@@ -64,22 +96,51 @@ d
     <canvas id="gameWorld" width="1300" height="900" style="background: lightgray; border: 1px solid black" autofocus tabindex=1></canvas>
     <br>
 
-    <!-- Instructions for playing the game -->
+    <span>Debug:</span>
+    <label for="debug" class="center"></label>
+    <input type="checkbox" id="debug" onclick="check()" class="center">
+    <label for="music" class="center">Music:</label>
+    <span>Music Volume Slider:</span>
+    <input type="range" min="1" max="100" value="50" class="slider" id="music" onchange="changeVolume()" class="center">
 
-    <!-- try adding button to toggle instructions -->
+
     <div id="instruction">
-        <ul>
-            <li>WASD to move up, left, down, right respectively</li>
-            <li>C to lock camera</li>
-            <li>Point and click in the direction you wish to shoot a projectile</li>
-            <li>Press G to become Ascended Rutherford. It drains mana per second.</li>
-        </ul>
+        <p>Game Controls</p>
+        <table class="center">
+            <tr class="row">
+                <th class="rowh">WASD</th>
+                <td>Move up, left, down, right</td>
+            </tr>
+            <tr class="row">
+                <th class="rowh">Point & Click</th>
+                <td>Shoot Projectile</td>
+            </tr>
+            <tr class="row">
+                <th class="rowh">C Key</th>
+                <td>Lock camera position</td>
+            </tr>
+            <tr class="row">
+                <th class="rowh">G Key</th>
+                <td>Turn Super Saiyan</td>
+            </tr>
+            <tr class="row">
+                <th class="rowh">E Key</th>
+                <td>Rutherford's special attack (uses some mana).
+                    <br>
+                    If you hit E key again right as sword 
+                    <br>
+                    strikes
+                    ground it will add another attack.
+                </td>
+            </tr>
+            <tr class="row">
+                <th class="rowh">1, 2, 3, 4 Number Keys + F</th>
+                <td>Use health or mana potions in inventory</td>
+            </tr>
+        </table>
     </div>
 
-    <label for="debug">Debug:</label>
-    <input type="checkbox" id="debug" onclick="check()">
-    <label for="music">Music:</label>
-    <input type="range" min="1" max="100" value="50" class="slider" id="music" onchange="changeVolume()">
+
     <script>
         function check() {
             PARAMS.debug = document.getElementById('debug').checked;

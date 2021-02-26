@@ -114,7 +114,7 @@ class SceneManager {
                         this.game.addEntity(new Fayere(this.game, sx * 32 * scale, sy * 32 * scale));
                     }
                 } else if (e[0] === "cyclops") {
-                    var enemy = new Slippey(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale);
+                    var enemy = new Cyclops(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale);
                     this.game.addEntity(enemy);
                 } else if (e[0] === "buck") {
                     this.game.addEntity(new Buck(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale));
