@@ -15,7 +15,7 @@ class GameEngine {
         this.up = false;
         this.down = false;
         this.gkey = false;
-        this.qkey = false;
+        this.spacekey = false;
 
         this.started = false;
         this.ekey = false;
@@ -39,7 +39,6 @@ class GameEngine {
 
     startInput() {
         var that = this;
-        var c = that.entities[that.entities.length-1];
 
         var getXandY = function (e) {
             var x = e.clientX - that.ctx.canvas.getBoundingClientRect().left;
@@ -69,8 +68,8 @@ class GameEngine {
                     case 'g':
                         this.gkey = true;
                         break;
-                    case 'q':
-                        this.qkey = true;
+                    case ' ':
+                        this.spacekey = true;
                         break;
                     case 'e':
                         this.ekey = true;
@@ -82,6 +81,21 @@ class GameEngine {
                         that.camera.offsetx = 0;
                         that.camera.offsety = 0;
                     }
+                    case '1':
+                        this.camera.inventory.current = 1;
+                        break;
+                    case '2':
+                        this.camera.inventory.current = 2;
+                        break;
+                    case '3':
+                        this.camera.inventory.current = 3;
+                        break;
+                    case '4':
+                        this.camera.inventory.current = 4;
+                        break;
+                    case 'f':
+                        this.camera.inventory.useItem();
+                        break;
                     default:
                         break;
                 }
@@ -105,8 +119,8 @@ class GameEngine {
                 case 'g':
                     this.gkey = false;
                     break;
-                case 'q':
-                    this.qkey = false;
+                case ' ':
+                    this.spacekey = false;
                     break;
                 case 'e':
                     this.ekey = false;

@@ -2,12 +2,31 @@
  * Use as a damage indicator
  */
 class Score {
-    constructor (game, x, y, value) {
-        Object.assign(this, { game, x, y, value});
+    /**
+     * 
+     * @param {*} game 
+     * @param {*} x 
+     * @param {*} y 
+     * @param {*} value 
+     * @param {int} healtype undefined/null for damage, 0 for hp healing, 1 for mp healing
+     */
+    constructor (game, x, y, value, healtype) {
+        Object.assign(this, { game, x, y, value, healtype});
 
         this.lifetime = 500;
 
         this.timestamp = Date.now();
+
+        if (healtype === 0) {
+            // green
+            this.color = "rgb(92, 255, 59)";
+        } else if (healtype === 1) {
+            // blue
+            this.color = "rgb(0, 98, 255)";
+        } else {
+            // red
+            this.color = "rgb(219, 45, 45)";
+        }
 
         // base size
         this.size = 24;
@@ -26,11 +45,12 @@ class Score {
     draw(ctx) {
         var size = this.getSize();
         ctx.font = `${size}px Comic Sans MS`;
-        ctx.fillStyle = "rgb(210, 0, 0)";
-        ctx.fillText(`-${this.value}`, this.x - this.game.camera.x, this.y - this.game.camera.y);
+        ctx.fillStyle = this.color;
+        ctx.fillText(`${this.healtype === undefined ? "-" : "+"} ${this.value}`, this.x - this.game.camera.x, this.y - this.game.camera.y);
+        // draw border
         ctx.strokeStyle = "black";
-        ctx.lineWidth = 0.2;
-        ctx.strokeText(`-${this.value}`, this.x - this.game.camera.x, this.y - this.game.camera.y);
+        ctx.lineWidth = 0.5;
+        ctx.strokeText(`${this.healtype === undefined ? "-" : "+"} ${this.value}`, this.x - this.game.camera.x, this.y - this.game.camera.y);
         ctx.lineWidth = 1;
     }
 

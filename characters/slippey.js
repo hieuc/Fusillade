@@ -268,27 +268,10 @@ class Slippey extends Enemy {
         }
     }
 
-    calculateVel() {
-        var dx = this.enemyX - this.x;
-        var dy = this.enemyY - this.y;
-        var angle = Math.atan(dy/dx);
-
-        var v = { x: Math.cos(angle),
-                 y: Math.sin(angle)};
-        
-        if (dx < 0)
-            v.x *= -1;
-
-        if ((angle > 0 && dy < 0) || (angle < 0 && dy > 0))
-            v.y *= -1;
-        
-        return v;
-    }
-
     attack() {
         var velocity = this.calculateVel();
         var pp = { sx: 34, sy: 144, size: 16};
-        var p = new Deflectprojectile(this.game, false, this.x+20, this.y+18, velocity, 14, 6000, 25, Math.PI/5, pp);
+        var p = new Deflectprojectile(this.game, false, this.bound.x, this.bound.y, velocity, 14, 6000, 25, Math.PI/5, pp);
         p.bound.r = 10;
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }

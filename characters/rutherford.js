@@ -156,7 +156,7 @@ class Rutherford {
                 //block further input
                 this.allow = false;
             //If the user wants to slide.
-            } else if(g.qkey) { 
+            } else if(g.spacekey) { 
                 //Are we idle or moving? 
                 if(this.velocity.x != 0 || this.velocity.y != 0) {
                     //If we're moving AND we have enough mana for that form's cost then block input and set action state.
@@ -391,7 +391,7 @@ class Rutherford {
         //In case we are ascended, we want to know fire projectile's coordinates.
         var f = this.form === 0; // condition if form is default, change this to an int if we have more than 2 form
         var pp = {sx: 96, sy: 336, size: 16};
-        var p = new Projectiles(this.game, true, this.x, this.y, velocity, 5, 
+        var p = new Projectiles(this.game, true, this.x, this.y, velocity, 6, 
             1200, 10 + randomInt(10) + (f ? 0 : 5), f ? undefined : pp, f ? "star" : "burn");
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
         

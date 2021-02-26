@@ -21,8 +21,8 @@ class Enemy {
 
     calculateVel() {
         var enemy = this.game.camera.char;
-        var dx = enemy.bound.x - (this.x + 55);
-        var dy = enemy.bound.y - (this.y + 50);
+        var dx = enemy.bound.x - (this.bound.x);
+        var dy = enemy.bound.y - (this.bound.y);
 
         // find unit vector
         var length = Math.sqrt(dx * dx + dy * dy);

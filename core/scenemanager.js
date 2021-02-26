@@ -4,8 +4,7 @@ class SceneManager {
         this.game.camera = this;
 
         this.minimap = new Minimap(game, 0, 0);
-        this.minimap.x = Math.round(PARAMS.canvas_width * (1 - 1/20) - this.minimap.size * this.minimap.scale);
-        this.minimap.y = Math.round(PARAMS.canvas_height / 20);
+        this.inventory = new Inventory(game, PARAMS.canvas_width/15, PARAMS.canvas_height/15);
 
         this.x = 0;
         this.y = 0;
@@ -181,7 +180,7 @@ class SceneManager {
 
         //this.game.addEntity(new Slippey(this.game, character.x- 500, character.y));
 
-        this.audio = new Audio("./sounds/greenpath-ambient.mp3");
+        this.audio = new Audio("./sounds/music/greenpath-ambient.mp3");
         this.audio.volume = 0.5;
         this.audio.loop = true;
         this.audio.play();
@@ -218,7 +217,7 @@ class SceneManager {
             if (this.stage === 1 && this.isInRoom(this.rooms[0])) {
                 this.audio.pause();
                 var vol = this.audio.volume;
-                this.audio = new Audio("./sounds/greenpath-action.mp3");
+                this.audio = new Audio("./sounds/music/greenpath-action.mp3");
                 this.audio.loop = true;
                 this.audio.volume = vol;
                 this.audio.play();
@@ -246,6 +245,7 @@ class SceneManager {
 
         if(this.game.started) {
             this.minimap.draw(ctx);
+            this.inventory.draw(ctx);
         }
     }
 
@@ -274,6 +274,9 @@ class Minimap {
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/minimap.png");
         this.size = 29; // map pixel size, how many things gonna be on the screen
         this.scale = 7;  // size of each pixel
+
+        this.x = Math.round(PARAMS.canvas_width * (1 - 1/20) - this.size * this.scale);
+        this.y = Math.round(PARAMS.canvas_height / 20);
     };
 
     update() {
@@ -346,7 +349,7 @@ class Minimap {
         ctx.lineWidth = 1; // return the stroke size back
     }
 
-    // check if entity is within rutherford range to draw in map
+    // check if entity is within rutherford range to draw in mapa
     isInMapRange(cx, cy, ex, ey) {
         var x = ex/64;
         var y = ey/64;
@@ -354,3 +357,94 @@ class Minimap {
             y >= cy - (this.size-1)/2 && y <= cy + (this.size-1)/2;
     }
 };
+
+/**
+ * Inventory display on screen.
+ */
+class Inventory {
+    constructor(game, x, y) {
+        Object.assign(this, {game, x, y});
+
+        this.uisheet = ASSET_MANAGER.getAsset("./sprites/GUI.png");
+        this.itemsheet = ASSET_MANAGER.getAsset("./sprites/Meat.png");
+        this.scale = 1.75;
+        
+        // regen value for each potion
+        this.regen = [200, 100, 200, 100]; //Coincides with "type" variable.
+
+        // we have 4 slots on screen
+        // 1 for hp
+        // 2 for mini hp
+        // 3 for mp 
+        // 4 for mini mp
+        // this array contains the number that we currently have
+        this.slots = [2 ,2 ,2, 2];
+        this.current = 2;
+    }
+
+    update() {
+
+    }
+
+    draw(ctx) {
+        var oldAlpha = ctx.globalAlpha;
+        
+
+        // custom properties for each item
+        var p = [{sx: 32, ox: -5}, {sx: 64, ox: -2}, {sx: 48, ox: 1}, {sx: 80, ox: 4}];
+
+        for (var i = 0; i < this.slots.length; i++) {
+            var extrascale = 1; // scale when item is selected
+            if (i+1 === this.current) {
+                ctx.globalAlpha = 0.9;
+                extrascale = 1.15;
+            } else {
+                ctx.globalAlpha = 0.4;
+            }
+            // for current selecting item, offset to simulate enlarge from center
+            var offset = 30 * this.scale * (extrascale-1)/2;
+            // draw ui
+            ctx.drawImage(this.uisheet, 81, 97, 30, 30, this.x  + 36*i*this.scale - offset, this.y - offset, 30 * this.scale * extrascale, 30 * this.scale * extrascale);
+
+            // draw item
+            ctx.drawImage(this.itemsheet, p[i].sx, 160, 16, 16, this.x + 38*i*this.scale - p[i].ox - offset, this.y - offset, 16 * this.scale * 1.5 * extrascale, 16 * this.scale * 1.5 * extrascale);
+
+            // draw number
+            ctx.globalAlpha = 1;
+            ctx.fillStyle = "white";
+            // item count
+            ctx.font = `${10*extrascale}px Comic Sans MS`;
+            ctx.fillText(this.slots[i], this.x + 38*i*this.scale - p[i].ox + 3 - offset/3, this.y + 25 * this.scale + offset/3);
+            // item key
+            ctx.font = `${14*extrascale}px Comic Sans MS`;
+            ctx.fillText(i + 1, this.x + 38*i*this.scale - p[i].ox - 3 - offset, this.y + 8 * this.scale - offset);
+        }
+        
+        ctx.globalAlpha = oldAlpha;
+    }
+
+    useItem() {
+        var ruth = this.game.camera.char;
+        var current = this.current - 1;
+        if (this.slots[current] > 0) {
+            if(current === 0 || current === 1) {
+                // make sure potion dont overheal
+                var heal = ruth.hp.max - ruth.hp.current;
+                ruth.hp.current += (heal < this.regen[current] ? heal : this.regen[current]);
+                this.game.addEntity(new Score(this.game, ruth.bound.x + ruth.bound.w/2, ruth.bound.y, this.regen[current], 0));
+            } else {
+                var heal = ruth.hp.max - ruth.hp.currMana;
+                ruth.hp.currMana += (heal < this.regen[current] ? heal : this.regen[current]);
+                this.game.addEntity(new Score(this.game, ruth.bound.x + ruth.bound.w/2, ruth.bound.y, this.regen[current], 1));
+            }
+            this.slots[current]--;
+            var a = new Audio("./sounds/use_potion.mp3");
+            a.volume = 0.25;
+            a.play();
+        } else {
+            var a = new Audio("./sounds/no_potion.mp3");
+            a.volume = 0.25;
+            a.play();
+        }       
+    }
+}

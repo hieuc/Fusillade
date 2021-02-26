@@ -88,16 +88,16 @@ class Barrel {
                 this.game.addEntity(new Fayere(this.game, this.bound.x, this.bound.y)); //Offset with sprite size.
                 break;
             case "red":
-                this.game.entities.splice(this.game.entities.length - 1, 0, new Healthmp(this.game, this.bound.x+5, this.bound.y, 0));;
+                this.game.entities.splice(this.game.entities.length - 1, 0, new Potion(this.game, this.bound.x+5, this.bound.y, 0));;
                 break;
             case "blue":
-                this.game.addEntity(new Healthmp(this.game, this.bound.x+5, this.bound.y, 1));
+                this.game.addEntity(new Potion(this.game, this.bound.x+5, this.bound.y, 1));
                 break;
             case "sred":
-                this.game.addEntity(new Healthmp(this.game, this.bound.x+5, this.bound.y, 2));
+                this.game.addEntity(new Potion(this.game, this.bound.x+5, this.bound.y, 2));
                 break;
             case "sblue":
-                this.game.addEntity(new Healthmp(this.game, this.bound.x+5, this.bound.y, 3));
+                this.game.addEntity(new Potion(this.game, this.bound.x+5, this.bound.y, 3));
                 break;
             default:
         }
