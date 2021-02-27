@@ -36,7 +36,7 @@ class Slippey extends Enemy {
 
         this.bound = new BoundingBox(this.game, this.x, this.y, 32, 25);
 
-        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y, 20 * this.scale, 800, false); //Has mana field too.
+        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y, 20 * this.scale, 800, 0); //Has mana field too.
 
         this.animations = [];
 

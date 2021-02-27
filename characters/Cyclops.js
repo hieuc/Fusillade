@@ -37,7 +37,7 @@ class Cyclops extends Enemy
 
         this.bound = new BoundingBox(this.game, this.x, this.y, this.ss / 2, this.ss);
 
-        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y , 34 * this.scale, 1000, false);
+        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y , 34 * this.scale, 1000, 0);
 
         this.animations = [];
 

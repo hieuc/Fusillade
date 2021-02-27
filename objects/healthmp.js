@@ -39,15 +39,15 @@ class Healthmp {
                     if(entity instanceof Rutherford) {
                         that.removeFromWorld = true;
                         if(that.type == 0 || that.type == 2) {
-                            if(entity.hp.current + that.regen[that.type] > entity.hp.max) {
-                                var heal = entity.hp.max - entity.hp.current;
+                            if(entity.hp.current + that.regen[that.type] > entity.hp.maxHealth) {
+                                var heal = entity.hp.maxHealth - entity.hp.current;
                                 entity.hp.current += heal;
                             } else {
                                 entity.hp.current += that.regen[that.type];
                             }
                         } else {
-                            if(entity.hp.currMana + that.regen[that.type] > entity.hp.max) {
-                                var heal = entity.hp.max - entity.hp.currMana;
+                            if(entity.hp.currMana + that.regen[that.type] > entity.hp.maxMana) {
+                                var heal = entity.hp.maxMana - entity.hp.currMana;
                                 entity.hp.currMana += heal;
                             } else {
                                 entity.hp.currMana += that.regen[that.type];

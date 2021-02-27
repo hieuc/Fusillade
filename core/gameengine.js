@@ -117,12 +117,23 @@ class GameEngine {
         }, false);
 
         this.ctx.canvas.addEventListener("mousemove", function (e) {
-            //console.log(getXandY(e));
-            that.mouse = getXandY(e);
+            for(let i = 0; i < that.entities.length; i++) {
+                if(that.entities[i].showtext) {
+                    that.entities[i].determineHover(e);
+                    break;
+                }
+            }
             
         }, false);
 
         this.ctx.canvas.addEventListener("click", function (e) {
+            for(let i = 0; i < that.entities.length; i++) {
+                if(that.entities[i].showtext) {
+                    that.entities[i].determineClick(e);
+                    break;
+                }
+            }
+
             that.click = getXandY(e);
             if (that.started) {
                 if(that.camera.char.allow) {

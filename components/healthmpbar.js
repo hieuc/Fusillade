@@ -1,15 +1,15 @@
 class HealthMpBar {
-    constructor( game, x, y, w, max, mc) { // x, y where you want to draw, width, max health (a number), false
-        Object.assign(this, { game, x, y, w, max, mc});
+    constructor( game, x, y, w, maxHealth, maxMana, mc) { // x, y where you want to draw, width, max health (a number), false
+        Object.assign(this, { game, x, y, w, maxHealth, maxMana, mc});
         
-        this.current = max;
-        this.currMana = max;
+        this.current = this.maxHealth;
+        this.currMana = this.maxMana;
         this.h = 6;
     }
 
     draw() {
         var ctx = this.game.ctx;
-        var percentage = this.current / this.max;
+        var percentage = this.current / this.maxHealth;
         
         if (percentage < 0) percentage = 0;
         ctx.fillStyle = this.getColor(percentage);
@@ -18,7 +18,7 @@ class HealthMpBar {
         ctx.strokeRect(this.x - this.game.camera.x, this.y - this.game.camera.y, this.w, this.h);
 
         if(this.mc) {
-            var percentageMana = this.currMana / this.max;
+            var percentageMana = this.currMana / this.maxMana;
             if (percentageMana < 0) percentageMana = 0;
             ctx.fillStyle = "rgb(30, 100, 255)";
             ctx.fillRect(this.x - this.game.camera.x, this.y + 5 - this.game.camera.y, this.w * percentageMana, this.h);

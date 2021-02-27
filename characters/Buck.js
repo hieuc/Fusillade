@@ -44,7 +44,7 @@ class Buck extends Enemy {
 
         this.bound = new BoundingBox(this.game, this.x, this.y, 50, 86);
 
-        this.hp = new HealthMpBar(this.game, this.x + 16 * this.scale, this.y + 44 * this.scale, 32 * this.scale, 1600);
+        this.hp = new HealthMpBar(this.game, this.x + 16 * this.scale, this.y + 44 * this.scale, 32 * this.scale, 1600, 0);
 
         this.portal = true; //Should we create a Buckportal for Buck's special. False if it's already created.
 
@@ -52,7 +52,7 @@ class Buck extends Enemy {
 
         this.blitz = 0; //Buck's semi-circular attack angle calculator.
 
-        this.enemypos = { enemyX: this.game.camera.x, enemyY: this.game.camera.y};
+        this.enemypos = { enemyX: this.game.camera.char.x, enemyY: this.game.camera.char.y};
 
         this.animations = [];
 

@@ -99,6 +99,12 @@ class Barrel {
             case "sblue":
                 this.game.addEntity(new Healthmp(this.game, this.bound.x+5, this.bound.y, 3));
                 break;
+            case "onecoin":
+                this.game.addEntity(new Onecoin(this.game, this.bound.x+5, this.bound.y, 3));
+                break;
+            case "threecoin":
+                this.game.addEntity(new Threecoin(this.game, this.bound.x+5, this.bound.y, 3));
+                break;
             default:
         }
     }

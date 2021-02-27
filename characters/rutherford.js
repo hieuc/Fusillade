@@ -10,9 +10,13 @@ class Rutherford {
 
         this.form = 0;
 
+        this.coins = 20;
+
         this.face = 0; // 0 = right, 1 = left
 
         this.speed = 6;
+
+        this.hasapet = false; //If we buy a pet, make this true
 
         this.speedtemp = this.speed; //Used to reset back speed when we block it.
 
@@ -48,7 +52,7 @@ class Rutherford {
 
         this.bound = new BoundingBox(this.game, this.x, this.y, 16, 24);
 
-        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y, 20 * this.scale, 400, true); //Has mana field too.
+        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y, 20 * this.scale, 400, 400, true); //Has mana field too.
 
         this.animations = [];
 
@@ -112,6 +116,8 @@ class Rutherford {
     }
 
     update() {
+        console.log(this.hp.maxHealth);
+        console.log(this.hp.maxMana);
         //shine effect
         if(this.form == 1) {
             if(Date.now() - this.shinecd > 500) {
@@ -267,12 +273,12 @@ class Rutherford {
 
         this.hp.current += this.hpregen;
         this.hp.currMana += this.mpregen;
-        if (this.hp.current > this.hp.max) {
-            this.hp.current = this.hp.max;
+        if (this.hp.current > this.hp.maxHealth) {
+            this.hp.current = this.hp.maxHealth;
         }
 
-        if (this.hp.currMana > this.hp.max) {
-            this.hp.currMana = this.hp.max;
+        if (this.hp.currMana > this.hp.maxMana) {
+            this.hp.currMana = this.hp.maxMana;
         }
 
         if (this.hp.current < 0) {
@@ -281,7 +287,7 @@ class Rutherford {
 
         //If we are Ascended, subtract mana each tick.
         if (this.form == 1) {
-            this.hp.currMana -= this.hp.max * this.ascendedmana;
+            this.hp.currMana -= this.hp.maxMana * this.ascendedmana;
             if(this.hp.currMana < 0) {
                 this.hp.currMana = 0;
                 this.action = 3;
@@ -431,6 +437,12 @@ class Rutherford {
                     // second bound update for collision update
                     this.updateBound();
                 }
+            } else if(e instanceof Onecoin && this.bound.collide(e.bound)) {
+                this.coins += 1;
+                e.removeFromWorld = true;
+            } else if(e instanceof Threecoin && this.bound.collide(e.bound)) {
+                this.coins += 3;
+                e.removeFromWorld = true;
             }
         });
     }

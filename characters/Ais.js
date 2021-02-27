@@ -27,7 +27,7 @@ class Ais extends Enemy{
 
         this.bound = new BoundingBox(this.game, this.x, this.y, 22, 20);
 
-        this.hp = new HealthMpBar(this.game, this.x + 2 * this.scale, this.y + 16 * this.scale, 16 * this.scale, 130, false);
+        this.hp = new HealthMpBar(this.game, this.x + 2 * this.scale, this.y + 16 * this.scale, 16 * this.scale, 130, 0);
 
         this.animations = [];
 

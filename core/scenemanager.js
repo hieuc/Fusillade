@@ -3,6 +3,7 @@ class SceneManager {
         this.game = game;
         this.game.camera = this;
 
+
         this.minimap = new Minimap(game, 0, 0);
         this.minimap.x = Math.round(PARAMS.canvas_width * (1 - 1/20) - this.minimap.size * this.minimap.scale);
         this.minimap.y = Math.round(PARAMS.canvas_height / 20);
@@ -115,8 +116,9 @@ class SceneManager {
                         this.game.addEntity(new Fayere(this.game, sx * 32 * scale, sy * 32 * scale));
                     }
                 } else if (e[0] === "cyclops") {
-                    var enemy = new Slippey(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale);
+                    var enemy = new Merchant(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale);
                     this.game.addEntity(enemy);
+                    
                 } else if (e[0] === "buck") {
                     this.game.addEntity(new Buck(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale));
                 }
@@ -141,7 +143,7 @@ class SceneManager {
                     }
                     var base = 0.01; // 1%
                     if (Math.random() < base * count) {
-                        var pool = ["red", "sred", "blue", "sblue", "fayere"];
+                        var pool = ["red", "sred", "blue", "sblue", "fayere", "onecoin", "threecoin"];
                         this.game.addEntity(new Barrel(this.game, j*32*scale, i*32*scale, pool[randomInt(pool.length)]));
                     }
 
