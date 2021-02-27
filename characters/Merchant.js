@@ -360,6 +360,11 @@ class Merchant {
      * @param {e} e mouse hover event. 
      */
     determineHover(e) {
+        var canvas = document.getElementById("gameWorld");
+        var ctx = canvas.getContext("2d");
+        const rect = ctx.canvas.getBoundingClientRect()
+        const canX = e.clientX - rect.left
+        const canY = e.clientY - rect.top
         //If we're in main menu.
         if(this.mainmenu) {
             //Reset to false, if otherwise proven true.
@@ -367,6 +372,8 @@ class Merchant {
             if(e.clientX >= 810 && e.clientX < 858) {
                 if(e.clientY >= 420 && e.clientY < 440) {
                     this.hoveredtalk = true;
+                    console.log(canX);
+                    console.log(canY);
                 }
             }
 

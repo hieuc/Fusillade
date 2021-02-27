@@ -116,8 +116,6 @@ class Rutherford {
     }
 
     update() {
-        console.log(this.hp.maxHealth);
-        console.log(this.hp.maxMana);
         //shine effect
         if(this.form == 1) {
             if(Date.now() - this.shinecd > 500) {
