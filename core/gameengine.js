@@ -133,7 +133,7 @@ class GameEngine {
         this.ctx.canvas.addEventListener("mousemove", function (e) {
             for(let i = 0; i < that.entities.length; i++) {
                 if(that.entities[i].showtext) {
-                    that.entities[i].determineHover(e);
+                    that.entities[i].determineHover(getXandY(e));
                     break;
                 }
             }
@@ -143,7 +143,7 @@ class GameEngine {
         this.ctx.canvas.addEventListener("click", function (e) {
             for(let i = 0; i < that.entities.length; i++) {
                 if(that.entities[i].showtext) {
-                    that.entities[i].determineClick(e);
+                    that.entities[i].determineClick(getXandY(e));
                     break;
                 }
             }
