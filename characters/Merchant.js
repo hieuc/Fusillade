@@ -369,8 +369,8 @@ class Merchant {
         if(this.mainmenu) {
             //Reset to false, if otherwise proven true.
             this.hoveredtalk = false;
-            if(e.clientX >= 810 && e.clientX < 858) {
-                if(e.clientY >= 420 && e.clientY < 440) {
+            if(canX >= 690 && canX < 780) {
+                if(canY >= 420 && canY < 440) {
                     this.hoveredtalk = true;
                     console.log(canX);
                     console.log(canY);
@@ -378,8 +378,8 @@ class Merchant {
             }
 
             this.hoveredbuy = false;
-            if(e.clientX >= 790 && e.clientX < 830) {
-                if(e.clientY >= 390 && e.clientY < 420) {
+            if(canX >= 690 && canX < 830) {
+                if(canY >= 390 && canY < 420) {
                     this.hoveredbuy = true;
                 }
             }
@@ -388,57 +388,57 @@ class Merchant {
         //If we're in the shop.
         if(this.shop) {
             this.hoveredbuy0 = false;
-            if(e.clientX >= 780 && e.clientX < 1050) {
-                if(e.clientY >= 360 && e.clientY < 385) {
+            if(canX >= 690 && canX < 960) {
+                if(canY >= 360 && canY < 385) {
                     this.hoveredbuy0 = true;
                 }
             }
 
             this.hoveredbuy1 = false;
-            if(e.clientX >= 780 && e.clientX < 980) {
-                if(e.clientY >= 390 && e.clientY < 415) {
+            if(canX >= 690 && canX < 890) {
+                if(canY >= 390 && canY < 415) {
                     this.hoveredbuy1 = true;
                 }
             }
 
             this.hoveredbuy2 = false;
-            if(e.clientX >= 780 && e.clientX < 980) {
-                if(e.clientY >= 420 && e.clientY < 445) {
+            if(canX >= 690 && canX < 890) {
+                if(canY >= 420 && canY < 445) {
                     this.hoveredbuy2 = true;
                 }
             }
 
             this.hoveredbuy3 = false;
-            if(e.clientX >= 780 && e.clientX < 980) {
-                if(e.clientY >= 450 && e.clientY < 475) {
+            if(canX >= 690 && canX < 890) {
+                if(canY >= 450 && canY < 475) {
                     this.hoveredbuy3 = true;
                 }
             }
 
             this.hoveredbuy4 = false;
-            if(e.clientX >= 780 && e.clientX < 980) {
-                if(e.clientY >= 480 && e.clientY < 505) {
+            if(canX >= 690 && canX < 890) {
+                if(canY >= 480 && canY < 505) {
                     this.hoveredbuy4 = true;
                 }
             }
 
             this.hoveredbuy5 = false;
-            if(e.clientX >= 780 && e.clientX < 1000) {
-                if(e.clientY >= 510 && e.clientY < 535) {
+            if(canX >= 690 && canX < 910) {
+                if(canY >= 510 && canY < 535) {
                     this.hoveredbuy5 = true;
                 }
             }
 
             this.hoveredbuy6 = false;
-            if(e.clientX >= 780 && e.clientX < 1100) {
-                if(e.clientY >= 540 && e.clientY < 565) {
+            if(canX >= 690 && canX < 1010) {
+                if(canY >= 540 && canY < 565) {
                     this.hoveredbuy6 = true;
                 }
             }
 
             this.hoveredback = false;
-            if(e.clientX >= 780 && e.clientX < 858) {
-                if(e.clientY >= 570 && e.clientY < 600) {
+            if(canX >= 690 && canX < 768) {
+                if(canY >= 570 && canY < 600) {
                     this.hoveredback = true;
                 }
             }
