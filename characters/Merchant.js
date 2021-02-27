@@ -166,7 +166,7 @@ class Merchant {
             this.animations[2].drawFrame(this.game.clockTick, ctx, PARAMS.canvas_width/2 + 20, PARAMS.canvas_height/2 - 100, 8);
         }
         //Font style
-        ctx.font = "14px Trebuchet MS";
+        ctx.font = "Bold 14px Trebuchet MS";
 
         //If we are in main right now.
         if(this.currChoice === main) {
