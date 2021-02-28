@@ -28,5 +28,6 @@ window.requestAnimFrame = (function () {
 // add global parameters here
 
 var PARAMS = {
-    hit_volume: 0.1
+    hit_volume: 0.1,
+    meme: false
 };

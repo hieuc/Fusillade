@@ -124,7 +124,7 @@ class SceneManager {
             });
         });
 
-        // spawn barrels
+        // spawn barrels and bunnies
         // barrels will only spawn next to trees
         // the more trees, the higher chance
         // the total will be purely random
@@ -140,12 +140,17 @@ class SceneManager {
                                 count++;
                         }
                     }
+                    // spawn barrels
                     var base = 0.01; // 1%
                     if (Math.random() < base * count) {
                         var pool = ["red", "sred", "blue", "sblue", "fayere", "onecoin", "threecoin"];
                         this.game.addEntity(new Barrel(this.game, j*32*scale, i*32*scale, pool[randomInt(pool.length)]));
                     }
-
+                    // spawn bunnies
+                    base = 0.001;
+                    if (Math.random() < base * count) {
+                        this.game.addEntity(new Bunny(this.game, j*32*scale, i*32*scale));
+                    }
                 }
             }
         } 
@@ -176,11 +181,11 @@ class SceneManager {
         /*
         this.game.addEntity(new Propportal(this.game, 100, 0, "Cyclops"));
         */
-        this.game.addEntity(new Propportal(this.game, 200, 300, "Cyclops"));
+
         this.game.addEntity(new Merchant(this.game, 840, 4100));
+        
         this.game.addEntity(character);
         
-
         //this.game.addEntity(new Slippey(this.game, character.x- 500, character.y));
 
         this.audio = new Audio("./sounds/music/greenpath-ambient.mp3");

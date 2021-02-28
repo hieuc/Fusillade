@@ -32,7 +32,7 @@
     <script type="text/javascript" src="./characters/Drumbuck.js"></script>
     <script type="text/javascript" src="./characters/Cyclops.js"></script>
     <script type="text/javascript" src="./characters/slippey.js"></script>
-    <script type="text/javascript" src="./characters/dummy.js"></script>
+    <script type="text/javascript" src="./characters/bunny.js"></script>
     <script type="text/javascript" src="./components/healthmpbar.js"></script>
     <script type="text/javascript" src="./components/score.js"></script>
     <script type="text/javascript" src="./characters/buckportal.js"></script>
@@ -151,6 +151,11 @@
         </div>
     </div>
 
+    <br>
+    <div>
+        <label for="meme">do not check</label>
+        <input type="checkbox" id="meme" onchange="PARAMS.meme = this.checked">
+    </div>
 
     <script>
         function check() {
@@ -158,6 +163,9 @@
         }
         function changeVolume() {
             gameEngine.camera.audio.volume = document.getElementById('music').value/100;
+        }
+        function meme() {
+            PARAMS.meme = document.getElementById('meme').checked;
         }
 
         // stop the broswer from scrolling on spacebar

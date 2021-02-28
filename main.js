@@ -29,6 +29,8 @@ ASSET_MANAGER.queueDownload("./sprites/GUI.png");
 ASSET_MANAGER.queueDownload("./sprites/minimap.png");
 ASSET_MANAGER.queueDownload("./sprites/merchan.png");
 ASSET_MANAGER.queueDownload("./sprites/Dine-O.png");
+ASSET_MANAGER.queueDownload("./sprites/p.png");
+ASSET_MANAGER.queueDownload("./sprites/bunny.png");
 
 ASSET_MANAGER.downloadAll(function () {
 	var canvas = document.getElementById('gameWorld');
