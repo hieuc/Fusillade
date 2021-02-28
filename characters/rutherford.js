@@ -115,10 +115,10 @@ class Rutherford {
         this.animations[6][1][1] = new Animator(this.spritesheet, 520, 1110, 50, 37, 5, 0.05, 0, true, false);
 
         //Death
-        this.animations[7][0][0] = new Animator(this.spritesheet, 0, 333, 50, 37, 6, 0.8, 0, false, false);
-        this.animations[7][1][0] = new Animator(this.spritesheet, 470, 333, 50, 37, 6, 0.8, 0, true, false);
-        this.animations[7][0][1] = new Animator(this.spritesheet, 0, 925, 50, 37, 6, 0.8, 0, false, false);
-        this.animations[7][1][1] = new Animator(this.spritesheet, 470, 925, 50, 37, 6, 0.8, 0, true, false);
+        this.animations[7][0][0] = new Animator(this.spritesheet, 0, 333, 50, 37, 6, 0.9, 0, false, false);
+        this.animations[7][1][0] = new Animator(this.spritesheet, 470, 333, 50, 37, 6, 0.9, 0, true, false);
+        this.animations[7][0][1] = new Animator(this.spritesheet, 0, 925, 50, 37, 6, 0.9, 0, false, false);
+        this.animations[7][1][1] = new Animator(this.spritesheet, 470, 925, 50, 37, 6, 0.9, 0, true, false);
     }
 
     update() {
@@ -126,6 +126,7 @@ class Rutherford {
         if (this.action !== 7 && this.hp.current <= 0) {
             this.action = 7;
             this.game.camera.gameover = true;
+            this.game.camera.audio.pause();
         } 
 
         // slowly closing the screen when he dies
@@ -134,8 +135,8 @@ class Rutherford {
             
             var radius = 5;
             // calculate rutherford's current coordinates
-            var cx = this.x / 64;
-            var cy = this.y / 64;
+            var cx = (this.bound.x - this.bound.w/2) / 64;
+            var cy = (this.bound.y - this.bound.h/2) / 64;
             
             this.game.background.forEach(e => {
                 if (Math.abs(cx - e.x/64) > radius - frame || Math.abs(cy - e.y/64) > radius - frame) {
@@ -144,7 +145,7 @@ class Rutherford {
             });
 
             this.game.entities.forEach(e => {
-                if (Math.abs(cx - e.x/64) > radius - frame || Math.abs(cy - e.y/64) > radius - frame) {
+                if (e !== this && (Math.abs(cx - e.x/64) > radius - frame || Math.abs(cy - e.y/64) > radius - frame)) {
                     e.removeFromWorld = true;
                 }
             });
