@@ -395,8 +395,16 @@ class Rutherford {
         //In case we are ascended, we want to know fire projectile's coordinates.
         var f = this.form === 0; // condition if form is default, change this to an int if we have more than 2 form
         var pp = {sx: 96, sy: 336, size: 16};
-        var p = new Projectiles(this.game, true, this.x, this.y, velocity, 6, 
-            1200, 10 + randomInt(10) + (f ? 0 : 5), f ? undefined : pp, f ? "star" : "burn");
+        var p;
+
+        if (PARAMS.meme) {
+            pp = {sx: 0, sy: 0, size: 16, spritesheet: ASSET_MANAGER.getAsset("./sprites/p.png")};
+            p =  new Projectiles(this.game, true, this.x, this.y, velocity, 4, 
+                1200, 10 + randomInt(10) + (f ? 0 : 5), pp, f ? "star" : "burn");;
+        } else {
+            p = new Projectiles(this.game, true, this.x, this.y, velocity, 6, 
+                1200, 10 + randomInt(10) + (f ? 0 : 5), f ? undefined : pp, f ? "star" : "burn");
+        }
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
         
         this.animations[this.action][this.face][this.form].elapsedTime = 0;
