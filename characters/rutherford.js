@@ -116,6 +116,8 @@ class Rutherford {
     }
 
     update() {
+        console.log(this.x);
+        console.log(this.y);
         //shine effect
         if(this.form == 1) {
             if(Date.now() - this.shinecd > 500) {

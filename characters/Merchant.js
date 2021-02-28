@@ -492,25 +492,65 @@ class Merchant {
             //BUY A BIG RED VIAL
             if(e.x >= 690 && e.x < 890) {
                 if(e.y >= 420 && e.y < 445) {
-                    this.game.camera.char.hp.current = this.game.camera.char.hp.max / 2;
-                }
+                    if(this.game.camera.char.coins >= 5) {
+                        this.game.camera.char.coins -= 5;
+                        this.game.camera.inventory.slots[0]++;
+                        this.success = true;
+                        this.itemno = 2;
+                        this.successtimer = Date.now();
+                    } else {
+                        this.failure = true;
+                        this.itemno = 2;
+                        this.failuretimer = Date.now();
+                    }
+                } 
             }
             //BUY A SMALL RED VIAL
             if(e.x >= 690 && e.x < 890) {
                 if(e.y >= 450 && e.y < 475) {
-                    this.game.camera.char.hp.current = this.game.camera.char.hp.max;
+                    if(this.game.camera.char.coins >= 3) {
+                        this.game.camera.char.coins -= 3;
+                        this.game.camera.inventory.slots[1]++;
+                        this.success = true;
+                        this.itemno = 3;
+                        this.successtimer = Date.now();
+                    } else {
+                        this.failure = true;
+                        this.itemno = 3;
+                        this.failuretimer = Date.now();
+                    }
                 }
             }
             //BUY A BIG BLUE VIAL
             if(e.x >= 690 && e.x < 890) {
                 if(e.y >= 480 && e.y < 505) {
-                    this.game.camera.char.hp.current = 0;
+                    if(this.game.camera.char.coins >= 5) {
+                        this.game.camera.char.coins -= 5;
+                        this.game.camera.inventory.slots[2]++;
+                        this.success = true;
+                        this.itemno = 4;
+                        this.successtimer = Date.now();
+                    } else {
+                        this.failure = true;
+                        this.itemno = 4;
+                        this.failuretimer = Date.now();
+                    }
                 }
             }
             //BUY A SMALL BLUE VIAL
             if(e.x >= 690 && e.x < 910) {
                 if(e.y >= 510 && e.y < 535) {
-                    this.game.camera.char.hp.current += 50;
+                    if(this.game.camera.char.coins >= 3) {
+                        this.game.camera.char.coins -= 3;
+                        this.game.camera.inventory.slots[3]++;
+                        this.success = true;
+                        this.itemno = 5;
+                        this.successtimer = Date.now();
+                    } else {
+                        this.failure = true;
+                        this.itemno = 5;
+                        this.failuretimer = Date.now();
+                    }
                 }
             }
             //BUY A PET
@@ -552,8 +592,8 @@ var itemsToSell = {
     0: "Increase Total Health x10 coins",
     1: "Increase Total Mana x10 coins",
     2: "Buy a Big Red Vial x5 coins",
-    3: "Buy a Small Red Vial x5 coins",
-    4: "Buy a Big Blue Vial x3 coins",
+    3: "Buy a Small Red Vial x3 coins",
+    4: "Buy a Big Blue Vial x5 coins",
     5: "Buy a Small Blue Vial x3 coins",
     6: "Get a Pet (Fights and mana regen inc.) x20 coins",
     7: "BACK"
