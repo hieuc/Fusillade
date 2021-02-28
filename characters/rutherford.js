@@ -131,7 +131,7 @@ class Rutherford {
         // slowly closing the screen when he dies
         if (this.action === 7) {
             var frame = this.animations[this.action][this.face][this.form].currentFrame();
-            console.log(frame);
+            
             var radius = 5;
             // calculate rutherford's current coordinates
             var cx = this.x / 64;
