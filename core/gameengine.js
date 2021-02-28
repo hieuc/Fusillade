@@ -76,6 +76,7 @@ class GameEngine {
                         break;
                     case 'c':
                         that.camera.camlock = !that.camera.camlock;
+                        console.log("e");
                         break;
                     case 'x': {
                         that.camera.offsetx = 0;
@@ -137,7 +138,7 @@ class GameEngine {
                     break;
                 }
             }
-            
+            that.mouse = getXandY(e);
         }, false);
 
         this.ctx.canvas.addEventListener("click", function (e) {
@@ -149,15 +150,15 @@ class GameEngine {
             }
 
             that.click = getXandY(e);
-            if (that.started) {
-                if(that.camera.char.allow) {
-                if(that.camera.char.velocity.x != 0 || that.camera.char.velocity.y != 0) {
-                    that.camera.char.action = 6;
-                } else {
-                    that.camera.char.action = 2;
+                if (that.started) {
+                    if(that.camera.char.allow) {
+                    if(that.camera.char.velocity.x != 0 || that.camera.char.velocity.y != 0) {
+                        that.camera.char.action = 6;
+                    } else {
+                        that.camera.char.action = 2;
+                    }
+                    that.camera.char.startAttack(that.click);
                 }
-                that.camera.char.startAttack(that.click);
-            }
             }
         }, false);
 

@@ -57,6 +57,11 @@
         {
             border: solid 2px white;
             margin-top: -10px;
+            margin-right: 10px;
+        }
+
+        td {
+            max-width: 20em;
         }
 
         .rowh
@@ -82,64 +87,68 @@
         .center
         {
             margin-left: auto;
-            margin-right: auto;
         }
 
-        span
+        label
         {
             color: red;
-            margin-right: 30px;
         }
         
     </style>
 </head>
 <body>
-d
+
     <canvas id="gameWorld" width="1300" height="900" style="background: lightgray; border: 1px solid black" autofocus tabindex=1></canvas>
     <br>
 
-    <span>Debug:</span>
-    <label for="debug" class="center"></label>
+    
+    <label for="debug" class="center">Debug:</label>
     <input type="checkbox" id="debug" onclick="check()" class="center">
-    <label for="music" class="center">Music:</label>
-    <span>Music Volume Slider:</span>
+    <label for="music" class="center" style="margin-left: 30px">Music:</label>
+    
     <input type="range" min="1" max="100" value="50" class="slider" id="music" onchange="changeVolume()" class="center">
-
-
     <div id="instruction">
         <p>Game Controls</p>
-        <table class="center">
-            <tr class="row">
-                <th class="rowh">WASD</th>
-                <td>Move up, left, down, right</td>
-            </tr>
-            <tr class="row">
-                <th class="rowh">Point & Click</th>
-                <td>Shoot Projectile</td>
-            </tr>
-            <tr class="row">
-                <th class="rowh">C Key</th>
-                <td>Lock camera position</td>
-            </tr>
-            <tr class="row">
-                <th class="rowh">G Key</th>
-                <td>Turn Super Saiyan</td>
-            </tr>
-            <tr class="row">
-                <th class="rowh">E Key</th>
-                <td>Rutherford's special attack (uses some mana).
-                    <br>
-                    If you hit E key again right as sword 
-                    <br>
-                    strikes
-                    ground it will add another attack.
-                </td>
-            </tr>
-            <tr class="row">
-                <th class="rowh">1, 2, 3, 4 Number Keys + F</th>
-                <td>Use health or mana potions in inventory</td>
-            </tr>
-        </table>
+        <div style="display:inline-flex">
+            <table class="center">
+                <tr class="row">
+                    <th class="rowh">WASD</th>
+                    <td>Move up, left, down, right</td>
+                </tr>
+                <tr class="row">
+                    <th class="rowh">Point & Click</th>
+                    <td>Basic Attack</td>
+                </tr>
+                <tr class="row">
+                    <th class="rowh">G</th>
+                    <td>Turn Ascended Rutherford</td>
+                </tr>
+                <tr class="row">
+                    <th class="rowh">E</th>
+                    <td>Special attack. Press again right before the first one lands for a second attack.</td>
+                </tr>
+                
+                
+            </table>
+            <table class="center">
+                <tr class="row">
+                    <th class="rowh">C</th>
+                    <td>Lock/Unlock Camera</td>
+                </tr>
+                <tr class="row">
+                    <th class="rowh">X</th>
+                    <td>Re-center Camera</td>
+                </tr>
+                <tr class="row">
+                    <th class="rowh">1, 2, 3, 4 + F</th>
+                    <td>Use potions at respective slot</td>
+                </tr>
+                <tr class="row">
+                    <th class="rowh">Space</th>
+                    <td>Dash</td>
+                </tr>
+            </table>
+        </div>
     </div>
 
 
