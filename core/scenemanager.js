@@ -21,6 +21,7 @@ class SceneManager {
         this.tempObstacles = null;
         this.locked = false;
         this.stage = 1; // stage 1 = start, stage 2 = miniboss, stage 3 = boss
+        this.gameover = true;
 
         if (this.debug) {
             var t = createDungeon(100, 75);
@@ -37,6 +38,10 @@ class SceneManager {
      */
     loadLevel1() {
         this.game.entities = [];
+        this.game.background = [];
+        if (this.audio)
+            this.audio.pause();
+        this.gameover = false;
 
         var w = 100;
         var h = 75;
@@ -183,7 +188,7 @@ class SceneManager {
         */
 
         this.game.addEntity(new Merchant(this.game, 840, 4100));
-        
+
         this.game.addEntity(character);
         
         //this.game.addEntity(new Slippey(this.game, character.x- 500, character.y));
@@ -433,26 +438,28 @@ class Inventory {
 
     useItem() {
         var ruth = this.game.camera.char;
-        var current = this.current - 1;
-        if (this.slots[current] > 0) {
-            if(current === 0 || current === 1) {
-                // make sure potion dont overheal
-                var heal = ruth.hp.maxHealth - ruth.hp.current;
-                ruth.hp.current += (heal < this.regen[current] ? heal : this.regen[current]);
-                this.game.addEntity(new Score(this.game, ruth.bound.x + ruth.bound.w/2, ruth.bound.y, this.regen[current], 0));
+        if (ruth.action !== 7) {
+            var current = this.current - 1;
+            if (this.slots[current] > 0) {
+                if(current === 0 || current === 1) {
+                    // make sure potion dont overheal
+                    var heal = ruth.hp.maxHealth - ruth.hp.current;
+                    ruth.hp.current += (heal < this.regen[current] ? heal : this.regen[current]);
+                    this.game.addEntity(new Score(this.game, ruth.bound.x + ruth.bound.w/2, ruth.bound.y, this.regen[current], 0));
+                } else {
+                    var heal = ruth.hp.maxMana - ruth.hp.currMana;
+                    ruth.hp.currMana += (heal < this.regen[current] ? heal : this.regen[current]);
+                    this.game.addEntity(new Score(this.game, ruth.bound.x + ruth.bound.w/2, ruth.bound.y, this.regen[current], 1));
+                }
+                this.slots[current]--;
+                var a = new Audio("./sounds/use_potion.mp3");
+                a.volume = 0.25;
+                a.play();
             } else {
-                var heal = ruth.hp.maxMana - ruth.hp.currMana;
-                ruth.hp.currMana += (heal < this.regen[current] ? heal : this.regen[current]);
-                this.game.addEntity(new Score(this.game, ruth.bound.x + ruth.bound.w/2, ruth.bound.y, this.regen[current], 1));
-            }
-            this.slots[current]--;
-            var a = new Audio("./sounds/use_potion.mp3");
-            a.volume = 0.25;
-            a.play();
-        } else {
-            var a = new Audio("./sounds/no_potion.mp3");
-            a.volume = 0.25;
-            a.play();
-        }       
+                var a = new Audio("./sounds/no_potion.mp3");
+                a.volume = 0.25;
+                a.play();
+            }       
+        }
     }
 }

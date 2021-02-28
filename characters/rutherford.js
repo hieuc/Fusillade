@@ -52,7 +52,7 @@ class Rutherford {
 
         this.bound = new BoundingBox(this.game, this.x, this.y, 16, 24);
 
-        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y, 20 * this.scale, 400, 400, true); //Has mana field too.
+        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y, 20 * this.scale, 100, 400, true); //Has mana field too.
 
         this.animations = [];
 
@@ -115,194 +115,228 @@ class Rutherford {
         this.animations[6][1][1] = new Animator(this.spritesheet, 520, 1110, 50, 37, 5, 0.05, 0, true, false);
 
         //Death
-        this.animations[7][0][0] = new Animator(this.spritesheet, 0, 333, 50, 37, 6, 0.1, 0, false, false);
-        this.animations[7][1][0] = new Animator(this.spritesheet, 470, 333, 50, 37, 6, 0.1, 0, true, false);
-        this.animations[7][0][1] = new Animator(this.spritesheet, 0, 913, 50, 37, 6, 0.1, 0, false, false);
-        this.animations[7][1][1] = new Animator(this.spritesheet, 470, 913, 50, 37, 6, 0.1, 0, true, false);
+        this.animations[7][0][0] = new Animator(this.spritesheet, 0, 333, 50, 37, 6, 0.8, 0, false, false);
+        this.animations[7][1][0] = new Animator(this.spritesheet, 470, 333, 50, 37, 6, 0.8, 0, true, false);
+        this.animations[7][0][1] = new Animator(this.spritesheet, 0, 925, 50, 37, 6, 0.8, 0, false, false);
+        this.animations[7][1][1] = new Animator(this.spritesheet, 470, 925, 50, 37, 6, 0.8, 0, true, false);
     }
 
     update() {
-        console.log(this.x);
-        console.log(this.y);
-        //shine effect
-        if(this.form == 1) {
-            if(Date.now() - this.shinecd > 500) {
-                this.createshine();
-                this.shinecd = Date.now();
-            }
-        }
-        
-        //If we got the lucky tick, create a beam.
-        if(this.luckytick) {
-            if(Date.now() - this.luckyticktimer > 600) {
-                this.createanotherbbeam();
-                this.luckytick = false;
-            }
-        }
+        // check death
+        if (this.action !== 7 && this.hp.current <= 0) {
+            this.action = 7;
+            this.game.camera.gameover = true;
+        } 
 
-        // movement
-        /**
-         * Are we performing an action where we should block user's interruption i.e. special, slide?.
-         */
-        if(this.allow) { 
-            var g = this.game;
-            if (g.left && !g.right) {
-                this.velocity.x = -1;
-            } else if (g.right && !g.left) {
-                this.velocity.x = 1;
-            } else {
-                this.velocity.x = 0;
-            }
-
-            if (g.up && !g.down) {
-                this.velocity.y = -1;
-            } else if (g.down && !g.up) {
-                this.velocity.y = 1;
-            } else {
-                this.velocity.y = 0;
-            }
-
-            //If the user wants to go ascended.
-            if(g.gkey) {
-                this.action = 3;
-                //block further input
-                this.allow = false;
-            //If the user wants to slide.
-            } else if(g.spacekey) { 
-                //Are we idle or moving? 
-                if(this.velocity.x != 0 || this.velocity.y != 0) {
-                    //If we're moving AND we have enough mana for that form's cost then block input and set action state.
-                    if(this.form == 1 && this.hp.currMana >= this.slideasc || this.form == 0 && this.hp.currMana >= this.slidenor) {
-                        this.action = 4;
-                        this.allow = false;
-                    }
+        // slowly closing the screen when he dies
+        if (this.action === 7) {
+            var frame = this.animations[this.action][this.face][this.form].currentFrame();
+            console.log(frame);
+            var radius = 5;
+            // calculate rutherford's current coordinates
+            var cx = this.x / 64;
+            var cy = this.y / 64;
+            
+            this.game.background.forEach(e => {
+                if (Math.abs(cx - e.x/64) > radius - frame || Math.abs(cy - e.y/64) > radius - frame) {
+                    e.removeFromWorld = true;
                 }
-            //Does the user want to use special?
-            } else if(g.ekey) {
-                //Are we idle?
-                if(this.velocity.x == 0 && this.velocity.y == 0) { 
-                    //If we have enough mana then set action state and block further input.
-                    if(this.form == 1 && this.hp.currMana >= this.redbeamcost || this.form == 0 && this.hp.currMana >= this.bluebeamcost) {
-                        this.action = 5;
-                        this.allow = false;
-                    }
+            });
+
+            this.game.entities.forEach(e => {
+                if (Math.abs(cx - e.x/64) > radius - frame || Math.abs(cy - e.y/64) > radius - frame) {
+                    e.removeFromWorld = true;
+                }
+            });
+        }
+
+        // when death animation finished
+        if (this.action === 7 && this.animations[this.action][this.face][this.form].isAlmostDone(this.game.clockTick)) {
+            this.game.camera.loadLevel1();
+        } 
+
+        // while not dead
+        if (this.action !== 7) {
+            //shine effect
+            if(this.form == 1) {
+                if(Date.now() - this.shinecd > 500) {
+                    this.createshine();
+                    this.shinecd = Date.now();
                 }
             }
-        }
-
-        if(this.action == 3) {         //Did the user press G? If yes, transform and do the animation.
-            this.speed = 0;
-            if(this.playaudio == 0) {
-                var audio = new Audio("./sounds/Ascend.mp3");
-                audio.volume = 0.3;
-                audio.play();
-                this.playaudio = 1;
+            
+            //If we got the lucky tick, create a beam.
+            if(this.luckytick) {
+                if(Date.now() - this.luckyticktimer > 600) {
+                    this.createanotherbbeam();
+                    this.luckytick = false;
+                }
             }
 
-            //If our animation is done, transform and start allowing input again. Default back to action state 0.
-            if(this.animations[this.action][this.face][this.form].isDone(this.game.clockTick)) {
-                this.transform();
-                this.action = 0;
-                this.allow = true;
-                this.speed = this.speedtemp;
-                this.playaudio = 0;
+            // movement
+            /**
+             * Are we performing an action where we should block user's interruption i.e. special, slide?.
+             */
+            if(this.allow) { 
+                var g = this.game;
+                if (g.left && !g.right) {
+                    this.velocity.x = -1;
+                } else if (g.right && !g.left) {
+                    this.velocity.x = 1;
+                } else {
+                    this.velocity.x = 0;
+                }
+
+                if (g.up && !g.down) {
+                    this.velocity.y = -1;
+                } else if (g.down && !g.up) {
+                    this.velocity.y = 1;
+                } else {
+                    this.velocity.y = 0;
+                }
+
+                //If the user wants to go ascended.
+                if(g.gkey) {
+                    this.action = 3;
+                    //block further input
+                    this.allow = false;
+                //If the user wants to slide.
+                } else if(g.spacekey) { 
+                    //Are we idle or moving? 
+                    if(this.velocity.x != 0 || this.velocity.y != 0) {
+                        //If we're moving AND we have enough mana for that form's cost then block input and set action state.
+                        if(this.form == 1 && this.hp.currMana >= this.slideasc || this.form == 0 && this.hp.currMana >= this.slidenor) {
+                            this.action = 4;
+                            this.allow = false;
+                        }
+                    }
+                //Does the user want to use special?
+                } else if(g.ekey) {
+                    //Are we idle?
+                    if(this.velocity.x == 0 && this.velocity.y == 0) { 
+                        //If we have enough mana then set action state and block further input.
+                        if(this.form == 1 && this.hp.currMana >= this.redbeamcost || this.form == 0 && this.hp.currMana >= this.bluebeamcost) {
+                            this.action = 5;
+                            this.allow = false;
+                        }
+                    }
+                }
             }
-        //If the user has pressed Q with all the prerequisites completed, then slide.
-        } else if (this.action == 4) {
-            //Increase our speed, Only ONCE
-            if(!this.speedbump) {
-                this.speed = this.speed * 2;
-                this.speedbump = true;
-                let manadeduction = this.form == 1? this.slideasc : this.slidenor;
-                this.hp.currMana -= manadeduction;
-                var audio = new Audio("./sounds/slide.mp3");
-                audio.volume = 0.3;
-                audio.play();
-            }
-            //After performing the slide, default back to normal state and values.
-            if(this.animations[this.action][this.face][this.form].isDone(this.game.clockTick)) {
-                this.animations[this.action][this.face][this.form].elapsedTime = 0;
-                this.action = 0;
-                this.speed = this.speed / 2;
-                this.speedbump = false;
-                this.allow = true;
-            }
-        //If we wanna use our special.
-        } else if(this.action == 5) {
-            if(this.animations[this.action][this.face][this.form].isAlmostDone(this.game.clockTick)) {
+
+            if(this.action == 3) {         //Did the user press G? If yes, transform and do the animation.
+                this.speed = 0;
                 if(this.playaudio == 0) {
-                    var audio = new Audio("./sounds/slam.mp3");
-                    audio.volume = 0.1;
+                    var audio = new Audio("./sounds/Ascend.mp3");
+                    audio.volume = 0.3;
                     audio.play();
                     this.playaudio = 1;
                 }
-            }
-            if(this.animations[this.action][this.face][this.form].isDone(this.game.clockTick)) {
-                this.animations[this.action][this.face][this.form].elapsedTime = 0; // take animation back to starting point
-                this.action = 0;
-                if(this.form == 1) {
-                    this.createRbeam();
-                    this.hp.currMana -= this.redbeamcost;
-                } else {
-                    this.createbbeam();
-                    this.hp.currMana -= this.bluebeamcost;
+
+                //If our animation is done, transform and start allowing input again. Default back to action state 0.
+                if(this.animations[this.action][this.face][this.form].isDone(this.game.clockTick)) {
+                    this.transform();
+                    this.action = 0;
+                    this.allow = true;
+                    this.speed = this.speedtemp;
+                    this.playaudio = 0;
                 }
+            //If the user has pressed Q with all the prerequisites completed, then slide.
+            } else if (this.action == 4) {
+                //Increase our speed, Only ONCE
+                if(!this.speedbump) {
+                    this.speed = this.speed * 2;
+                    this.speedbump = true;
+                    let manadeduction = this.form == 1? this.slideasc : this.slidenor;
+                    this.hp.currMana -= manadeduction;
+                    var audio = new Audio("./sounds/slide.mp3");
+                    audio.volume = 0.3;
+                    audio.play();
+                }
+                //After performing the slide, default back to normal state and values.
+                if(this.animations[this.action][this.face][this.form].isDone(this.game.clockTick)) {
+                    this.animations[this.action][this.face][this.form].elapsedTime = 0;
+                    this.action = 0;
+                    this.speed = this.speed / 2;
+                    this.speedbump = false;
+                    this.allow = true;
+                }
+            //If we wanna use our special.
+            } else if(this.action == 5) {
+                if(this.animations[this.action][this.face][this.form].isAlmostDone(this.game.clockTick)) {
+                    if(this.playaudio == 0) {
+                        var audio = new Audio("./sounds/slam.mp3");
+                        audio.volume = 0.1;
+                        audio.play();
+                        this.playaudio = 1;
+                    }
+                }
+                if(this.animations[this.action][this.face][this.form].isDone(this.game.clockTick)) {
+                    this.animations[this.action][this.face][this.form].elapsedTime = 0; // take animation back to starting point
+                    this.action = 0;
+                    if(this.form == 1) {
+                        this.createRbeam();
+                        this.hp.currMana -= this.redbeamcost;
+                    } else {
+                        this.createbbeam();
+                        this.hp.currMana -= this.bluebeamcost;
+                    }
+                    if(this.hp.currMana < 0) {
+                        this.hp.currMana = 0;
+                    }
+                    this.allow = true;
+                    this.playaudio = 0;
+                }           
+            } else if(this.action == 6) {
+                if(this.animations[this.action][this.face][this.form].isAlmostDone(this.game.clockTick)) {
+                    if (this.velocity.x !== 0 || this.velocity.y !== 0) {
+                        this.action = 1;
+                    } else {
+                        this.action = 0;
+                    }
+                }
+            } else {
+                if(this.action !== 2 || this.animations[this.action][this.face][this.form].isAlmostDone(this.game.clockTick)) {
+                    if (this.velocity.x !== 0 || this.velocity.y !== 0) {
+                        this.action = 1;
+                    } else {
+                        this.action = 0;
+                    }
+                }
+            }
+
+            if (this.velocity.x > 0 && this.action !== 2 && this.action !== 6)
+                this.face = 0;
+            if (this.velocity.x < 0 && this.action !== 2 && this.action !== 6)
+                this.face = 1;
+
+            this.hp.current += this.hpregen;
+            this.hp.currMana += this.mpregen;
+            if (this.hp.current > this.hp.maxHealth) {
+                this.hp.current = this.hp.maxHealth;
+            }
+
+            if (this.hp.currMana > this.hp.maxMana) {
+                this.hp.currMana = this.hp.maxMana;
+            }
+
+            if (this.hp.current < 0) {
+                this.hp.current = 0;
+            }
+
+            //If we are Ascended, subtract mana each tick.
+            if (this.form == 1) {
+                this.hp.currMana -= this.hp.maxMana * this.ascendedmana;
                 if(this.hp.currMana < 0) {
                     this.hp.currMana = 0;
-                }
-                this.allow = true;
-                this.playaudio = 0;
-            }           
-        } else if(this.action == 6) {
-            if(this.animations[this.action][this.face][this.form].isAlmostDone(this.game.clockTick)) {
-                if (this.velocity.x !== 0 || this.velocity.y !== 0) {
-                    this.action = 1;
-                } else {
-                    this.action = 0;
+                    this.action = 3;
                 }
             }
-        } else {
-            if(this.action !== 2 || this.animations[this.action][this.face][this.form].isAlmostDone(this.game.clockTick)) {
-                if (this.velocity.x !== 0 || this.velocity.y !== 0) {
-                    this.action = 1;
-                } else {
-                    this.action = 0;
-                }
-            }
-        }
-
-        if (this.velocity.x > 0 && this.action !== 2 && this.action !== 6)
-            this.face = 0;
-        if (this.velocity.x < 0 && this.action !== 2 && this.action !== 6)
-            this.face = 1;
-
-        this.hp.current += this.hpregen;
-        this.hp.currMana += this.mpregen;
-        if (this.hp.current > this.hp.maxHealth) {
-            this.hp.current = this.hp.maxHealth;
-        }
-
-        if (this.hp.currMana > this.hp.maxMana) {
-            this.hp.currMana = this.hp.maxMana;
-        }
-
-        if (this.hp.current < 0) {
-            this.hp.current = 0;
-        }
-
-        //If we are Ascended, subtract mana each tick.
-        if (this.form == 1) {
-            this.hp.currMana -= this.hp.maxMana * this.ascendedmana;
-            if(this.hp.currMana < 0) {
-                this.hp.currMana = 0;
-                this.action = 3;
-            }
-        }
-        // update position
-        this.x += this.velocity.x * this.speed;
-        this.y += this.velocity.y * this.speed;
-        this.updateBound();
-        this.checkCollision();
+            // update position
+            this.x += this.velocity.x * this.speed;
+            this.y += this.velocity.y * this.speed;
+            this.updateBound();
+            this.checkCollision();
+        };
     }
 
     draw(ctx) {
@@ -393,28 +427,38 @@ class Rutherford {
     }
 
 
-    startAttack(click) {
-        if (click.x - this.x  + this.game.camera.x - 25 < 0)
-            this.face = 1;
-        else 
-            this.face = 0;
-        var velocity = this.calculateVel(click);
-        //In case we are ascended, we want to know fire projectile's coordinates.
-        var f = this.form === 0; // condition if form is default, change this to an int if we have more than 2 form
-        var pp = {sx: 96, sy: 336, size: 16};
-        var p;
+    attack(click) {
+        if (this.action !== 7) {
+            if(this.allow) {
+                if(this.velocity.x != 0 || this.velocity.y != 0) {
+                    this.action = 6;
+                } else {
+                    this.action = 2;
+                }
+            }
 
-        if (PARAMS.meme) {
-            pp = {sx: 0, sy: 0, size: 16, spritesheet: ASSET_MANAGER.getAsset("./sprites/p.png")};
-            p =  new Projectiles(this.game, true, this.x, this.y, velocity, 4, 
-                1200, 10 + randomInt(10) + (f ? 0 : 5), pp, f ? "star" : "burn");;
-        } else {
-            p = new Projectiles(this.game, true, this.x, this.y, velocity, 6, 
-                1200, 10 + randomInt(10) + (f ? 0 : 5), f ? undefined : pp, f ? "star" : "burn");
+            if (click.x - this.x  + this.game.camera.x - 25 < 0)
+                this.face = 1;
+            else 
+                this.face = 0;
+            var velocity = this.calculateVel(click);
+            //In case we are ascended, we want to know fire projectile's coordinates.
+            var f = this.form === 0; // condition if form is default, change this to an int if we have more than 2 form
+            var pp = {sx: 96, sy: 336, size: 16};
+            var p;
+
+            if (PARAMS.meme) {
+                pp = {sx: 0, sy: 0, size: 16, spritesheet: ASSET_MANAGER.getAsset("./sprites/p.png")};
+                p =  new Projectiles(this.game, true, this.x, this.y, velocity, 4, 
+                    1200, 10 + randomInt(10) + (f ? 0 : 5), pp, f ? "star" : "burn");;
+            } else {
+                p = new Projectiles(this.game, true, this.x, this.y, velocity, 6, 
+                    1200, 10 + randomInt(10) + (f ? 0 : 5), f ? undefined : pp, f ? "star" : "burn");
+            }
+            this.game.entities.splice(this.game.entities.length - 1, 0, p);
+            
+            this.animations[this.action][this.face][this.form].elapsedTime = 0;
         }
-        this.game.entities.splice(this.game.entities.length - 1, 0, p);
-        
-        this.animations[this.action][this.face][this.form].elapsedTime = 0;
     }
 
     checkCollision() {

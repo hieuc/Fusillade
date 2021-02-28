@@ -76,7 +76,6 @@ class GameEngine {
                         break;
                     case 'c':
                         that.camera.camlock = !that.camera.camlock;
-                        console.log("e");
                         break;
                     case 'x': {
                         that.camera.offsetx = 0;
@@ -150,16 +149,10 @@ class GameEngine {
             }
 
             that.click = getXandY(e);
-                if (that.started) {
-                    if(that.camera.char.allow) {
-                    if(that.camera.char.velocity.x != 0 || that.camera.char.velocity.y != 0) {
-                        that.camera.char.action = 6;
-                    } else {
-                        that.camera.char.action = 2;
-                    }
-                    that.camera.char.startAttack(that.click);
-                }
+            if (that.started) {
+                that.camera.char.attack(that.click);
             }
+            
         }, false);
 
         this.ctx.canvas.addEventListener("wheel", function (e) {
@@ -215,8 +208,14 @@ class GameEngine {
         for (var i = 0; i < entitiesCount; i++) {
             var entity = this.entities[i];
 
-            if (!entity.removeFromWorld) {
-                entity.update();
+            if (this.camera.gameover) {
+                if (entity === this.camera.char) {
+                    entity.update();
+                }
+            } else {
+                if (entity && !entity.removeFromWorld) {
+                    entity.update();
+                }
             }
         }
 
@@ -225,12 +224,22 @@ class GameEngine {
                 this.entities.splice(i, 1);
             }
         }
+
+        // check when game over
+        if (this.camera.gameover) {
+            for (var i = this.background.length - 1; i >= 0; --i) {
+                if (this.background[i].removeFromWorld) {
+                    this.background.splice(i, 1);
+                }
+            }
+        }
         this.camera.update();
     };
 
     loop() {
         this.clockTick = this.timer.tick();
         this.update();
+
         this.draw();
     };
 };
