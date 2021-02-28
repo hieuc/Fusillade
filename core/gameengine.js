@@ -20,7 +20,7 @@ class GameEngine {
         this.started = false;
         this.ekey = false;
     };
-
+    
     init(ctx) {
         this.ctx = ctx;
         this.surfaceWidth = this.ctx.canvas.width;

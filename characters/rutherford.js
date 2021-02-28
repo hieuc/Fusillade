@@ -60,7 +60,7 @@ class Rutherford {
     }
 
     loadAnimations() {
-        for (var i = 0; i < 7; i++) { // 4 states as of now.
+        for (var i = 0; i < 8; i++) { // 4 states as of now.
             this.animations.push([]);
             for (var j = 0; j < 2; j++) { // two directions
                 this.animations[i].push([]);
@@ -113,6 +113,12 @@ class Rutherford {
         this.animations[6][1][0] = new Animator(this.spritesheet, 520, 518, 50, 37, 5, 0.05, 0, true, false);
         this.animations[6][0][1] = new Animator(this.spritesheet, 0, 1110, 50, 37, 5, 0.05, 0, false, false);
         this.animations[6][1][1] = new Animator(this.spritesheet, 520, 1110, 50, 37, 5, 0.05, 0, true, false);
+
+        //Death
+        this.animations[7][0][0] = new Animator(this.spritesheet, 0, 333, 50, 37, 6, 0.1, 0, false, false);
+        this.animations[7][1][0] = new Animator(this.spritesheet, 470, 333, 50, 37, 6, 0.1, 0, true, false);
+        this.animations[7][0][1] = new Animator(this.spritesheet, 0, 913, 50, 37, 6, 0.1, 0, false, false);
+        this.animations[7][1][1] = new Animator(this.spritesheet, 470, 913, 50, 37, 6, 0.1, 0, true, false);
     }
 
     update() {
@@ -184,8 +190,7 @@ class Rutherford {
             }
         }
 
-        //Did the user press G? If yes, transform and do the animation.
-        if(this.action == 3) {
+        if(this.action == 3) {         //Did the user press G? If yes, transform and do the animation.
             this.speed = 0;
             if(this.playaudio == 0) {
                 var audio = new Audio("./sounds/Ascend.mp3");
