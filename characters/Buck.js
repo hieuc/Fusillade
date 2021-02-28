@@ -145,7 +145,7 @@ class Buck extends Enemy {
             }
 
             //First check if player triggered the enemy.
-            if((Math.abs(this.x - this.enemyX) < 300 && Math.abs(this.y - this.enemyY) < 200) && !this.triggered) {
+            if((Math.abs(this.x - this.enemyX) < 600 && Math.abs(this.y - this.enemyY) < 500) && !this.triggered) {
                 this.triggered = true;
                 this.summontime = Date.now();
             }
@@ -165,7 +165,7 @@ class Buck extends Enemy {
                     //After 10 seconds of channel, do an attack yourself as well.
                     if(summon >= this.summoncooldown+4500 && summon < this.summoncooldown+6800) {
                         if(this.portal) {
-                            this.myportal = new Buckportal(this.game, this.x-300, this.y - 50, this.hp.current, this.hp.max, 0, 0, 350, 100);
+                            this.myportal = new Buckportal(this.game, this.x-300, this.y - 50, this.hp.current, this.hp.maxHealth, 0, 0, 350, 100);
                             this.game.addEntity(this.myportal);
                             this.portal = false;
                         }

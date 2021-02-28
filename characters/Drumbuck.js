@@ -165,9 +165,10 @@ class Drumbuck extends Enemy {
                     //After 10 seconds of channel, do an attack yourself as well.
                     if(summon >= this.summoncooldown+4500 && summon < this.summoncooldown+6800) {
                         if(this.portal) {
-                            this.myportal = new Buckportal(this.game, this.x-300, this.y - 50, this.hp.current, this.hp.max, 1, 0, 350, 100);
+                            console.log("Im here");
+                            this.myportal = new Buckportal(this.game, this.x-300, this.y - 50, this.hp.current, this.hp.maxHealth, 1, 0, 350, 100);
                             this.game.addEntity(this.myportal);
-                            this.game.addEntity(new Buckportal(this.game, this.x+300, this.y - 50, this.hp.current, this.hp.max, 1, Math.PI, -350, 100));
+                            this.game.addEntity(new Buckportal(this.game, this.x+300, this.y - 50, this.hp.current, this.hp.maxHealth, 1, Math.PI, -350, 100));
                             this.portal = false;
                         }
                         this.state = 2;
