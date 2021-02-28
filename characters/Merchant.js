@@ -163,7 +163,7 @@ class Merchant {
             this.animations[3].drawFrame(this.game.clockTick, ctx, PARAMS.canvas_width/2 + 20, PARAMS.canvas_height/2+80, 8);
         } else {
             //Otherwise, show a normal dashboard for other cases.
-            this.animations[2].drawFrame(this.game.clockTick, ctx, PARAMS.canvas_width/2 + 20, PARAMS.canvas_height/2 - 100, 8);
+            this.animations[2].drawFrame(this.game.clockTick, ctx, PARAMS.canvas_width/2 + 20, PARAMS.canvas_height/2 - 100, 9);
         }
         //Font style
         ctx.font = "Bold 14px Trebuchet MS";
@@ -360,17 +360,12 @@ class Merchant {
      * @param {e} e mouse hover event. 
      */
     determineHover(e) {
-        var canvas = document.getElementById("gameWorld");
-        var ctx = canvas.getContext("2d");
-        const rect = ctx.canvas.getBoundingClientRect()
-        const canX = e.clientX - rect.left
-        const canY = e.clientY - rect.top
         //If we're in main menu.
         if(this.mainmenu) {
             //Reset to false, if otherwise proven true.
             this.hoveredtalk = false;
-            if(canX >= 690 && canX < 780) {
-                if(canY >= 420 && canY < 440) {
+            if(e.x >= 690 && e.x < 780) {
+                if(e.y >= 420 && e.y < 440) {
                     this.hoveredtalk = true;
                     console.log(canX);
                     console.log(canY);
@@ -378,8 +373,8 @@ class Merchant {
             }
 
             this.hoveredbuy = false;
-            if(canX >= 690 && canX < 830) {
-                if(canY >= 390 && canY < 420) {
+            if(e.x >= 690 && e.x < 830) {
+                if(e.y >= 390 && e.y < 415) {
                     this.hoveredbuy = true;
                 }
             }
@@ -388,57 +383,57 @@ class Merchant {
         //If we're in the shop.
         if(this.shop) {
             this.hoveredbuy0 = false;
-            if(canX >= 690 && canX < 960) {
-                if(canY >= 360 && canY < 385) {
+            if(e.x >= 690 && e.x < 960) {
+                if(e.y >= 360 && e.y < 385) {
                     this.hoveredbuy0 = true;
                 }
             }
 
             this.hoveredbuy1 = false;
-            if(canX >= 690 && canX < 890) {
-                if(canY >= 390 && canY < 415) {
+            if(e.x >= 690 && e.x < 890) {
+                if(e.y >= 390 && e.y < 415) {
                     this.hoveredbuy1 = true;
                 }
             }
 
             this.hoveredbuy2 = false;
-            if(canX >= 690 && canX < 890) {
-                if(canY >= 420 && canY < 445) {
+            if(e.x >= 690 && e.x < 890) {
+                if(e.y >= 420 && e.y < 445) {
                     this.hoveredbuy2 = true;
                 }
             }
 
             this.hoveredbuy3 = false;
-            if(canX >= 690 && canX < 890) {
-                if(canY >= 450 && canY < 475) {
+            if(e.x >= 690 && e.x < 890) {
+                if(e.y >= 450 && e.y < 475) {
                     this.hoveredbuy3 = true;
                 }
             }
 
             this.hoveredbuy4 = false;
-            if(canX >= 690 && canX < 890) {
-                if(canY >= 480 && canY < 505) {
+            if(e.x >= 690 && e.x < 890) {
+                if(e.y >= 480 && e.y < 505) {
                     this.hoveredbuy4 = true;
                 }
             }
 
             this.hoveredbuy5 = false;
-            if(canX >= 690 && canX < 910) {
-                if(canY >= 510 && canY < 535) {
+            if(e.x >= 690 && e.x < 910) {
+                if(e.y >= 510 && e.y < 535) {
                     this.hoveredbuy5 = true;
                 }
             }
 
             this.hoveredbuy6 = false;
-            if(canX >= 690 && canX < 1010) {
-                if(canY >= 540 && canY < 565) {
+            if(e.x >= 690 && e.x < 1010) {
+                if(e.y >= 540 && e.y < 565) {
                     this.hoveredbuy6 = true;
                 }
             }
 
             this.hoveredback = false;
-            if(canX >= 690 && canX < 768) {
-                if(canY >= 570 && canY < 600) {
+            if(e.x >= 690 && e.x < 768) {
+                if(e.y >= 570 && e.y < 600) {
                     this.hoveredback = true;
                 }
             }
@@ -447,13 +442,13 @@ class Merchant {
 
     determineClick(e) {
         if(this.mainmenu) {
-            if(e.clientX >= 810 && e.clientX < 858) {
-                if(e.clientY >= 420 && e.clientY < 440) {
+            if(e.x >= 690 && e.x < 780) {
+                if(e.y >= 420 && e.y < 440) {
                     this.currChoice = firstEncounterStory;
                 }
             }
-            if(e.clientX >= 790 && e.clientX < 830) {
-                if(e.clientY >= 390 && e.clientY < 420) {
+            if(e.x >= 690 && e.x < 830) {
+                if(e.y >= 390 && e.y < 415) {
                     this.currChoice = itemsToSell;
                 }
             }
@@ -461,8 +456,8 @@ class Merchant {
 
         if(this.shop) {
             //INCREASE TOTAL HEALTH
-            if(e.clientX >= 780 && e.clientX < 1050) {
-                if(e.clientY >= 360 && e.clientY < 385) {
+            if(e.x >= 690 && e.x < 960) {
+                if(e.y >= 360 && e.y < 385) {
                     if(this.game.camera.char.coins >= 10) {
                         this.game.camera.char.coins -= 10;
                         this.game.camera.char.hp.maxHealth += 150;
@@ -478,8 +473,8 @@ class Merchant {
                 }
             }
             //INCREASE TOTAL MANA
-            if(e.clientX >= 780 && e.clientX < 980) {
-                if(e.clientY >= 390 && e.clientY < 415) {
+            if(e.x >= 690 && e.x < 890) {
+                if(e.y >= 390 && e.y < 415) {
                     if(this.game.camera.char.coins >= 10) {
                         this.game.camera.char.coins -= 10;
                         this.game.camera.char.hp.maxMana += 150;
@@ -495,32 +490,32 @@ class Merchant {
                 }
             }
             //BUY A BIG RED VIAL
-            if(e.clientX >= 780 && e.clientX < 980) {
-                if(e.clientY >= 420 && e.clientY < 445) {
+            if(e.x >= 690 && e.x < 890) {
+                if(e.y >= 420 && e.y < 445) {
                     this.game.camera.char.hp.current = this.game.camera.char.hp.max / 2;
                 }
             }
             //BUY A SMALL RED VIAL
-            if(e.clientX >= 780 && e.clientX < 980) {
-                if(e.clientY >= 450 && e.clientY < 475) {
+            if(e.x >= 690 && e.x < 890) {
+                if(e.y >= 450 && e.y < 475) {
                     this.game.camera.char.hp.current = this.game.camera.char.hp.max;
                 }
             }
             //BUY A BIG BLUE VIAL
-            if(e.clientX >= 780 && e.clientX < 980) {
-                if(e.clientY >= 480 && e.clientY < 505) {
+            if(e.x >= 690 && e.x < 890) {
+                if(e.y >= 480 && e.y < 505) {
                     this.game.camera.char.hp.current = 0;
                 }
             }
             //BUY A SMALL BLUE VIAL
-            if(e.clientX >= 780 && e.clientX < 1000) {
-                if(e.clientY >= 510 && e.clientY < 535) {
+            if(e.x >= 690 && e.x < 910) {
+                if(e.y >= 510 && e.y < 535) {
                     this.game.camera.char.hp.current += 50;
                 }
             }
             //BUY A PET
-            if(e.clientX >= 780 && e.clientX < 1100) {
-                if(e.clientY >= 540 && e.clientY < 565) {
+            if(e.x >= 690 && e.x < 1010) {
+                if(e.y >= 540 && e.y < 565) {
                     if(this.game.camera.char.coins >= 20) {
                         this.game.camera.char.coins -= 20;
                         //Create a pet
@@ -537,8 +532,8 @@ class Merchant {
                 }
             }
             //BACK
-            if(e.clientX >= 780 && e.clientX < 858) {
-                if(e.clientY >= 570 && e.clientY < 600) {
+            if(e.x >= 690 && e.x < 768) {
+                if(e.y >= 570 && e.y < 600) {
                     this.currChoice = main;
                 }
             }
