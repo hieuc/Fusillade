@@ -70,6 +70,8 @@ class Merchant {
 
         this.textlocation = {textX: 680, textY: 380};
 
+        this.textlocationbuy = {textX: 740, textY: 402};
+
         this.rutherpos = this.game.camera.char.x; //Don't need to know Y.
 
         this.face = 0;
@@ -89,11 +91,10 @@ class Merchant {
         //Textbox
         this.animations[2] = new Animator(this.textsheet, 145, 65, 46, 15, 1, 1, 0, false, true);
 
-        //Textbox For Joining (lower half)
-        this.animations[3] = new Animator(this.textsheet, 145, 68, 46, 13, 1, 1, 0, false, true);
+        //Textbox For Joining (upper half)
+        this.animations[4] = new Animator(this.textsheet, 0, 96, 48, 13, 1, 1, 0, false, true);
 
-        //Textbox for joining (upper half) 
-        this.animations[4] = new Animator(this.textsheet, 145, 65, 46, 13, 1, 1, 0, false, true);
+        this.animations[5] = new Animator(this.textsheet, 0, 96, 48, 33, 1, 1, 0, false, true);
 
     }
 
@@ -158,12 +159,15 @@ class Merchant {
         ctx.fillStyle = "#53505e";
         //If right now, we have decided to hit "buy" show an "extended" dashboard that accomodates everything.
         if(this.currChoice == itemsToSell) {
-            this.animations[4].drawFrame(this.game.clockTick, ctx, PARAMS.canvas_width/2 + 20, PARAMS.canvas_height/2 - 100, 8);
-            this.animations[3].drawFrame(this.game.clockTick, ctx, PARAMS.canvas_width/2 + 20, PARAMS.canvas_height/2, 8);
-            this.animations[3].drawFrame(this.game.clockTick, ctx, PARAMS.canvas_width/2 + 20, PARAMS.canvas_height/2+80, 8);
+            this.animations[5].drawFrame(this.game.clockTick, ctx, PARAMS.canvas_width/2 + 20, PARAMS.canvas_height/2 - 130, 11);
+            this.animations[4].drawFrame(this.game.clockTick, ctx, PARAMS.canvas_width/2 + 27, PARAMS.canvas_height/2 - 175, 6);
         } else {
             //Otherwise, show a normal dashboard for other cases.
-            this.animations[2].drawFrame(this.game.clockTick, ctx, PARAMS.canvas_width/2 + 20, PARAMS.canvas_height/2 - 100, 9);
+            if(this.currChoice != main) {
+                this.animations[2].drawFrame(this.game.clockTick, ctx, PARAMS.canvas_width/2 + 20, PARAMS.canvas_height/2 - 100, 8);
+            } else {
+                this.animations[2].drawFrame(this.game.clockTick, ctx, PARAMS.canvas_width/2 + 20, PARAMS.canvas_height/2 - 100, 7);
+            }
         }
         //Font style
         ctx.font = "Bold 14px Trebuchet MS";
@@ -189,23 +193,28 @@ class Merchant {
             //Set main menu to be false and shop to be true.
                 this.mainmenu = false;
                 this.shop = true;
+                ctx.font = "Bold 18px Trebuchet MS";
+                ctx.fillStyle = "#FFD700";
+                ctx.fillText("Coins: " + this.game.camera.char.coins, this.textlocationbuy.textX+20, this.textlocationbuy.textY-65);
+                ctx.fillStyle = "#ffffff"; 
+                ctx.font = "Bold 14px Trebuchet MS";
                 if(this.hoveredbuy0) {
                     ctx.fillStyle = "#000000";
                 }
-                ctx.fillText(this.currChoice[this.textIndex], this.textlocation.textX+20, this.textlocation.textY);
-                ctx.fillStyle = "#53505e"; 
+                ctx.fillText(this.currChoice[this.textIndex], this.textlocationbuy.textX+20, this.textlocationbuy.textY);
+                ctx.fillStyle = "#ffffff"; 
                 //Draw the small potion icon.
-                ctx.drawImage(this.potionsheet, 3, 160, 14, 16, this.textlocation.textX, this.textlocation.textY-15, 16, 16);
+                ctx.drawImage(this.potionsheet, 3, 160, 14, 16, this.textlocationbuy.textX, this.textlocationbuy.textY-15, 16, 16);
                 //If the purchase was successful, and THIS item 0 was purchased and the user hasn't immediately tried to buy again and it failed
                 if(this.success && this.itemno == 0 && !this.failure) {
                     //Draw the tick to show it was successful.
-                    ctx.drawImage(this.tickorxsheet, 160, 304, 16, 16, this.textlocation.textX + 230, this.textlocation.textY-15, 16, 16);
+                    ctx.drawImage(this.tickorxsheet, 160, 304, 16, 16, this.textlocationbuy.textX + 230, this.textlocationbuy.textY-15, 16, 16);
                     if(Date.now() - this.successtimer > 3000) {
                         this.success = false;
                     }
                 //If the user tried to buy, but they weren't able to, show an X mark.
                 } else if(this.failure && this.itemno == 0) {
-                    ctx.drawImage(this.tickorxsheet, 176, 304, 16, 16, this.textlocation.textX + 230, this.textlocation.textY-15, 16, 16);
+                    ctx.drawImage(this.tickorxsheet, 176, 304, 16, 16, this.textlocationbuy.textX + 230, this.textlocationbuy.textY-15, 16, 16);
                     if(Date.now() - this.failuretimer > 3000) {
                         this.failure = false;
                         this.success = false;
@@ -215,16 +224,16 @@ class Merchant {
                     if(this.hoveredbuy1) {
                         ctx.fillStyle = "#000000";
                     }
-                    ctx.fillText(this.currChoice[this.textIndex + 1], this.textlocation.textX+20, this.textlocation.textY+30);  
-                    ctx.fillStyle = "#53505e"; 
-                    ctx.drawImage(this.potionsheet, 3, 160, 14, 16, this.textlocation.textX, this.textlocation.textY+15, 16, 16);
+                    ctx.fillText(this.currChoice[this.textIndex + 1], this.textlocationbuy.textX+20, this.textlocationbuy.textY+30);  
+                    ctx.fillStyle = "#ffffff"; 
+                    ctx.drawImage(this.potionsheet, 3, 160, 14, 16, this.textlocationbuy.textX, this.textlocationbuy.textY+15, 16, 16);
                     if(this.success && this.itemno == 1 && !this.failure) {
-                        ctx.drawImage(this.tickorxsheet, 160, 304, 16, 16, this.textlocation.textX + 230, this.textlocation.textY+15, 16, 16);
+                        ctx.drawImage(this.tickorxsheet, 160, 304, 16, 16, this.textlocationbuy.textX + 230, this.textlocationbuy.textY+15, 16, 16);
                         if(Date.now() - this.successtimer > 3000) {
                             this.success = false;
                         }
                     } else if(this.failure && this.itemno == 1) {
-                        ctx.drawImage(this.tickorxsheet, 176, 304, 16, 16, this.textlocation.textX + 230, this.textlocation.textY+15, 16, 16);
+                        ctx.drawImage(this.tickorxsheet, 176, 304, 16, 16, this.textlocationbuy.textX + 230, this.textlocationbuy.textY+15, 16, 16);
                         if(Date.now() - this.failuretimer > 3000) {
                             this.failure = false;
                             this.success = false;
@@ -234,16 +243,16 @@ class Merchant {
                     if(this.hoveredbuy2) {
                         ctx.fillStyle = "#000000";
                     }
-                    ctx.fillText(this.currChoice[this.textIndex + 2], this.textlocation.textX+20, this.textlocation.textY+60);
-                    ctx.fillStyle = "#53505e"; 
-                    ctx.drawImage(this.potionsheet, 34, 160, 16, 16, this.textlocation.textX, this.textlocation.textY+45, 16, 16);
+                    ctx.fillText(this.currChoice[this.textIndex + 2], this.textlocationbuy.textX+20, this.textlocationbuy.textY+60);
+                    ctx.fillStyle = "#ffffff"; 
+                    ctx.drawImage(this.potionsheet, 34, 160, 16, 16, this.textlocationbuy.textX, this.textlocationbuy.textY+45, 16, 16);
                     if(this.success && this.itemno == 2 && !this.failure) {
-                        ctx.drawImage(this.tickorxsheet, 160, 304, 16, 16, this.textlocation.textX + 230, this.textlocation.textY+45, 16, 16);
+                        ctx.drawImage(this.tickorxsheet, 160, 304, 16, 16, this.textlocationbuy.textX + 230, this.textlocationbuy.textY+45, 16, 16);
                         if(Date.now() - this.successtimer > 3000) {
                             this.success = false;
                         }
                     } else if(this.failure && this.itemno == 2) {
-                        ctx.drawImage(this.tickorxsheet, 176, 304, 16, 16, this.textlocation.textX + 230, this.textlocation.textY+45, 16, 16);
+                        ctx.drawImage(this.tickorxsheet, 176, 304, 16, 16, this.textlocationbuy.textX + 230, this.textlocationbuy.textY+45, 16, 16);
                         if(Date.now() - this.failuretimer > 3000) {
                             this.failure = false;
                             this.success = false;
@@ -253,16 +262,16 @@ class Merchant {
                     if(this.hoveredbuy3) {
                         ctx.fillStyle = "#000000";
                     }
-                    ctx.fillText(this.currChoice[this.textIndex + 3], this.textlocation.textX+20, this.textlocation.textY+90);
-                    ctx.fillStyle = "#53505e"; 
-                    ctx.drawImage(this.potionsheet, 66, 160, 16, 16, this.textlocation.textX, this.textlocation.textY+75, 16,16);
+                    ctx.fillText(this.currChoice[this.textIndex + 3], this.textlocationbuy.textX+20, this.textlocationbuy.textY+90);
+                    ctx.fillStyle = "#ffffff"; 
+                    ctx.drawImage(this.potionsheet, 66, 160, 16, 16, this.textlocationbuy.textX, this.textlocationbuy.textY+75, 16,16);
                     if(this.success && this.itemno == 3 && !this.failure) {
-                        ctx.drawImage(this.tickorxsheet, 160, 304, 16, 16, this.textlocation.textX + 230, this.textlocation.textY+75, 16, 16);
+                        ctx.drawImage(this.tickorxsheet, 160, 304, 16, 16, this.textlocationbuy.textX + 230, this.textlocationbuy.textY+75, 16, 16);
                         if(Date.now() - this.successtimer > 3000) {
                             this.success = false;
                         }
                     } else if(this.failure && this.itemno == 3) {
-                        ctx.drawImage(this.tickorxsheet, 176, 304, 16, 16, this.textlocation.textX + 230, this.textlocation.textY+75, 16, 16);
+                        ctx.drawImage(this.tickorxsheet, 176, 304, 16, 16, this.textlocationbuy.textX + 230, this.textlocationbuy.textY+75, 16, 16);
                         if(Date.now() - this.failuretimer > 3000) {
                             this.failure = false;
                             this.success = false;
@@ -272,16 +281,16 @@ class Merchant {
                     if(this.hoveredbuy4) {
                         ctx.fillStyle = "#000000";
                     }
-                    ctx.fillText(this.currChoice[this.textIndex + 4], this.textlocation.textX+20, this.textlocation.textY+120);
-                    ctx.fillStyle = "#53505e"; 
-                    ctx.drawImage(this.potionsheet, 50, 160, 16, 16, this.textlocation.textX, this.textlocation.textY+105, 16,16);
+                    ctx.fillText(this.currChoice[this.textIndex + 4], this.textlocationbuy.textX+20, this.textlocationbuy.textY+120);
+                    ctx.fillStyle = "#ffffff"; 
+                    ctx.drawImage(this.potionsheet, 50, 160, 16, 16, this.textlocationbuy.textX, this.textlocationbuy.textY+105, 16,16);
                     if(this.success && this.itemno == 4 && !this.failure) {
-                        ctx.drawImage(this.tickorxsheet, 160, 304, 16, 16, this.textlocation.textX + 230, this.textlocation.textY+105, 16, 16);
+                        ctx.drawImage(this.tickorxsheet, 160, 304, 16, 16, this.textlocationbuy.textX + 230, this.textlocationbuy.textY+105, 16, 16);
                         if(Date.now() - this.successtimer > 3000) {
                             this.success = false;
                         }
                     } else if(this.failure && this.itemno == 4) {
-                        ctx.drawImage(this.tickorxsheet, 176, 304, 16, 16, this.textlocation.textX + 230, this.textlocation.textY+105, 16, 16);
+                        ctx.drawImage(this.tickorxsheet, 176, 304, 16, 16, this.textlocationbuy.textX + 230, this.textlocationbuy.textY+105, 16, 16);
                         if(Date.now() - this.failuretimer > 3000) {
                             this.failure = false;
                             this.success = false;
@@ -291,16 +300,16 @@ class Merchant {
                     if(this.hoveredbuy5) {
                         ctx.fillStyle = "#000000";
                     }
-                    ctx.fillText(this.currChoice[this.textIndex + 5], this.textlocation.textX+20, this.textlocation.textY+150);
-                    ctx.fillStyle = "#53505e"; 
-                    ctx.drawImage(this.potionsheet, 82, 160, 16, 16, this.textlocation.textX, this.textlocation.textY+135, 16,16);
+                    ctx.fillText(this.currChoice[this.textIndex + 5], this.textlocationbuy.textX+20, this.textlocationbuy.textY+150);
+                    ctx.fillStyle = "#ffffff"; 
+                    ctx.drawImage(this.potionsheet, 82, 160, 16, 16, this.textlocationbuy.textX, this.textlocationbuy.textY+135, 16,16);
                     if(this.success && this.itemno == 5 && !this.failure) {
-                        ctx.drawImage(this.tickorxsheet, 160, 304, 16, 16, this.textlocation.textX + 230, this.textlocation.textY+135, 16, 16);
+                        ctx.drawImage(this.tickorxsheet, 160, 304, 16, 16, this.textlocationbuy.textX + 230, this.textlocationbuy.textY+135, 16, 16);
                         if(Date.now() - this.successtimer > 3000) {
                             this.success = false;
                         }
                     } else if(this.failure && this.itemno == 5) {
-                        ctx.drawImage(this.tickorxsheet, 176, 304, 16, 16, this.textlocation.textX + 230, this.textlocation.textY+135, 16, 16);
+                        ctx.drawImage(this.tickorxsheet, 176, 304, 16, 16, this.textlocationbuy.textX + 230, this.textlocationbuy.textY+135, 16, 16);
                         if(Date.now() - this.failuretimer > 3000) {
                             this.failure = false;
                             this.success = false;
@@ -310,16 +319,16 @@ class Merchant {
                     if(this.hoveredbuy6) {
                         ctx.fillStyle = "#000000";
                     }
-                    ctx.fillText(this.currChoice[this.textIndex + 6], this.textlocation.textX+20, this.textlocation.textY+180);
-                    ctx.fillStyle = "#53505e"; 
-                    ctx.drawImage(this.petsheet, 0, 0, 24, 24, this.textlocation.textX-4, this.textlocation.textY+165, 24,24);
+                    ctx.fillText(this.currChoice[this.textIndex + 6], this.textlocationbuy.textX+20, this.textlocationbuy.textY+180);
+                    ctx.fillStyle = "#ffffff"; 
+                    ctx.drawImage(this.petsheet, 0, 0, 24, 24, this.textlocationbuy.textX-4, this.textlocationbuy.textY+165, 24,24);
                     if(this.success && this.itemno == 6 && !this.failure) {
-                        ctx.drawImage(this.tickorxsheet, 160, 304, 16, 16, this.textlocation.textX + 330, this.textlocation.textY+165, 16, 16);
+                        ctx.drawImage(this.tickorxsheet, 160, 304, 16, 16, this.textlocationbuy.textX + 330, this.textlocationbuy.textY+165, 16, 16);
                         if(Date.now() - this.successtimer > 3000) {
                             this.success = false;
                         }
                     } else if(this.failure && this.itemno == 6) {
-                        ctx.drawImage(this.tickorxsheet, 176, 304, 16, 16, this.textlocation.textX + 330, this.textlocation.textY+165, 16, 16);
+                        ctx.drawImage(this.tickorxsheet, 176, 304, 16, 16, this.textlocationbuy.textX + 330, this.textlocationbuy.textY+165, 16, 16);
                         if(Date.now() - this.failuretimer > 3000) {
                             this.failure = false;
                             this.success = false;
@@ -329,8 +338,8 @@ class Merchant {
                     if(this.hoveredback) {
                         ctx.fillStyle = "#000000";
                     }
-                    ctx.fillText(this.currChoice[this.textIndex + 7], this.textlocation.textX+20, this.textlocation.textY+210);
-                    ctx.fillStyle = "#53505e"; 
+                    ctx.fillText(this.currChoice[this.textIndex + 7], this.textlocationbuy.textX+20, this.textlocationbuy.textY+210);
+                    ctx.fillStyle = "#ffffff"; 
         } else {
             //THIS SECTION TRIGGERS ONLY WHEN YOU HIT 'TALK TO ME'
             this.mainmenu = false;
@@ -367,8 +376,6 @@ class Merchant {
             if(e.x >= 690 && e.x < 780) {
                 if(e.y >= 420 && e.y < 440) {
                     this.hoveredtalk = true;
-                    console.log(canX);
-                    console.log(canY);
                 }
             }
 
@@ -383,57 +390,57 @@ class Merchant {
         //If we're in the shop.
         if(this.shop) {
             this.hoveredbuy0 = false;
-            if(e.x >= 690 && e.x < 960) {
-                if(e.y >= 360 && e.y < 385) {
+            if(e.x >= 730 && e.x < 1000) {
+                if(e.y >= 382 && e.y < 407) {
                     this.hoveredbuy0 = true;
                 }
             }
 
             this.hoveredbuy1 = false;
-            if(e.x >= 690 && e.x < 890) {
-                if(e.y >= 390 && e.y < 415) {
+            if(e.x >= 730 && e.x < 930) {
+                if(e.y >= 412 && e.y < 437) {
                     this.hoveredbuy1 = true;
                 }
             }
 
             this.hoveredbuy2 = false;
-            if(e.x >= 690 && e.x < 890) {
-                if(e.y >= 420 && e.y < 445) {
+            if(e.x >= 730 && e.x < 930) {
+                if(e.y >= 442 && e.y < 467) {
                     this.hoveredbuy2 = true;
                 }
             }
 
             this.hoveredbuy3 = false;
-            if(e.x >= 690 && e.x < 890) {
-                if(e.y >= 450 && e.y < 475) {
+            if(e.x >= 730 && e.x < 930) {
+                if(e.y >= 472 && e.y < 497) {
                     this.hoveredbuy3 = true;
                 }
             }
 
             this.hoveredbuy4 = false;
-            if(e.x >= 690 && e.x < 890) {
-                if(e.y >= 480 && e.y < 505) {
+            if(e.x >= 730 && e.x < 930) {
+                if(e.y >= 502 && e.y < 527) {
                     this.hoveredbuy4 = true;
                 }
             }
 
             this.hoveredbuy5 = false;
-            if(e.x >= 690 && e.x < 910) {
-                if(e.y >= 510 && e.y < 535) {
+            if(e.x >= 730 && e.x < 950) {
+                if(e.y >= 532 && e.y < 557) {
                     this.hoveredbuy5 = true;
                 }
             }
 
             this.hoveredbuy6 = false;
-            if(e.x >= 690 && e.x < 1010) {
-                if(e.y >= 540 && e.y < 565) {
+            if(e.x >= 730 && e.x < 1050) {
+                if(e.y >= 562 && e.y < 587) {
                     this.hoveredbuy6 = true;
                 }
             }
 
             this.hoveredback = false;
-            if(e.x >= 690 && e.x < 768) {
-                if(e.y >= 570 && e.y < 600) {
+            if(e.x >= 730 && e.x < 808) {
+                if(e.y >= 592 && e.y < 622) {
                     this.hoveredback = true;
                 }
             }
@@ -456,8 +463,8 @@ class Merchant {
 
         if(this.shop) {
             //INCREASE TOTAL HEALTH
-            if(e.x >= 690 && e.x < 960) {
-                if(e.y >= 360 && e.y < 385) {
+            if(e.x >= 730 && e.x < 1000) {
+                if(e.y >= 382 && e.y < 407) {
                     if(this.game.camera.char.coins >= 10) {
                         this.game.camera.char.coins -= 10;
                         this.game.camera.char.hp.maxHealth += 150;
@@ -473,8 +480,8 @@ class Merchant {
                 }
             }
             //INCREASE TOTAL MANA
-            if(e.x >= 690 && e.x < 890) {
-                if(e.y >= 390 && e.y < 415) {
+            if(e.x >= 730 && e.x < 930) {
+                if(e.y >= 412 && e.y < 437) {
                     if(this.game.camera.char.coins >= 10) {
                         this.game.camera.char.coins -= 10;
                         this.game.camera.char.hp.maxMana += 150;
@@ -490,8 +497,8 @@ class Merchant {
                 }
             }
             //BUY A BIG RED VIAL
-            if(e.x >= 690 && e.x < 890) {
-                if(e.y >= 420 && e.y < 445) {
+            if(e.x >= 730 && e.x < 930) {
+                if(e.y >= 442 && e.y < 467) {
                     if(this.game.camera.char.coins >= 5) {
                         this.game.camera.char.coins -= 5;
                         this.game.camera.inventory.slots[0]++;
@@ -506,8 +513,8 @@ class Merchant {
                 } 
             }
             //BUY A SMALL RED VIAL
-            if(e.x >= 690 && e.x < 890) {
-                if(e.y >= 450 && e.y < 475) {
+            if(e.x >= 730 && e.x < 930) {
+                if(e.y >= 472 && e.y < 497) {
                     if(this.game.camera.char.coins >= 3) {
                         this.game.camera.char.coins -= 3;
                         this.game.camera.inventory.slots[1]++;
@@ -522,8 +529,8 @@ class Merchant {
                 }
             }
             //BUY A BIG BLUE VIAL
-            if(e.x >= 690 && e.x < 890) {
-                if(e.y >= 480 && e.y < 505) {
+            if(e.x >= 730 && e.x < 930) {
+                if(e.y >= 502 && e.y < 527) {
                     if(this.game.camera.char.coins >= 5) {
                         this.game.camera.char.coins -= 5;
                         this.game.camera.inventory.slots[2]++;
@@ -538,8 +545,8 @@ class Merchant {
                 }
             }
             //BUY A SMALL BLUE VIAL
-            if(e.x >= 690 && e.x < 910) {
-                if(e.y >= 510 && e.y < 535) {
+            if(e.x >= 730 && e.x < 950) {
+                if(e.y >= 532 && e.y < 557) {
                     if(this.game.camera.char.coins >= 3) {
                         this.game.camera.char.coins -= 3;
                         this.game.camera.inventory.slots[3]++;
@@ -554,8 +561,8 @@ class Merchant {
                 }
             }
             //BUY A PET
-            if(e.x >= 690 && e.x < 1010) {
-                if(e.y >= 540 && e.y < 565) {
+            if(e.x >= 730 && e.x < 1050) {
+                if(e.y >= 562 && e.y < 587) {
                     if(this.game.camera.char.coins >= 20) {
                         this.game.camera.char.coins -= 20;
                         //Create a pet
@@ -572,8 +579,8 @@ class Merchant {
                 }
             }
             //BACK
-            if(e.x >= 690 && e.x < 768) {
-                if(e.y >= 570 && e.y < 600) {
+            if(e.x >= 730 && e.x < 808) {
+                if(e.y >= 592 && e.y < 622) {
                     this.currChoice = main;
                 }
             }
