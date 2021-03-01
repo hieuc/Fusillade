@@ -148,7 +148,6 @@ class GameEngine {
                 this.click = getXandY(e);
                 this.leftclick = true;
             }     
-            e.preventDefault();
         }, false);
 
         this.ctx.canvas.addEventListener("mouseup", e => {
@@ -157,7 +156,6 @@ class GameEngine {
                 this.camera.merchant.determineClick(getXandY(e));
                 this.leftclick = false;
             }
-            e.preventDefault();
         }, false);
 
         this.ctx.canvas.addEventListener("wheel", function (e) {
