@@ -16,6 +16,8 @@ class GameEngine {
         this.down = false;
         this.gkey = false;
         this.spacekey = false;
+        this.leftclick = false;
+        this.ikey = false;
 
         this.started = false;
         this.ekey = false;
@@ -78,8 +80,8 @@ class GameEngine {
                         that.camera.camlock = !that.camera.camlock;
                         break;
                     case 'x': {
-                        that.camera.offsetx = 0;
-                        that.camera.offsety = 0;
+                        this.camera.offsetx = 0;
+                        this.camera.offsety = 0;
                     }
                     case '1':
                         this.camera.inventory.current = 1;
@@ -96,6 +98,9 @@ class GameEngine {
                     case 'f':
                         this.camera.inventory.useItem();
                         break;
+                    case 'i':
+                        this.ikey = !this.ikey;
+                        break;
                     default:
                         break;
                 }
@@ -105,16 +110,16 @@ class GameEngine {
         this.ctx.canvas.addEventListener("keyup", e => {
             switch (e.key) {
                 case 'd':
-                    that.right = false;
+                    this.right = false;
                     break;
                 case 'a':
-                    that.left = false;
+                    this.left = false;
                     break;
                 case 's':
-                    that.down = false;
+                    this.down = false;
                     break;
                 case 'w':
-                    that.up = false;
+                    this.up = false;
                     break;
                 case 'g':
                     this.gkey = false;
@@ -130,29 +135,29 @@ class GameEngine {
             }
         }, false);
 
-        this.ctx.canvas.addEventListener("mousemove", function (e) {
-            for(let i = 0; i < that.entities.length; i++) {
-                if(that.entities[i].showtext) {
-                    that.entities[i].determineHover(getXandY(e));
-                    break;
-                }
+        this.ctx.canvas.addEventListener("mousemove", e =>  {
+            this.mouse = getXandY(e);
+            if (this.started) {
+                this.camera.merchant.determineHover(this.mouse);
             }
-            that.mouse = getXandY(e);
         }, false);
 
-        this.ctx.canvas.addEventListener("click", function (e) {
-            for(let i = 0; i < that.entities.length; i++) {
-                if(that.entities[i].showtext) {
-                    that.entities[i].determineClick(getXandY(e));
-                    break;
-                }
-            }
+        this.ctx.canvas.addEventListener("mousedown", e => {
+            // only left click counts
+            if (e.button === 0 && this.started) {
+                this.click = getXandY(e);
+                this.leftclick = true;
+            }     
+            e.preventDefault();
+        }, false);
 
-            that.click = getXandY(e);
-            if (that.started) {
-                that.camera.char.attack(that.click);
+        this.ctx.canvas.addEventListener("mouseup", e => {
+            // only left click counts
+            if(e.button === 0 && this.started) {
+                this.camera.merchant.determineClick(getXandY(e));
+                this.leftclick = false;
             }
-            
+            e.preventDefault();
         }, false);
 
         this.ctx.canvas.addEventListener("wheel", function (e) {

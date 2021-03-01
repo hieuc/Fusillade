@@ -16,6 +16,9 @@ class Rutherford {
 
         this.speed = 6;
 
+        this.attackcd = 200; // in ms
+        this.lastAttack = Date.now();
+
         this.hasapet = false; //If we buy a pet, make this true
 
         this.speedtemp = this.speed; //Used to reset back speed when we block it.
@@ -158,6 +161,7 @@ class Rutherford {
 
         // while not dead
         if (this.action !== 7) {
+
             //shine effect
             if(this.form == 1) {
                 if(Date.now() - this.shinecd > 500) {
@@ -337,6 +341,11 @@ class Rutherford {
             this.y += this.velocity.y * this.speed;
             this.updateBound();
             this.checkCollision();
+
+            // attack if available
+            if (this.game.leftclick || this.game.ikey) {
+                this.attack();
+            }
         };
     }
 
@@ -428,21 +437,20 @@ class Rutherford {
     }
 
 
-    attack(click) {
-        if (this.action !== 7) {
-            if(this.allow) {
-                if(this.velocity.x != 0 || this.velocity.y != 0) {
-                    this.action = 6;
-                } else {
-                    this.action = 2;
-                }
+    attack() {
+        if (this.action !== 7 && this.allow && Date.now() - this.lastAttack > this.attackcd) {
+            if(this.velocity.x != 0 || this.velocity.y != 0) {
+                this.action = 6;
+            } else {
+                this.action = 2;
             }
 
-            if (click.x - this.x  + this.game.camera.x - 25 < 0)
+            if (this.game.mouse.x - this.x  + this.game.camera.x - 25 < 0)
                 this.face = 1;
             else 
                 this.face = 0;
-            var velocity = this.calculateVel(click);
+
+            var velocity = this.calculateVel(this.game.mouse);
             //In case we are ascended, we want to know fire projectile's coordinates.
             var f = this.form === 0; // condition if form is default, change this to an int if we have more than 2 form
             var pp = {sx: 96, sy: 336, size: 16};
@@ -459,6 +467,7 @@ class Rutherford {
             this.game.entities.splice(this.game.entities.length - 1, 0, p);
             
             this.animations[this.action][this.face][this.form].elapsedTime = 0;
+            this.lastAttack = Date.now();
         }
     }
 

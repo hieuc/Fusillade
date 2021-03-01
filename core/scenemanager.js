@@ -22,6 +22,7 @@ class SceneManager {
         this.locked = false;
         this.stage = 1; // stage 1 = start, stage 2 = miniboss, stage 3 = boss
         this.gameover = true;
+        this.merchant = null;
 
         if (this.debug) {
             var t = createDungeon(100, 75);
@@ -186,8 +187,8 @@ class SceneManager {
         /*
         this.game.addEntity(new Propportal(this.game, 100, 0, "Cyclops"));
         */
-
-        this.game.addEntity(new Merchant(this.game, 840, 4100));
+        this.merchant = new Merchant(this.game, 840, 4100);
+        this.game.addEntity(this.merchant);
 
         this.game.addEntity(character);
         
