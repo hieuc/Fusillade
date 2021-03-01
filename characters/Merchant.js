@@ -164,7 +164,7 @@ class Merchant {
         } else {
             //Otherwise, show a normal dashboard for other cases.
             if(this.currChoice != main) {
-                this.animations[2].drawFrame(this.game.clockTick, ctx, PARAMS.canvas_width/2 + 20, PARAMS.canvas_height/2 - 100, 8);
+                this.animations[2].drawFrame(this.game.clockTick, ctx, PARAMS.canvas_width/2 + 20, PARAMS.canvas_height/2 - 100, 8.3);
             } else {
                 this.animations[2].drawFrame(this.game.clockTick, ctx, PARAMS.canvas_width/2 + 20, PARAMS.canvas_height/2 - 100, 7);
             }
