@@ -1,6 +1,6 @@
 class Merchant {
-    constructor(game, x, y) {
-        Object.assign(this, {game, x, y});
+    constructor(game, x, y, level) {
+        Object.assign(this, {game, x, y, level});
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/merchan.png");
 
@@ -17,6 +17,8 @@ class Merchant {
         this.showTextTimer = Date.now();
 
         this.textIndex = 0;
+
+        this.dialoguenum;
 
         /**
          * ALL THE HOVERING CHECKS ARE HERE.
@@ -58,7 +60,7 @@ class Merchant {
         
         this.failuretimer = Date.now();
 
-        this.textappearDuration = 7500;
+        this.textappearDuration = 15000;
 
         this.animations = [];
 
@@ -68,7 +70,7 @@ class Merchant {
 
         this.shop = false;
 
-        this.textlocation = {textX: 680, textY: 380};
+        this.textlocation = {textX: 722, textY: 420};
 
         this.textlocationbuy = {textX: 740, textY: 402};
 
@@ -99,6 +101,15 @@ class Merchant {
     }
 
     update() {
+        if(this.level == 1) {
+            this.dialoguenum = firstEncounterStory;
+        } else if(this.level == 2) {
+            this.dialoguenum = secondEncounterStory;
+        }
+
+        if(this.level == 2) {
+
+        }
         //Get rutherford's position.
         this.rutherpos = this.game.camera.char.x;
         this.decideDir();
@@ -156,7 +167,7 @@ class Merchant {
         var canvas = document.getElementById("gameWorld");
         var ctx = canvas.getContext("2d");
         //THIS IS THE COLOR OF THE FONT.
-        ctx.fillStyle = "#53505e";
+        ctx.fillStyle = "#ffffff";
         //If right now, we have decided to hit "buy" show an "extended" dashboard that accomodates everything.
         if(this.currChoice == itemsToSell) {
             this.animations[5].drawFrame(this.game.clockTick, ctx, PARAMS.canvas_width/2 + 20, PARAMS.canvas_height/2 - 130, 11);
@@ -164,9 +175,9 @@ class Merchant {
         } else {
             //Otherwise, show a normal dashboard for other cases.
             if(this.currChoice != main) {
-                this.animations[2].drawFrame(this.game.clockTick, ctx, PARAMS.canvas_width/2 + 20, PARAMS.canvas_height/2 - 100, 8.3);
+                this.animations[5].drawFrame(this.game.clockTick, ctx, PARAMS.canvas_width/2 + 20, PARAMS.canvas_height/2 - 100, 10);
             } else {
-                this.animations[2].drawFrame(this.game.clockTick, ctx, PARAMS.canvas_width/2 + 20, PARAMS.canvas_height/2 - 100, 7);
+                this.animations[5].drawFrame(this.game.clockTick, ctx, PARAMS.canvas_width/2 + 20 , PARAMS.canvas_height/2 - 100, 8.3);
             }
         }
         //Font style
@@ -181,12 +192,12 @@ class Merchant {
                 ctx.fillStyle = "#000000";
             }
             ctx.fillText(this.currChoice[1], this.textlocation.textX, this.textlocation.textY+30);
-            ctx.fillStyle = "#53505e";
+            ctx.fillStyle = "#ffffff";
             if(this.hoveredtalk) {
                 ctx.fillStyle = "#000000";
             }
             ctx.fillText(this.currChoice[2], this.textlocation.textX, this.textlocation.textY+50); 
-            ctx.fillStyle = "#53505e"; 
+            ctx.fillStyle = "#ffffff"; 
             this.showTextTimer = Date.now(); 
         //If we are inside the "buy" option.
         } else if(this.currChoice === itemsToSell) {
@@ -195,7 +206,8 @@ class Merchant {
                 this.shop = true;
                 ctx.font = "Bold 18px Trebuchet MS";
                 ctx.fillStyle = "#FFD700";
-                ctx.fillText("Coins: " + this.game.camera.char.coins, this.textlocationbuy.textX+20, this.textlocationbuy.textY-65);
+                ctx.drawImage(this.potionsheet, 160, 132, 33, 24, this.textlocationbuy.textX+12, this.textlocationbuy.textY-90, 50, 37);
+                ctx.fillText(this.game.camera.char.coins, this.textlocationbuy.textX+70, this.textlocationbuy.textY-65);
                 ctx.fillStyle = "#ffffff"; 
                 ctx.font = "Bold 14px Trebuchet MS";
                 if(this.hoveredbuy0) {
@@ -205,6 +217,8 @@ class Merchant {
                 ctx.fillStyle = "#ffffff"; 
                 //Draw the small potion icon.
                 ctx.drawImage(this.potionsheet, 3, 160, 14, 16, this.textlocationbuy.textX, this.textlocationbuy.textY-15, 16, 16);
+                //Draw coin
+                ctx.drawImage(this.potionsheet, 160, 132, 33, 24, this.textlocationbuy.textX+197, this.textlocationbuy.textY-15, 24, 18);
                 //If the purchase was successful, and THIS item 0 was purchased and the user hasn't immediately tried to buy again and it failed
                 if(this.success && this.itemno == 0 && !this.failure) {
                     //Draw the tick to show it was successful.
@@ -227,6 +241,8 @@ class Merchant {
                     ctx.fillText(this.currChoice[this.textIndex + 1], this.textlocationbuy.textX+20, this.textlocationbuy.textY+30);  
                     ctx.fillStyle = "#ffffff"; 
                     ctx.drawImage(this.potionsheet, 3, 160, 14, 16, this.textlocationbuy.textX, this.textlocationbuy.textY+15, 16, 16);
+                    //coin image
+                    ctx.drawImage(this.potionsheet, 160, 132, 33, 24, this.textlocationbuy.textX+189, this.textlocationbuy.textY+15, 24, 18);
                     if(this.success && this.itemno == 1 && !this.failure) {
                         ctx.drawImage(this.tickorxsheet, 160, 304, 16, 16, this.textlocationbuy.textX + 230, this.textlocationbuy.textY+15, 16, 16);
                         if(Date.now() - this.successtimer > 3000) {
@@ -246,6 +262,8 @@ class Merchant {
                     ctx.fillText(this.currChoice[this.textIndex + 2], this.textlocationbuy.textX+20, this.textlocationbuy.textY+60);
                     ctx.fillStyle = "#ffffff"; 
                     ctx.drawImage(this.potionsheet, 34, 160, 16, 16, this.textlocationbuy.textX, this.textlocationbuy.textY+45, 16, 16);
+                    //coin image
+                    ctx.drawImage(this.potionsheet, 160, 132, 33, 24, this.textlocationbuy.textX+172, this.textlocationbuy.textY+45, 24, 18);
                     if(this.success && this.itemno == 2 && !this.failure) {
                         ctx.drawImage(this.tickorxsheet, 160, 304, 16, 16, this.textlocationbuy.textX + 230, this.textlocationbuy.textY+45, 16, 16);
                         if(Date.now() - this.successtimer > 3000) {
@@ -265,6 +283,8 @@ class Merchant {
                     ctx.fillText(this.currChoice[this.textIndex + 3], this.textlocationbuy.textX+20, this.textlocationbuy.textY+90);
                     ctx.fillStyle = "#ffffff"; 
                     ctx.drawImage(this.potionsheet, 66, 160, 16, 16, this.textlocationbuy.textX, this.textlocationbuy.textY+75, 16,16);
+                    //coin image
+                    ctx.drawImage(this.potionsheet, 160, 132, 33, 24, this.textlocationbuy.textX+187, this.textlocationbuy.textY+75, 24, 18);
                     if(this.success && this.itemno == 3 && !this.failure) {
                         ctx.drawImage(this.tickorxsheet, 160, 304, 16, 16, this.textlocationbuy.textX + 230, this.textlocationbuy.textY+75, 16, 16);
                         if(Date.now() - this.successtimer > 3000) {
@@ -284,6 +304,8 @@ class Merchant {
                     ctx.fillText(this.currChoice[this.textIndex + 4], this.textlocationbuy.textX+20, this.textlocationbuy.textY+120);
                     ctx.fillStyle = "#ffffff"; 
                     ctx.drawImage(this.potionsheet, 50, 160, 16, 16, this.textlocationbuy.textX, this.textlocationbuy.textY+105, 16,16);
+                    //coin image
+                    ctx.drawImage(this.potionsheet, 160, 132, 33, 24, this.textlocationbuy.textX+182, this.textlocationbuy.textY+105, 24, 18);
                     if(this.success && this.itemno == 4 && !this.failure) {
                         ctx.drawImage(this.tickorxsheet, 160, 304, 16, 16, this.textlocationbuy.textX + 230, this.textlocationbuy.textY+105, 16, 16);
                         if(Date.now() - this.successtimer > 3000) {
@@ -303,6 +325,8 @@ class Merchant {
                     ctx.fillText(this.currChoice[this.textIndex + 5], this.textlocationbuy.textX+20, this.textlocationbuy.textY+150);
                     ctx.fillStyle = "#ffffff"; 
                     ctx.drawImage(this.potionsheet, 82, 160, 16, 16, this.textlocationbuy.textX, this.textlocationbuy.textY+135, 16,16);
+                    //coin image
+                    ctx.drawImage(this.potionsheet, 160, 132, 33, 24, this.textlocationbuy.textX+192, this.textlocationbuy.textY+135, 24, 18);
                     if(this.success && this.itemno == 5 && !this.failure) {
                         ctx.drawImage(this.tickorxsheet, 160, 304, 16, 16, this.textlocationbuy.textX + 230, this.textlocationbuy.textY+135, 16, 16);
                         if(Date.now() - this.successtimer > 3000) {
@@ -322,13 +346,15 @@ class Merchant {
                     ctx.fillText(this.currChoice[this.textIndex + 6], this.textlocationbuy.textX+20, this.textlocationbuy.textY+180);
                     ctx.fillStyle = "#ffffff"; 
                     ctx.drawImage(this.petsheet, 0, 0, 24, 24, this.textlocationbuy.textX-4, this.textlocationbuy.textY+165, 24,24);
+                    //coi image
+                    ctx.drawImage(this.potionsheet, 160, 132, 33, 24, this.textlocationbuy.textX+310, this.textlocationbuy.textY+165, 24, 18);
                     if(this.success && this.itemno == 6 && !this.failure) {
-                        ctx.drawImage(this.tickorxsheet, 160, 304, 16, 16, this.textlocationbuy.textX + 330, this.textlocationbuy.textY+165, 16, 16);
+                        ctx.drawImage(this.tickorxsheet, 160, 304, 16, 16, this.textlocationbuy.textX + 340, this.textlocationbuy.textY+165, 16, 16);
                         if(Date.now() - this.successtimer > 3000) {
                             this.success = false;
                         }
                     } else if(this.failure && this.itemno == 6) {
-                        ctx.drawImage(this.tickorxsheet, 176, 304, 16, 16, this.textlocationbuy.textX + 330, this.textlocationbuy.textY+165, 16, 16);
+                        ctx.drawImage(this.tickorxsheet, 176, 304, 16, 16, this.textlocationbuy.textX + 340, this.textlocationbuy.textY+165, 16, 16);
                         if(Date.now() - this.failuretimer > 3000) {
                             this.failure = false;
                             this.success = false;
@@ -346,13 +372,19 @@ class Merchant {
             this.shop = false;
             //We show 3 sentences at a time for textappearDuration i.e. 7.5 seconds.
             if(Date.now() - this.showTextTimer < this.textappearDuration) {
-                ctx.fillText(this.currChoice[this.textIndex], this.textlocation.textX, this.textlocation.textY);
+                ctx.fillText(this.currChoice[this.textIndex], this.textlocation.textX+10, this.textlocation.textY+10);
                 if(this.currChoice[this.textIndex + 1] !== undefined)
-                    ctx.fillText(this.currChoice[this.textIndex + 1], this.textlocation.textX, this.textlocation.textY+30);  
+                    ctx.fillText(this.currChoice[this.textIndex + 1], this.textlocation.textX+10, this.textlocation.textY+40);  
                 if(this.currChoice[this.textIndex + 2] !== undefined)  
-                    ctx.fillText(this.currChoice[this.textIndex + 2], this.textlocation.textX, this.textlocation.textY+60);  
+                    ctx.fillText(this.currChoice[this.textIndex + 2], this.textlocation.textX+10, this.textlocation.textY+70);  
+                if(this.currChoice[this.textIndex + 3] !== undefined)
+                    ctx.fillText(this.currChoice[this.textIndex + 3], this.textlocation.textX+10, this.textlocation.textY+100);  
+                if(this.currChoice[this.textIndex + 4] !== undefined)  
+                    ctx.fillText(this.currChoice[this.textIndex + 4], this.textlocation.textX+10, this.textlocation.textY+130);
+                if(this.currChoice[this.textIndex + 5] !== undefined)  
+                    ctx.fillText(this.currChoice[this.textIndex + 5], this.textlocation.textX+10, this.textlocation.textY+160);   
             } else {
-                this.textIndex += 3;
+                this.textIndex += 6;
                 //At the end of his conversation, go back to main menu.
                 if(this.currChoice[this.textIndex] === undefined) {
                     this.currChoice = main;
@@ -373,15 +405,15 @@ class Merchant {
         if(this.mainmenu) {
             //Reset to false, if otherwise proven true.
             this.hoveredtalk = false;
-            if(e.x >= 690 && e.x < 780) {
-                if(e.y >= 420 && e.y < 440) {
+            if(e.x >= 732 && e.x < 822) {
+                if(e.y >= 460 && e.y < 480) {
                     this.hoveredtalk = true;
                 }
             }
 
             this.hoveredbuy = false;
-            if(e.x >= 690 && e.x < 830) {
-                if(e.y >= 390 && e.y < 415) {
+            if(e.x >= 732 && e.x < 872) {
+                if(e.y >= 430 && e.y < 455) {
                     this.hoveredbuy = true;
                 }
             }
@@ -449,13 +481,13 @@ class Merchant {
 
     determineClick(e) {
         if(this.mainmenu) {
-            if(e.x >= 690 && e.x < 780) {
-                if(e.y >= 420 && e.y < 440) {
-                    this.currChoice = firstEncounterStory;
+            if(e.x >= 732 && e.x < 822) {
+                if(e.y >= 460 && e.y < 480) {
+                    this.currChoice = this.dialoguenum;
                 }
             }
-            if(e.x >= 690 && e.x < 830) {
-                if(e.y >= 390 && e.y < 415) {
+            if(e.x >= 732 && e.x < 872) {
+                if(e.y >= 430 && e.y < 455) {
                     this.currChoice = itemsToSell;
                 }
             }
@@ -467,7 +499,7 @@ class Merchant {
                 if(e.y >= 382 && e.y < 407) {
                     if(this.game.camera.char.coins >= 10) {
                         this.game.camera.char.coins -= 10;
-                        this.game.camera.char.hp.maxHealth += 150;
+                        this.game.camera.char.hp.maxHealth += 70;
                         this.game.camera.char.hp.current = this.game.camera.char.hp.maxHealth;
                         this.success = true;
                         this.itemno = 0;
@@ -484,7 +516,7 @@ class Merchant {
                 if(e.y >= 412 && e.y < 437) {
                     if(this.game.camera.char.coins >= 10) {
                         this.game.camera.char.coins -= 10;
-                        this.game.camera.char.hp.maxMana += 150;
+                        this.game.camera.char.hp.maxMana += 120;
                         this.game.camera.char.hp.current = this.game.camera.char.hp.maxMana;
                         this.success = true;
                         this.itemno = 1;
@@ -596,13 +628,13 @@ var main = {
 }
 
 var itemsToSell = {
-    0: "Increase Total Health x10 coins",
-    1: "Increase Total Mana x10 coins",
-    2: "Buy a Big Red Vial x5 coins",
-    3: "Buy a Small Red Vial x3 coins",
-    4: "Buy a Big Blue Vial x5 coins",
-    5: "Buy a Small Blue Vial x3 coins",
-    6: "Get a Pet (Fights and mana regen inc.) x20 coins",
+    0: "Increase Total Health x 10",
+    1: "Increase Total Mana x 10",
+    2: "Buy a Big Red Vial x 5",
+    3: "Buy a Small Red Vial x 3",
+    4: "Buy a Big Blue Vial x 5",
+    5: "Buy a Small Blue Vial x 3",
+    6: "Get a Pet (Fights and mana regen inc.) x 20",
     7: "BACK"
 }
 
@@ -628,4 +660,34 @@ var firstEncounterStory =
     17: "Protector. You should Buck-le up, Hoho, even after", 
     18: "all these years, I haven't lost my sense of humor.",
     19: "Let us talk more later."
+}
+
+var secondEncounterStory = 
+{
+    0: "Ah, so we meet again in this Eerie dungeon, Hoho.",
+    1: "If you made it this far, then you beat both the ",
+    2: "Buck Aroo brothers. Incidentally, Drumbuck, who you", 
+    3: "just beat, wasn't under the spell as well. In fact,",
+    4: "he often tells me how he doesn't want to serve our",
+    5: "King. His actions and his words don't match up but",
+    6: "I suppose we all keep our secrets. .... Hm? You are",
+    7: "curious to know about me? Hoho, my identity is not",
+    8: "important. I am a mere cog in the machine, but,",
+    9: "even if I wanted to tell you, I can't because I",
+    10: "do not remember myself. The only thing I remember",
+    11: "from my life was the unwavering need to have gold.",
+    12: "Anyhow, as I mentioned, everyone in this Kingdom",
+    13: "has been placed under a spell, and all you have",
+    14: "to do is beat them up to knock them into senses.",
+    15: " It's a classic strategy but it works everytime.",
+    16: "Keep following this path, and you'll meet me again",
+    17: "but this time we will be foes. Yes.. I am the", 
+    18: "guardian of this Dungeon. Hoho, like I said, I am",
+    19: "not against you Young Rutherford, but I am a",
+    20: "loyal Apparition that serves our King. I cannot",
+    21: "let you pass simply because our goals are the same.",
+    22: "Think of it this way, if you cannot beat me, then",
+    23: "you definitely won't be able to beat the King.",
+    24: "Buy from me what you want and be prepared for when",
+    25: "we meet again."
 }
