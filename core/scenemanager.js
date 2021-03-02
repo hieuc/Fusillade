@@ -40,8 +40,6 @@ class SceneManager {
     loadLevel1() {
         this.game.entities = [];
         this.game.background = [];
-        if (this.audio)
-            this.audio.pause();
         this.gameover = false;
 
         var w = 100;
@@ -193,11 +191,9 @@ class SceneManager {
         this.game.addEntity(character);
         
         //this.game.addEntity(new Slippey(this.game, character.x- 500, character.y));
-
-        this.audio = new Audio("./sounds/music/greenpath-ambient.mp3");
-        this.audio.volume = 0.5;
-        this.audio.loop = true;
-        this.audio.play();
+        ASSET_MANAGER.pauseBackgroundMusic();
+        ASSET_MANAGER.playAsset("./sounds/music/greenpath-ambient.mp3");
+        ASSET_MANAGER.autoRepeat("./sounds/music/greenpath-ambient.mp3");
     };
 
     update() {
@@ -229,12 +225,9 @@ class SceneManager {
                 }
 
             if (this.stage === 1 && this.isInRoom(this.rooms[0])) {
-                this.audio.pause();
-                var vol = this.audio.volume;
-                this.audio = new Audio("./sounds/music/greenpath-action.mp3");
-                this.audio.loop = true;
-                this.audio.volume = vol;
-                this.audio.play();
+                ASSET_MANAGER.pauseBackgroundMusic();
+                ASSET_MANAGER.playAsset("./sounds/music/greenpath-action.mp3");
+                ASSET_MANAGER.autoRepeat("./sounds/music/greenpath-action.mp3");
                 this.stage = 2;
             }
         }  
@@ -453,13 +446,9 @@ class Inventory {
                     this.game.addEntity(new Score(this.game, ruth.bound.x + ruth.bound.w/2, ruth.bound.y, this.regen[current], 1));
                 }
                 this.slots[current]--;
-                var a = new Audio("./sounds/use_potion.mp3");
-                a.volume = 0.25;
-                a.play();
+                ASSET_MANAGER.playAsset("./sounds/sfx/use_potion.mp3");
             } else {
-                var a = new Audio("./sounds/no_potion.mp3");
-                a.volume = 0.25;
-                a.play();
+                ASSET_MANAGER.playAsset("./sounds/sfx/no_potion.mp3");
             }       
         }
     }

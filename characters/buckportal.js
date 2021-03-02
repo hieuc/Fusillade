@@ -82,11 +82,8 @@ class Buckportal extends Enemy {
                 if (entity.bound && that.bound.collide(entity.bound)) {
                     if(entity instanceof Projectiles && !entity.friendly) {
                         entity.removeFromWorld = true;
-                        var audio = new Audio("./sounds/warpI.mp3");
-                        audio.volume = 0.12;
-                        audio.play();
+                        ASSET_MANAGER.playAsset("./sounds/sfx/warpI.mp3");
                         that.projcount++;
-                        console.log(that.projcount);
                     } else {
                         //nothing really.
                     }
@@ -118,10 +115,7 @@ class Buckportal extends Enemy {
         var pp = this.form == 1? {sx: 96, sy:160, size: 16}:{sx: 96, sy: 112, size: 16};
         var p = new Projectiles(this.game, false, this.x+50, this.y+40, velocity, 4.5, 2500, 10, pp);
         this.attacks--;
-        var audio = new Audio("./sounds/warpO.mp3");
-        console.log(this.attacks);
-        audio.volume = 0.12;
-        audio.play();
+        ASSET_MANAGER.playAsset("./sounds/sfx/warpO.mp3");
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }
 

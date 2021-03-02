@@ -105,8 +105,9 @@
     <label for="debug" class="center">Debug:</label>
     <input type="checkbox" id="debug" onclick="check()" class="center">
     <label for="music" class="center" style="margin-left: 30px">Music:</label>
-    
-    <input type="range" min="1" max="100" value="50" class="slider" id="music" onchange="changeVolume()" class="center">
+    <input type="range" min="1" max="100" value="40" class="slider" id="music" onchange="changeMusicVolume()" class="center">
+    <label for="music" class="center" style="margin-left: 30px">Sfx:</label>
+    <input type="range" min="1" max="100" value="20" class="slider" id="sfx" onchange="changeEffectsVolume()" class="center">
     <div id="instruction">
         <p>Game Controls</p>
         <div style="display:inline-flex">
@@ -166,13 +167,23 @@
         function check() {
             PARAMS.debug = document.getElementById('debug').checked;
         }
-        function changeVolume() {
-            gameEngine.camera.audio.volume = document.getElementById('music').value/100;
+        function changeEffectsVolume() {
+            ASSET_MANAGER.adjustEffectsVolume(document.getElementById('sfx').value/100);
         }
+
+        function changeMusicVolume() {
+            ASSET_MANAGER.adjustBackgroundVolume(document.getElementById('music').value/100);
+        }
+
+
+        
         function meme() {
             PARAMS.meme = document.getElementById('meme').checked;
         }
 
+        // trigger the default volume change
+        changeMusicVolume();
+        changeEffectsVolume();
         // stop the broswer from scrolling on spacebar
         window.addEventListener('keydown', function(e) {
             if(e.keyCode == 32 && e.target == document.getElementById('gameWorld')) {

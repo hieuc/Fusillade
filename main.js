@@ -2,6 +2,7 @@ var gameEngine = new GameEngine();
 
 var ASSET_MANAGER = new AssetManager();
 
+// sprites
 ASSET_MANAGER.queueDownload("./sprites/rutherford.png");
 ASSET_MANAGER.queueDownload("./sprites/rutherford-main.png");
 ASSET_MANAGER.queueDownload("./sprites/Fayere.png");
@@ -31,6 +32,24 @@ ASSET_MANAGER.queueDownload("./sprites/merchan.png");
 ASSET_MANAGER.queueDownload("./sprites/Dine-O.png");
 ASSET_MANAGER.queueDownload("./sprites/p.png");
 ASSET_MANAGER.queueDownload("./sprites/bunny.png");
+
+// sounds
+ASSET_MANAGER.queueDownload("./sounds/music/buck.mp3");
+ASSET_MANAGER.queueDownload("./sounds/music/greenpath-ambient.mp3");
+ASSET_MANAGER.queueDownload("./sounds/music/greenpath-action.mp3");
+ASSET_MANAGER.queueDownload("./sounds/sfx/Ascend.mp3");
+ASSET_MANAGER.queueDownload("./sounds/sfx/Barrelbreak.mp3");
+ASSET_MANAGER.queueDownload("./sounds/sfx/health.mp3");
+ASSET_MANAGER.queueDownload("./sounds/sfx/Hit.mp3");
+ASSET_MANAGER.queueDownload("./sounds/sfx/no_potion.mp3");
+ASSET_MANAGER.queueDownload("./sounds/sfx/slam.mp3");
+ASSET_MANAGER.queueDownload("./sounds/sfx/slide.mp3");
+ASSET_MANAGER.queueDownload("./sounds/sfx/use_potion.mp3");
+ASSET_MANAGER.queueDownload("./sounds/sfx/warpI.mp3");
+ASSET_MANAGER.queueDownload("./sounds/sfx/warpO.mp3");
+ASSET_MANAGER.queueDownload("./sounds/sfx/body-fall.mp3");
+
+
 
 ASSET_MANAGER.downloadAll(function () {
 	var canvas = document.getElementById('gameWorld');

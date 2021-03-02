@@ -244,7 +244,7 @@ class Drumbuck extends Enemy {
                     }
                     that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, entity.damage));
                     entity.removeFromWorld = true;
-                    //var audio = new Audio("./sounds/Hit.mp3");
+                    ASSET_MANAGER.playAsset("./sounds/sfx/Hit.mp3");
                     //audio.volume = PARAMS.hit_volume;
                     //audio.play();
                 } else if(entity instanceof Bluebeam) {

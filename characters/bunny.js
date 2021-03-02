@@ -120,7 +120,7 @@ class Bunny extends Enemy {
             // already enraged
             this.velocity = this.calculateVel();
             this.action = 1;
-            this.speed = 5;
+            this.speed = 6;
             this.scale = 4;
             if (time > this.attackRate) {
                 this.attack();
