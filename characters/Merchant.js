@@ -18,7 +18,7 @@ class Merchant {
 
         this.textIndex = 0;
 
-        this.dialoguenum;
+        this.dialoguenum = this.level == 1? firstEncounterStory: this.level == 2? secondEncounterStory: main;
 
         /**
          * ALL THE HOVERING CHECKS ARE HERE.
@@ -101,15 +101,6 @@ class Merchant {
     }
 
     update() {
-        if(this.level == 1) {
-            this.dialoguenum = firstEncounterStory;
-        } else if(this.level == 2) {
-            this.dialoguenum = secondEncounterStory;
-        }
-
-        if(this.level == 2) {
-
-        }
         //Get rutherford's position.
         this.rutherpos = this.game.camera.char.x;
         this.decideDir();

@@ -477,11 +477,11 @@ class Rutherford {
             if (e instanceof Projectiles && this.bound.collide(e.bound) && !e.friendly) {
                 //If ascended take 80% of the intended damage.
                 if(this.form == 1) {
-                    this.hp.current -= e.damage * 0.8;
+                    e.hit(this);
+                    this.hp.current += e.damage * 0.2;
                 } else {
-                    this.hp.current -= e.damage;
+                    e.hit(this);
                 }
-                e.hit(this);
             } else if (e instanceof Obstacle && this.bound.collide(e.bound)) {
                 var changed = false;
                 // check horizontal

@@ -117,58 +117,7 @@ class Cyclops extends Enemy
         } 
         else 
         {
-            /*
-            if(Math.abs(this.x - this.enemyX) > 700 || Math.abs(this.y - this.enemyY) > 500) 
-            {
-                this.howlong = Date.now() - this.toofarmovement;
-                if(this.howlong < 1500) 
-                {
-                    this.face = 1;
-                    this.x += -1 * this.speed;
-                    this.state = 1;
-                } 
-                else if (this.howlong >= 1500 && this.howlong < 3000) 
-                {
-                    this.state = 0;
-                } 
-                else if(this.howlong >= 3000 && this.howlong < 4500) 
-                {
-                    this.face = 0;
-                    this.x += 1 * this.speed;
-                    this.state = 1;
-                } 
-                else if (this.howlong >= 4500 && this.howlong < 6000) 
-                {
-                    this.state = 0;
-                } 
-                else 
-                {
-                    this.toofarmovement = Date.now();
-                }
-                //If we are in trigger range, get closer to the main character
-             } 
-            else if(Math.abs(this.x - this.enemyX) > 200 || Math.abs(this.y - this.enemyY) > 150) 
-            {
-
-                if(this.x - this.enemyX > 100) {
-                    this.x += -1 * this.speed;
-                    this.face = 1;
-                    this.state = 1;
-                } else {
-                    this.x += 1 * this.speed;
-                    this.face = 0;
-                    this.state = 1;
-                }
-                if(this.y - this.enemyY > 50) {
-                    this.y += -1 * this.speed;
-                } else {
-                    this.y += 1 * this.speed;
-                }
-                this.x += 2;
-             //Once we are in a decent attack range, Do something now. 
-             } 
-             else 
-             {*/
+            if(Math.abs(this.x - this.enemyX) < 600 && Math.abs(this.y - this.enemyY) < 400) {
                 this.attackbehavior = Date.now() - this.attackpatterntime;
                 if(this.attackbehavior < 1500) 
                 {
@@ -204,7 +153,7 @@ class Cyclops extends Enemy
                 {
                     this.attackpatterntime = Date.now();
                 }
-            //}
+            }
         }
 
        this.updateBound();
@@ -260,7 +209,7 @@ class Cyclops extends Enemy
     attack() {
         var velocity = this.calculateVel();
         var pp = { spritesheet: ASSET_MANAGER.getAsset("./sprites/Cyclops.png"), sx: 256, sy: 1236, size: 35, scale : 1};
-        var p = new Projectiles(this.game, false, this.x + 55, this.y + 50, velocity, 25, 2000, this.damage, pp);
+        var p = new Projectiles(this.game, false, this.x + 55, this.y + 50, velocity, 25, 2000, this.damage, pp, "cyclopshit");
         p.bound.r = p.bound.r / 1.5;
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }

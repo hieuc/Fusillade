@@ -104,6 +104,14 @@ class Projectiles {
             r = new Star(this.game, this.x - this.proj.scale * this.proj.size/2 , this.y - this.proj.scale * this.proj.size );
         } else if (this.effect === "burn") {
             r = new Burn(this.game, this.x - 60, this.y - 60);
+        } else if (this.effect == "fayerehit") {
+            r = new Fayerehit(this.game, this.x-15, this.y-10);
+        } else if(this.effect == "Aishit") {
+            r = new Aishit(this.game, this.x -15, this.y - 10);
+        } else if(this.effect == "buckhit") {
+            r = new Buckhit(this.game, this.x, this.y);
+        } else if(this.effect == "cyclopshit") {
+            r = new Cyclopshit(this.game, this.x-12, this.y);
         }
         return r;
     }

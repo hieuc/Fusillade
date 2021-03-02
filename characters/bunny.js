@@ -190,7 +190,7 @@ class Bunny extends Enemy {
     attack() {
         var velocity = this.calculateVel();
         var pp = {sx: 64, sy: 336, size: 16};
-        var p = new Projectiles(this.game, false, this.x, this.y, velocity, 8, 2000, 15, pp);
+        var p = new Projectiles(this.game, false, this.x, this.y, velocity, 8, 2000, 15, pp, "fayerehit");
         p.bound.r = 8;
         this.game.addEntity(p);
     }
