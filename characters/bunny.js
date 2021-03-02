@@ -9,6 +9,8 @@ class Bunny extends Enemy {
 
         this.scale = 3;
 
+        this.damage = 20;
+
         this.action = 0; // 0 = idle, 1 = moving
 
         this.state = 0; // 0 = normal, 1 = enraged
@@ -190,7 +192,7 @@ class Bunny extends Enemy {
     attack() {
         var velocity = this.calculateVel();
         var pp = {sx: 64, sy: 336, size: 16};
-        var p = new Projectiles(this.game, false, this.x, this.y, velocity, 8, 2000, 15, pp, "fayerehit");
+        var p = new Projectiles(this.game, false, this.x, this.y, velocity, 8, 2000, this.damage, pp, "fayerehit");
         p.bound.r = 8;
         this.game.addEntity(p);
     }
