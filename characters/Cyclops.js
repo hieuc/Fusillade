@@ -166,9 +166,7 @@ class Cyclops extends Enemy
                 if (entity.bound && that.bound.collide(entity.bound)) {
                     if(entity instanceof Projectiles && entity.friendly) {
                         entity.hit(that);
-                        var audio = new Audio("./sounds/Hit.mp3");
-                        audio.volume = PARAMS.hit_volume;
-                        audio.play();
+                        ASSET_MANAGER.playAsset("./sounds/sfx/Hit.mp3");
                         if(that.hp.current <= 0) {
                             that.state = 3;
                         }

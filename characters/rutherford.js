@@ -44,8 +44,6 @@ class Rutherford {
 
         this.luckyticktimer = 0;
 
-        this.playaudio = 0; //used in playing audios only once.
-
         this.redbeamcost = 200;
         
         this.bluebeamcost = 130;
@@ -119,10 +117,10 @@ class Rutherford {
         this.animations[6][1][1] = new Animator(this.spritesheet, 520, 1110, 50, 37, 5, 0.05, 0, true, false);
 
         //Death
-        this.animations[7][0][0] = new Animator(this.spritesheet, 0, 333, 50, 37, 6, 0.9, 0, false, false);
-        this.animations[7][1][0] = new Animator(this.spritesheet, 470, 333, 50, 37, 6, 0.9, 0, true, false);
-        this.animations[7][0][1] = new Animator(this.spritesheet, 0, 925, 50, 37, 6, 0.9, 0, false, false);
-        this.animations[7][1][1] = new Animator(this.spritesheet, 470, 925, 50, 37, 6, 0.9, 0, true, false);
+        this.animations[7][0][0] = new Animator(this.spritesheet, 0, 333, 50, 37, 6, 0.5, 0, false, false);
+        this.animations[7][1][0] = new Animator(this.spritesheet, 470, 333, 50, 37, 6, 0.5, 0, true, false);
+        this.animations[7][0][1] = new Animator(this.spritesheet, 0, 925, 50, 37, 6, 0.5, 0, false, false);
+        this.animations[7][1][1] = new Animator(this.spritesheet, 470, 925, 50, 37, 6, 0.5, 0, true, false);
     }
 
     update() {
@@ -130,12 +128,16 @@ class Rutherford {
         if (this.action !== 7 && this.hp.current <= 0) {
             this.action = 7;
             this.game.camera.gameover = true;
-            this.game.camera.audio.pause();
+            ASSET_MANAGER.pauseBackgroundMusic();
         } 
 
         // slowly closing the screen when he dies
         if (this.action === 7) {
             var frame = this.animations[this.action][this.face][this.form].currentFrame();
+
+            if (frame === 2) {
+                ASSET_MANAGER.playAsset("./sounds/sfx/body-fall.mp3");
+            }
             
             var radius = 5;
             // calculate rutherford's current coordinates
@@ -231,12 +233,9 @@ class Rutherford {
 
             if(this.action == 3) {         //Did the user press G? If yes, transform and do the animation.
                 this.speed = 0;
-                if(this.playaudio == 0) {
-                    var audio = new Audio("./sounds/Ascend.mp3");
-                    audio.volume = 0.3;
-                    audio.play();
-                    this.playaudio = 1;
-                }
+                
+                ASSET_MANAGER.playAsset("./sounds/sfx/Ascend.mp3");
+                
 
                 //If our animation is done, transform and start allowing input again. Default back to action state 0.
                 if(this.animations[this.action][this.face][this.form].isDone(this.game.clockTick)) {
@@ -244,7 +243,6 @@ class Rutherford {
                     this.action = 0;
                     this.allow = true;
                     this.speed = this.speedtemp;
-                    this.playaudio = 0;
                 }
             //If the user has pressed Q with all the prerequisites completed, then slide.
             } else if (this.action == 4) {
@@ -254,9 +252,7 @@ class Rutherford {
                     this.speedbump = true;
                     let manadeduction = this.form == 1? this.slideasc : this.slidenor;
                     this.hp.currMana -= manadeduction;
-                    var audio = new Audio("./sounds/slide.mp3");
-                    audio.volume = 0.3;
-                    audio.play();
+                    ASSET_MANAGER.playAsset("./sounds/sfx/slide.mp3");
                 }
                 //After performing the slide, default back to normal state and values.
                 if(this.animations[this.action][this.face][this.form].isDone(this.game.clockTick)) {
@@ -269,12 +265,8 @@ class Rutherford {
             //If we wanna use our special.
             } else if(this.action == 5) {
                 if(this.animations[this.action][this.face][this.form].isAlmostDone(this.game.clockTick)) {
-                    if(this.playaudio == 0) {
-                        var audio = new Audio("./sounds/slam.mp3");
-                        audio.volume = 0.1;
-                        audio.play();
-                        this.playaudio = 1;
-                    }
+                    ASSET_MANAGER.playAsset("./sounds/sfx/slam.mp3");
+            
                 }
                 if(this.animations[this.action][this.face][this.form].isDone(this.game.clockTick)) {
                     this.animations[this.action][this.face][this.form].elapsedTime = 0; // take animation back to starting point
@@ -290,7 +282,6 @@ class Rutherford {
                         this.hp.currMana = 0;
                     }
                     this.allow = true;
-                    this.playaudio = 0;
                 }           
             } else if(this.action == 6) {
                 if(this.animations[this.action][this.face][this.form].isAlmostDone(this.game.clockTick)) {

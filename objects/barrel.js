@@ -6,8 +6,6 @@ class Barrel {
 
         this.animations = [];
 
-        this.barrelsound = 0.25; //out of 1
-
         this.dead = false;
 
         this.state = 0;
@@ -56,15 +54,13 @@ class Barrel {
                             entity.removeFromWorld = true;
                             that.hp.current -= entity.damage;
                             if(that.hp.current <= 0) {
-                                var audio = new Audio("./sounds/Barrelbreak.mp3");
+                                ASSET_MANAGER.playAsset("./sounds/sfx/Barrelbreak.mp3");
                                 that.state = 2;
                                 that.dead = true;
                             } else {
-                                var audio = new Audio("./sounds/Hit.mp3");
+                                ASSET_MANAGER.playAsset("./sounds/sfx/Hit.mp3");
                                 that.state = 1;
                             }
-                            audio.volume = that.barrelsound;
-                            audio.play();
                         } else {
                             //nothing
                         }

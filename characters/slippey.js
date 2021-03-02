@@ -315,7 +315,7 @@ class Slippey extends Enemy {
             if (entity.bound && that.bound.collide(entity.bound)) {
                 if(entity instanceof Projectiles && entity.friendly) {
                     entity.hit(that);
-                    //var audio = new Audio("./sounds/Hit.mp3");
+                    ASSET_MANAGER.playAsset("./sounds/sfx/Hit.mp3");
                     //audio.volume = PARAMS.hit_volume;
                     //audio.play();
                 } else if(entity instanceof Bluebeam) {

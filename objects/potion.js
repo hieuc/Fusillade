@@ -8,8 +8,6 @@ class Potion {
 
         this.scale = 2.5;
 
-        this.healthsound = 0.25;
-
         this.bound = new BoundingCircle(this.game, this.x+15, this.y+25, 20);
 
         this.loadAnimations();
@@ -38,9 +36,7 @@ class Potion {
                         that.removeFromWorld = true;
                         that.game.camera.inventory.slots[that.type]++;
                         
-                        var audio = new Audio("./sounds/health.mp3");
-                        audio.volume = that.healthsound;
-                        audio.play();
+                        ASSET_MANAGER.playAsset("./sounds/sfx/health.mp3");
                     } else {
                         //Nothing really
                     }
