@@ -8,7 +8,7 @@ class GameEngine {
 
         this.ctx = null;
         this.click = null;
-        this.mouse = null;
+        this.mouse = { x:0, y: 0 };
         this.wheel = null;
         this.left = false;
         this.right= false;
