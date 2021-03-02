@@ -586,11 +586,9 @@ class Merchant {
             //BUY A PET
             if(e.x >= 730 && e.x < 1050) {
                 if(e.y >= 562 && e.y < 587) {
-                    if(this.game.camera.char.coins >= 20) {
+                    if(this.game.camera.char.coins >= 20 && !this.game.camera.char.pet) {
                         this.game.camera.char.coins -= 20;
-                        //Create a pet
-
-
+                        this.game.camera.char.hasapet = true;
                         this.success = true;
                         this.itemno = 6;
                         this.successtimer = Date.now();

@@ -93,7 +93,7 @@ class SceneManager {
         }
         // spawn main character and enemiessss
         var startRoom = rooms[7];
-        var character = new Rutherford(this.game, (startRoom.x + startRoom.w/2) * 32 * scale,  (startRoom.y + startRoom.h/2) * 32 * scale); 
+        var character = new Rutherford(this.game, (startRoom.x + startRoom.w/2) * 32 * scale,  (startRoom.y + startRoom.h/2) * 32 * scale, false); 
         this.char = character;
 
         rooms.forEach(r => {

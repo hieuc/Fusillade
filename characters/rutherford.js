@@ -1,6 +1,6 @@
 class Rutherford {
-    constructor(game, x, y) {
-        Object.assign(this, { game, x, y});
+    constructor(game, x, y, pet) {
+        Object.assign(this, { game, x, y, pet});
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/rutherford-main.png");
 
@@ -54,7 +54,7 @@ class Rutherford {
 
         this.bound = new BoundingBox(this.game, this.x, this.y, 16, 24);
 
-        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y, 20 * this.scale, 400, 400, true); //Has mana field too.
+        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y, 20 * this.scale, 300, 300, true); //Has mana field too.
 
         this.animations = [];
 
@@ -124,6 +124,11 @@ class Rutherford {
     }
 
     update() {
+        if(this.hasapet) {
+            this.game.addEntity(new DineO(this.game, this.x-20, this.y));
+            this.hasapet = false;
+            this.pet = true;
+        }
         // check death
         if (this.action !== 7 && this.hp.current <= 0) {
             this.action = 7;

@@ -26,7 +26,7 @@ class Fayere extends Enemy {
 
         this.fireRate = 300; //in milliseconds.
 
-        this.enemypos = { enemyX: this.game.camera.x, enemyY: this.game.camera.y};
+        this.enemypos = { enemyX: this.game.camera.char.x, enemyY: this.game.camera.char.y};
 
         this.animations = [];
 
