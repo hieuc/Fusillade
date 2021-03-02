@@ -14,9 +14,10 @@ class Rutherford {
 
         this.face = 0; // 0 = right, 1 = left
 
-        this.speed = 6;
+        this.speed = 7;
 
         this.attackcd = 200; // in ms
+        
         this.lastAttack = Date.now();
 
         this.hasapet = false; //If we buy a pet, make this true
