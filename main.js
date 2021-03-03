@@ -36,6 +36,7 @@ ASSET_MANAGER.queueDownload("./sprites/fayerehit.png");
 ASSET_MANAGER.queueDownload("./sprites/Aishit.png");
 ASSET_MANAGER.queueDownload("./sprites/buckhit.png");
 ASSET_MANAGER.queueDownload("./sprites/cyclopshit.png");
+ASSET_MANAGER.queueDownload("./sprites/mainmenu.png");
 
 // sounds
 ASSET_MANAGER.queueDownload("./sounds/music/buck.mp3");

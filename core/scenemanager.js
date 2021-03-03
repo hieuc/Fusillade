@@ -3,6 +3,7 @@ class SceneManager {
         this.game = game;
         this.game.camera = this;
 
+        this.main = ASSET_MANAGER.getAsset("./sprites/mainmenu.png");
 
         this.minimap = new Minimap(game, 0, 0);
         this.inventory = new Inventory(game, PARAMS.canvas_width/15, PARAMS.canvas_height/15);
@@ -251,8 +252,33 @@ class SceneManager {
             }
         } else if (!this.game.started) {
             ctx.font = "30px Comic Sans MS";
-            ctx.fillStyle = "red";
-            ctx.fillText("press any key to start", PARAMS.canvas_width/6, PARAMS.canvas_height/2);
+            ctx.drawImage(this.main, 0, 0, 1300, 900, 0, 0, 1300, 900);
+            ctx.strokeStyle = "#ffffff";
+            ctx.fillStyle = "#ffffff";
+
+            //If our mouse has come on canvas
+            if(this.game.hover != null) {
+                //If we are hovering over button.
+                if(this.game.hover.x >= 580 && this.game.hover.x < 750) {
+                    if(this.game.hover.y >= 690 && this.game.hover.y < 790) {
+                        ctx.strokeStyle = "#000000";
+                        ctx.fillStyle = "#000000";
+                    }
+                }
+            }
+            ctx.lineWidth = 10;
+            ctx.strokeRect(580, 700, 150, 80);
+            ctx.fillText("START", 600, 750);
+            //If our mouse has clicked canvas
+            if(this.game.click != null) {
+                //If we are clicking in range load lvl 1.
+                if(this.game.click.x >= 580 && this.game.click.x < 750) {
+                    if(this.game.click.y >= 690 && this.game.click.y < 790) {
+                        this.game.started = true;
+                        this.loadLevel1();
+                    }
+                }
+            }
         } 
 
         if(this.game.started) {

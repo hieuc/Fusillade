@@ -8,6 +8,7 @@ class GameEngine {
 
         this.ctx = null;
         this.click = null;
+        this.hover = null;
         this.mouse = { x:0, y: 0 };
         this.wheel = null;
         this.left = false;
@@ -50,10 +51,6 @@ class GameEngine {
         }
 
         this.ctx.canvas.addEventListener("keydown", e => {
-            if (!this.started) {
-                this.started = true;
-                this.camera.loadLevel1();
-            } else {
                 switch (e.key) {
                     case 'd':
                         that.right = true;
@@ -104,7 +101,6 @@ class GameEngine {
                     default:
                         break;
                 }
-            }
         }, false);
 
         this.ctx.canvas.addEventListener("keyup", e => {
@@ -140,6 +136,10 @@ class GameEngine {
             if (this.started) {
                 this.camera.merchant.determineHover(this.mouse);
             }
+
+            if(!this.started) {
+                this.hover = getXandY(e);
+            }
         }, false);
 
         this.ctx.canvas.addEventListener("mousedown", e => {
@@ -155,6 +155,10 @@ class GameEngine {
             if(e.button === 0 && this.started) {
                 this.camera.merchant.determineClick(getXandY(e));
                 this.leftclick = false;
+            }
+
+            if(!this.started) {
+                this.click = getXandY(e);
             }
         }, false);
 

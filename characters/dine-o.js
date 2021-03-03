@@ -95,7 +95,9 @@ class DineO {
         }
 
         //If we are colliding with rutherford or if rutherford is idle, stand idle.
-        if(this.rutherstate == 0 || this.bound.collide(this.game.camera.char.bound)) {
+        if(this.rutherstate == 7) {
+            this.state = 4;
+        } else if(this.rutherstate == 0 || this.bound.collide(this.game.camera.char.bound)) {
             this.transformonce = true;
             this.state = 0;
             this.decideDir();
@@ -148,8 +150,6 @@ class DineO {
                     this.y -= this.speed * 2;
                 }
             }
-        } else if(this.rutherstate == 7) {
-            this.state = 4;
         }
         
         if(this.rutherstate == 2 || this.rutherstate == 6) {
