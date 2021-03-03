@@ -27,7 +27,7 @@ class SceneManager {
         this.merchant = null;
 
         if (this.debug) {
-            var t = createDungeon(100, 75);
+            var t = createLevel2(150, 150);
             this.test = t[0];
         } else {
             //this.loadSandbox();
@@ -51,7 +51,7 @@ class SceneManager {
         //var m = this.createPerlinMap(w, h);
         //var threshold = 0.3;
 
-        var rooms = createDungeon(w, h);
+        var rooms = createLevel1(w, h);
         var m = rooms[0];
         rooms = rooms[1];
         this.rooms = rooms;

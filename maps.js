@@ -200,7 +200,7 @@ function applyDLA(m, pad) {
 }
 
 /**
- * Create a map with rooms.
+ * Create level 1.
  * 
  * The returning map is a 2d array where every element is either
  * 0 (obstacles) and 1 (empty space),
@@ -208,8 +208,8 @@ function applyDLA(m, pad) {
  * @param {*} w 
  * @param {*} h 
  */
-function createDungeon(w, h) {
-    var rooms = createRooms(w, h);
+function createLevel1(w, h) {
+    var rooms = createRoomsLevel1(w, h);
     
     // boss room will be at location (w * 0.1, 0), width, height = 30;
     // saving 50 space
@@ -226,7 +226,7 @@ function createDungeon(w, h) {
     var boss = new Room(Math.floor(w * 0.1), 0, 30, 30, "boss");
     createPath(rooms[0], boss, true);
     rooms[0].key = "miniboss";
-     rooms[7].key = ""; // delete this line since it was just for placing Cyclops next to Rutherford for debugging purposes
+    rooms[7].key = ""; // delete this line since it was just for placing Cyclops next to Rutherford for debugging purposes
     rooms.push(boss);
 
     fillEnemiesLevel1(rooms);
@@ -284,17 +284,161 @@ function createDungeon(w, h) {
 }
 
 /**
- * Create a list of rooms.
+ * Create level 1.
+ * 
+ * The returning map is a 2d array where every element is either
+ * 0 (obstacles) and 1 (empty space),
+ * 
+ * @param {*} w 
+ * @param {*} h 
+ */
+function createLevel2(w, h) {
+    var rooms = createRoomsLevel2(w, h);
+
+    var m = [];
+
+    // init map with obstacles
+    for (var i = 0; i < h; i++) {
+        m[i] = [];
+        for (var j = 0; j < w; j++) {
+            m[i][j] = 0;
+        }
+    }
+
+    for (var i = 0; i < rooms.length; i++) {
+        // fill the room area
+        for (var a = 0; a < rooms[i].h; a++) {
+            for (var b = 0; b < rooms[i].w; b++) {
+                m[rooms[i].y + a][rooms[i].x + b] = 1;
+            }
+        }
+
+        // fill the paths
+        if (rooms[i].path)
+            rooms[i].path.forEach(e => {
+                // if going in x direction
+                if (e.x2 - e.x1 !== 0) {
+                    var v = (e.x2 - e.x1) / Math.abs(e.x2 - e.x1);
+                    for (var a = 0; a < Math.abs(e.x2 - e.x1); a++) {
+                        // width of path is 5
+                        //m[e.y1 - 2][e.x1 + a*v] = 1;
+                        m[e.y1 - 1][e.x1 + a*v] = 1;
+                        m[e.y1][e.x1 + a*v] = 1;
+                        m[e.y1 + 1][e.x1 + a*v] = 1;
+                        //m[e.y1 + 2][e.x1 + a*v] = 1;
+                    }
+                } else {
+                    var v = (e.y2 - e.y1) / Math.abs(e.y2 - e.y1);
+                    for (var a = 0; a < Math.abs(e.y2 - e.y1); a++) {
+                        // width of path is 5
+                        //m[e.y1 + a*v][e.x1 - 2] = 1;
+                        m[e.y1 + a*v][e.x1 - 1] = 1;
+                        m[e.y1 + a*v][e.x1] = 1;
+                        m[e.y1 + a*v][e.x1 + 1] = 1;
+                        //m[e.y1 + a*v][e.x1 + 2] = 1;
+                    }
+                }
+            });
+    }
+
+    m = applyEdgePadding(m, rooms);
+    
+    return [m, rooms];
+}
+
+
+/**
+ * Create a list of rooms for level 2.
  * Will connect rooms with paths.
  * 
  * @param {*} w 
  * @param {*} h 
  */
-function createRooms(w, h) {
+function createRoomsLevel2(w, h) {
     
     var m = [];
     // partition space
-    new Space(0, 0, w, h, 3, m);
+    new Space(0, 0, w, h, 6, m, 0.05);
+
+    // assign rooms to space
+    for (var i = 0; i < m.length; i++) {
+        var e = m[i];
+        // room will occupy 70-80% area of space
+        var w = Math.floor(e.w * (randomInt(11) + 75) / 100);
+        var h = Math.floor(e.h * (randomInt(11) + 75) / 100);
+        // position will also be randomized, but always within space bound
+        var x = e.x + randomInt(Math.floor((e.w - w) * 0.8)) + Math.floor((e.w - w) * 0.1);
+        var y = e.y + randomInt(Math.floor((e.h - h) * 0.8)) + Math.floor((e.h - h) * 0.1);
+        
+        e.room = new Room(x, y, w, h, "normal");
+    };
+
+    // randomly remove 30-40% of rooms
+    for (var i = 0; i < randomInt(Math.floor(m.length*0.1)) + Math.floor(m.length*0.5); i++) {
+        m.splice(randomInt(m.length-3)+1, 1);
+    }
+
+    // create paths between rooms
+    
+    // generate distance between rooms
+    var dist = [];
+    var verticies = [];
+    for (var i = 0; i < m.length; i++) {
+        verticies.push(i);
+        for (var j = i + 1; j < m.length; j++) {
+            // distance is calculated by from room center point
+            var x1 = m[i].room.x + m[i].room.w/2;
+            var y1 = m[i].room.y + m[i].room.h/2;
+            var x2 = m[j].room.x + m[j].room.w/2;
+            var y2 = m[j].room.y + m[j].room.h/2;
+            dist.push({ r1: i, r2: j, d: Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2))});
+        }
+    }
+    // sort distance
+    dist.sort( (a, b) => {return a.d - b.d;} );
+    
+    // build spanning tree
+    var connection = new UnionFind(verticies);
+    for (var i = 0; i < dist.length; i++) {
+        if (!connection.allConnected()) {
+            if(!connection.connected(dist[i].r1, dist[i].r2)) {
+                createPath(m[dist[i].r1].room, m[dist[i].r2].room);
+                connection.union(dist[i].r1, dist[i].r2);
+            }
+        } else {
+            break;
+        }
+    }
+    // do a second pass
+    for (var i = 0; i < dist.length; i++) {
+        if (!connection.allConnected()) {
+            if(!connection.connected(dist[i].r1, dist[i].r2)) {
+                createPath(m[dist[i].r1].room, m[dist[i].r2].room);
+                connection.union(dist[i].r1, dist[i].r2);
+            }
+        } else {
+            break;
+        }
+    }
+    for (var i = 0; i < m.length; i++) {
+        m[i] = m[i].room;
+    }
+    return m;
+}
+
+
+/**
+ * Create a list of rooms for level 1.
+ * Will connect rooms with paths.
+ * 
+ * @param {*} w 
+ * @param {*} h 
+ */
+function createRoomsLevel1(w, h) {
+    
+    var m = [];
+    // partition space
+    new Space(0, 0, w, h, 3, m, 0.1);
 
     // assign rooms to space
     for (var i = 0; i < m.length; i++) {
@@ -360,6 +504,7 @@ function createRooms(w, h) {
     }
     return m;
 }
+
 
 /**
  * Create a z path between 2 rooms
@@ -487,23 +632,23 @@ function createPath(r1, r2, boss) {
  * Expect n^level elements in array.
  */
 class Space {
-    constructor (x, y, w, h, level, collection) {
+    constructor (x, y, w, h, level, collection, discrepancy) {
         Object.assign(this, {x, y, w, h, level, collection});
         
         // create children if level > 0
         if (level > 0) {
             this.children = [];
-            // split on the larger dimension, randomize 0.4 - 0.6 of length
+            // split on the larger dimension, randomize 0.5 +- discrepancy of length
             if (this.w > this.h) {
-                var v = randomInt(Math.floor(this.w * 0.1) + 1) * Math.pow(-1, randomInt(2)) + Math.floor(this.w * 0.5);
+                var v = randomInt(Math.floor(this.w * discrepancy) + 1) * Math.pow(-1, randomInt(2)) + Math.floor(this.w * 0.5);
 
-                this.children[0] = new Space(x, y, v, h, level - 1, collection);
-                this.children[1] = new Space(x + v, y, w - v, h, level - 1, collection);
+                this.children[0] = new Space(x, y, v, h, level - 1, collection, discrepancy);
+                this.children[1] = new Space(x + v, y, w - v, h, level - 1, collection, discrepancy);
             } else {
-                var v = randomInt(Math.floor(this.h * 0.1) + 1) * Math.pow(-1, randomInt(2)) + Math.floor(this.h * 0.5);
+                var v = randomInt(Math.floor(this.h * discrepancy) + 1) * Math.pow(-1, randomInt(2)) + Math.floor(this.h * 0.5);
 
-                this.children[0] = new Space(x, y, w, v, level - 1, collection);
-                this.children[1] = new Space(x, y + v, w, h - v, level - 1, collection);
+                this.children[0] = new Space(x, y, w, v, level - 1, collection, discrepancy);
+                this.children[1] = new Space(x, y + v, w, h - v, level - 1, collection, discrepancy);
             }
         } else {
             this.collection.push(this);
