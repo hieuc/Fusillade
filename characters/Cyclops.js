@@ -9,7 +9,7 @@ class Cyclops extends Enemy
         this.ss = 64;
 
         // damage for each shot 
-        this.damage = 20;
+        this.damage = 100;
         
         this.removeFromWorld = false;
 
@@ -117,7 +117,7 @@ class Cyclops extends Enemy
         } 
         else 
         {
-            if(Math.abs(this.x - this.enemyX) < 600 && Math.abs(this.y - this.enemyY) < 400) {
+            if(Math.abs(this.x - this.enemyX) < 600 && Math.abs(this.y - this.enemyY) < 500) {
                 this.attackbehavior = Date.now() - this.attackpatterntime;
                 if(this.attackbehavior < 1500) 
                 {
@@ -207,7 +207,7 @@ class Cyclops extends Enemy
     attack() {
         var velocity = this.calculateVel();
         var pp = { spritesheet: ASSET_MANAGER.getAsset("./sprites/Cyclops.png"), sx: 256, sy: 1236, size: 35, scale : 1};
-        var p = new Projectiles(this.game, false, this.x + 55, this.y + 50, velocity, 25, 2000, this.damage, pp, "cyclopshit");
+        var p = new Projectiles(this.game, false, this.x + 55, this.y + 50, velocity, 30, 1000, this.damage, pp, "cyclopshit");
         p.bound.r = p.bound.r / 1.5;
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }

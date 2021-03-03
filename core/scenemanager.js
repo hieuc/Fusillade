@@ -43,6 +43,8 @@ class SceneManager {
         this.game.entities = [];
         this.game.background = [];
         this.gameover = false;
+        this.stage = 1;
+        this.tempObstacles = null;
 
         var w = 100;
         var h = 75;

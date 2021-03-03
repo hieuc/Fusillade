@@ -14,7 +14,7 @@ class Rutherford {
 
         this.face = 0; // 0 = right, 1 = left
 
-        this.speed = 7;
+        this.speed = 6;
 
         this.attackcd = 200; // in ms
         
@@ -458,7 +458,7 @@ class Rutherford {
                 p =  new Projectiles(this.game, true, this.x, this.y, velocity, 4, 
                     1200, 10 + randomInt(10) + (f ? 0 : 5), pp, f ? "star" : "burn");;
             } else {
-                p = new Projectiles(this.game, true, this.x, this.y, velocity, 6, 
+                p = new Projectiles(this.game, true, this.x, this.y, velocity, 7, 
                     1200, 10 + randomInt(10) + (f ? 0 : 5), f ? undefined : pp, f ? "star" : "burn");
             }
             this.game.entities.splice(this.game.entities.length - 1, 0, p);
