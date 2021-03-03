@@ -127,7 +127,7 @@ class SceneManager {
                     this.game.addEntity(enemy);
                     
                 } else if (e[0] === "buck") {
-                    this.game.addEntity(new Buck(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale));
+                    this.game.addEntity(new Drumbuck(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale));
                 }
             });
         });
@@ -189,7 +189,7 @@ class SceneManager {
         /*
         this.game.addEntity(new Propportal(this.game, 100, 0, "Cyclops"));
         */
-        this.merchant = new Merchant(this.game, character.x, character.y, 1);
+        this.merchant = new Merchant(this.game, 840, 4100, 1);
         this.game.addEntity(this.merchant);
 
         this.game.addEntity(character);
