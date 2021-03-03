@@ -70,9 +70,9 @@ class Merchant {
 
         this.shop = false;
 
-        this.textlocation = {textX: 722, textY: 420};
+        this.textlocation = {textX: 712, textY: 330};
 
-        this.textlocationbuy = {textX: 740, textY: 402};
+        this.textlocationbuy = {textX: 730, textY: 372};
 
         this.rutherpos = this.game.camera.char.x; //Don't need to know Y.
 
