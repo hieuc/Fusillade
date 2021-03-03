@@ -51,55 +51,55 @@ class GameEngine {
         }
 
         this.ctx.canvas.addEventListener("keydown", e => {
-                switch (e.key) {
-                    case 'd':
-                        that.right = true;
-                        break;
-                    case 'a':
-                        that.left = true;
-                        break;
-                    case 's':
-                        that.down = true;
-                        break;
-                    case 'w':
-                        that.up = true;
-                        break;
-                    case 'g':
-                        this.gkey = true;
-                        break;
-                    case ' ':
-                        this.spacekey = true;
-                        break;
-                    case 'e':
-                        this.ekey = true;
-                        break;
-                    case 'c':
-                        that.camera.camlock = !that.camera.camlock;
-                        break;
-                    case 'x': {
-                        this.camera.offsetx = 0;
-                        this.camera.offsety = 0;
-                    }
-                    case '1':
-                        this.camera.inventory.current = 1;
-                        break;
-                    case '2':
-                        this.camera.inventory.current = 2;
-                        break;
-                    case '3':
-                        this.camera.inventory.current = 3;
-                        break;
-                    case '4':
-                        this.camera.inventory.current = 4;
-                        break;
-                    case 'f':
-                        this.camera.inventory.useItem();
-                        break;
-                    case 'i':
-                        this.ikey = !this.ikey;
-                        break;
-                    default:
-                        break;
+            switch (e.key) {
+                case 'd':
+                    that.right = true;
+                    break;
+                case 'a':
+                    that.left = true;
+                    break;
+                case 's':
+                    that.down = true;
+                    break;
+                case 'w':
+                    that.up = true;
+                    break;
+                case 'g':
+                    this.gkey = true;
+                    break;
+                case ' ':
+                    this.spacekey = true;
+                    break;
+                case 'e':
+                    this.ekey = true;
+                    break;
+                case 'c':
+                    that.camera.camlock = !that.camera.camlock;
+                    break;
+                case 'x': {
+                    this.camera.offsetx = 0;
+                    this.camera.offsety = 0;
+                }
+                case '1':
+                    this.camera.inventory.current = 1;
+                    break;
+                case '2':
+                    this.camera.inventory.current = 2;
+                    break;
+                case '3':
+                    this.camera.inventory.current = 3;
+                    break;
+                case '4':
+                    this.camera.inventory.current = 4;
+                    break;
+                case 'f':
+                    this.camera.inventory.useItem();
+                    break;
+                case 'i':
+                    this.ikey = !this.ikey;
+                    break;
+                default:
+                    break;
                 }
         }, false);
 

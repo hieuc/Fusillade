@@ -7,6 +7,7 @@ class SceneManager {
 
         this.minimap = new Minimap(game, 0, 0);
         this.inventory = new Inventory(game, PARAMS.canvas_width/15, PARAMS.canvas_height/15);
+        this.playonce = true;
 
         this.x = 0;
         this.y = 0;
@@ -251,6 +252,10 @@ class SceneManager {
                 }
             }
         } else if (!this.game.started) {
+            if(this.playonce)
+                ASSET_MANAGER.playAsset("./sounds/music/maintheme.mp3");
+                ASSET_MANAGER.autoRepeat("./sounds/music/maintheme.mp3");
+                this.playonce = false;
             ctx.font = "30px Comic Sans MS";
             ctx.drawImage(this.main, 0, 0, 1300, 900, 0, 0, 1300, 900);
             ctx.strokeStyle = "#ffffff";
