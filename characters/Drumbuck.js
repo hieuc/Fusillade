@@ -324,7 +324,7 @@ class Drumbuck extends Enemy {
     }
 
     attackportal() {
-        var pp = {sx: 96, sy: 112, size: 16};
+        var pp = {sx: 96, sy: 160, size: 16};
         var p = new Projectiles(this.game, false, this.x, this.y, {x: Math.cos(Math.PI), y:Math.sin(Math.PI)}, 4, 2000, 10, pp);
         var p2 = new Projectiles(this.game, false, this.x, this.y, {x: Math.cos(0), y:Math.sin(0)}, 4, 2000, 10, pp);
         this.game.entities.splice(this.game.entities.length - 1, 0, p);

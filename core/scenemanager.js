@@ -127,7 +127,7 @@ class SceneManager {
                     this.game.addEntity(enemy);
                     
                 } else if (e[0] === "buck") {
-                    this.game.addEntity(new Buck(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale));
+                    this.game.addEntity(new Drumbuck(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale));
                 }
             });
         });
@@ -259,28 +259,28 @@ class SceneManager {
                 ASSET_MANAGER.autoRepeat("./sounds/music/maintheme.mp3");
                 this.playonce = false;
             ctx.font = "30px Comic Sans MS";
-            ctx.drawImage(this.main, 0, 0, 1300, 900, 0, 0, 1300, 900);
+            ctx.drawImage(this.main, 0, 0, PARAMS.canvas_width, PARAMS.canvas_height);
             ctx.strokeStyle = "#ffffff";
             ctx.fillStyle = "#ffffff";
 
             //If our mouse has come on canvas
             if(this.game.hover != null) {
                 //If we are hovering over button.
-                if(this.game.hover.x >= 580 && this.game.hover.x < 750) {
-                    if(this.game.hover.y >= 690 && this.game.hover.y < 790) {
+                if(this.game.hover.x >= PARAMS.canvas_width*0.42 && this.game.hover.x < PARAMS.canvas_width*0.57) {
+                    if(this.game.hover.y >= PARAMS.canvas_height*0.8 && this.game.hover.y < PARAMS.canvas_height*0.88) {
                         ctx.strokeStyle = "#000000";
                         ctx.fillStyle = "#000000";
                     }
                 }
             }
             ctx.lineWidth = 10;
-            ctx.strokeRect(580, 700, 150, 80);
-            ctx.fillText("START", 600, 750);
+            ctx.strokeRect(PARAMS.canvas_width*0.42, PARAMS.canvas_height*0.8, PARAMS.canvas_width*0.15, PARAMS.canvas_height*0.08);
+            ctx.fillText("START", PARAMS.canvas_width*0.45 + 5, PARAMS.canvas_height*0.85);
             //If our mouse has clicked canvas
             if(this.game.click != null) {
                 //If we are clicking in range load lvl 1.
-                if(this.game.click.x >= 580 && this.game.click.x < 750) {
-                    if(this.game.click.y >= 690 && this.game.click.y < 790) {
+                if(this.game.click.x >= PARAMS.canvas_width*0.42 && this.game.click.x < PARAMS.canvas_width * 0.57) {
+                    if(this.game.click.y >= PARAMS.canvas_height * 0.8 && this.game.click.y < PARAMS.canvas_height*0.88) {
                         this.game.started = true;
                         this.loadLevel1();
                     }

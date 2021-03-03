@@ -42,6 +42,10 @@ class Slippey extends Enemy {
 
         this.morphcheck = true; //Have we run a check to see whether to stay slime or morph, happens only ONCE.
 
+        this.morphtimer = Date.now(); 
+        
+        this.morphcd = 6000;
+
         this.loadAnimations();
 
     }
@@ -145,8 +149,9 @@ class Slippey extends Enemy {
         } else if(Math.abs(this.x - this.enemyX) < 600 && Math.abs(this.y - this.enemyY) < 300 || (this.triggered)) {
             this.triggered = true;
             //Check once in your existence if you should morph or stay as slime.
-            if(this.morphcheck) {
+            if(Date.now() - this.morphtimer > this.morphcd) {
                 this.transform = Math.random() < 0.51? 1:0;
+                this.morphtimer = Date.now();
                 if(this.transform == 1) {
                     this.state = 4;
                     this.bound = new BoundingBox(this.game, this.x, this.y, 40, 37);
@@ -154,8 +159,10 @@ class Slippey extends Enemy {
                     this.speed = 5;
                     this.spritesheet = ASSET_MANAGER.getAsset("./sprites/SlimeRuther.png");
                     this.loadAnimations();
+                } else {
+                    this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Slime.png");
+                    this.loadAnimations();
                 }
-                this.morphcheck = false;
             }
 
             //If we are Slimeford, run this section.
