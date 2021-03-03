@@ -310,22 +310,28 @@ class SceneManager {
 };
 
 
-
-
 class Minimap {
     constructor(game, x, y) {
         Object.assign(this, { game, x, y});
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/minimap.png");
-        this.size = 29; // map pixel size, how many things gonna be on the screen
-        this.scale = 7;  // size of each pixel
+        this.scale = 1.5;
+        // SHOULD ALWAYS BE AN ODD NUMBER
+        this.size = 29*this.scale; // map pixel size, how many things gonna be on the screen
+        this.psize = 7 / this.scale;  // size of each pixel
 
-        this.x = Math.round(PARAMS.canvas_width * (1 - 1/20) - this.size * this.scale);
+        this.x = Math.round(PARAMS.canvas_width * (1 - 1/20) - 29 * 7);
         this.y = Math.round(PARAMS.canvas_height / 20);
     };
 
-    update() {
+    updateScale(value) {
+        this.scale += value;
 
+        if (this.scale > 2) this.scale = 2;
+        if (this.scale < 1) this.scale = 1;
+
+        this.size = 29*this.scale; // map pixel size, how many things gonna be on the screen
+        this.psize = 7 / this.scale;  // size of each pixel
     };
 
     draw(ctx) {
@@ -336,14 +342,14 @@ class Minimap {
         var cy = this.game.camera.char.y / 64;
 
         // use the generated map to draw the terrain first
-        for(var i = Math.round(cy) - (this.size-1)/2; i <= Math.round(cy) + (this.size-1)/2; i++) {
-            for (var j = Math.round(cx) - (this.size-1)/2; j <= Math.round(cx) + (this.size-1)/2; j++) {
+        for(var i = Math.round(cy) - Math.round((this.size-1)/2); i <= Math.round(cy) + Math.round((this.size-1)/2); i++) {
+            for (var j = Math.round(cx) - Math.round((this.size-1)/2); j <= Math.round(cx) + Math.round((this.size-1)/2); j++) {
                 if (this.game.camera.map[i] !== undefined && this.game.camera.map[i][j] === 1)
                     ctx.fillStyle = "#00b530";
                 else 
                     ctx.fillStyle = "darkgreen";
-                ctx.fillRect(this.x + (j - cx + (this.size-1)/2) * this.scale, 
-                    this.y + (i- cy + (this.size-1)/2) * this.scale, this.scale, this.scale);
+                ctx.fillRect(this.x + (j - cx + (this.size-1)/2) * this.psize, 
+                    this.y + (i- cy + (this.size-1)/2) * this.psize, this.psize, this.psize);
             }
         }
         
@@ -352,12 +358,12 @@ class Minimap {
             if ((e instanceof Enemy) &&
                     this.isInMapRange(cx, cy, e.x, e.y)) {
                 ctx.fillStyle = "red";
-                ctx.fillRect(this.x + (e.x/64 - cx + (this.size-1)/2) * this.scale, 
-                        this.y + (e.y/64 - cy + (this.size-1)/2) * this.scale, this.scale, this.scale);
+                ctx.fillRect(this.x + (e.x/64 - cx + (this.size-1)/2) * this.psize, 
+                        this.y + (e.y/64 - cy + (this.size-1)/2) * this.psize, this.psize, this.psize);
             } else if (e instanceof Barrel && this.isInMapRange(cx, cy, e.x, e.y)) {
                 ctx.fillStyle = "yellow";
-                ctx.fillRect(this.x + (e.x/64 - cx + (this.size-1)/2) * this.scale, 
-                        this.y + (e.y/64 - cy + (this.size-1)/2) * this.scale, this.scale, this.scale);
+                ctx.fillRect(this.x + (e.x/64 - cx + (this.size-1)/2) * this.psize, 
+                        this.y + (e.y/64 - cy + (this.size-1)/2) * this.psize, this.psize, this.psize);
             }
 
             /*
@@ -383,14 +389,14 @@ class Minimap {
         // draw rutherford
         ctx.fillStyle = "darkblue";
 
-        ctx.fillRect(this.x + ((this.size-1)/2) * this.scale, 
-                    this.y + ((this.size-1)/2) * this.scale, this.scale, this.scale);
+        ctx.fillRect(this.x + 28 * 7 / 2, 
+                    this.y + 28 * 7 / 2, 7, 7);
 
         // draw map frame
-        ctx.drawImage(this.spritesheet, 0, 0, this.size + 4, this.size + 4, this.x - this.scale * 2, this.y - this.scale * 2, (this.size + 4) * this.scale, (this.size + 4) * this.scale);
+        ctx.drawImage(this.spritesheet, 0, 0, 29 + 4, 29 + 4, this.x - this.psize * 2 * this.size /29, this.y - this.psize * 2 * this.size /29, (29+4) * this.psize * this.size /29, (29+4) * this.psize * this.size /29);
         ctx.strokeStyle = "Black";
         ctx.lineWidth = 5; // to cover the map bug lmaooooooo
-        ctx.strokeRect(this.x, this.y, this.size * this.scale, this.size * this.scale);
+        ctx.strokeRect(this.x  , this.y , this.size * this.psize, this.size * this.psize);
         ctx.lineWidth = 1; // return the stroke size back
     }
 

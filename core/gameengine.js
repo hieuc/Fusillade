@@ -162,10 +162,18 @@ class GameEngine {
             }
         }, false);
 
-        this.ctx.canvas.addEventListener("wheel", function (e) {
-            //console.log(getXandY(e));
-            that.wheel = e;
-            //       console.log(e.wheelDelta);
+        this.ctx.canvas.addEventListener("wheel", e => {
+            if (this.started ) {
+                // scrolling up
+                if (e.deltaY < 0) {
+                    this.camera.minimap.updateScale(-0.25);
+                }
+                // scrolling down
+                else if (e.deltaY > 0) {
+                    this.camera.minimap.updateScale(0.25);
+                }
+            }
+
             e.preventDefault();
         }, false);
 
