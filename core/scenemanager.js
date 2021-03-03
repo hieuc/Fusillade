@@ -189,7 +189,7 @@ class SceneManager {
         /*
         this.game.addEntity(new Propportal(this.game, 100, 0, "Cyclops"));
         */
-        this.merchant = new Merchant(this.game, 840, 4100, 1);
+        this.merchant = new Merchant(this.game, character.x, character.y, 1);
         this.game.addEntity(this.merchant);
 
         this.game.addEntity(character);

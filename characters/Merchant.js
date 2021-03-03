@@ -70,9 +70,9 @@ class Merchant {
 
         this.shop = false;
 
-        this.textlocation = {textX: 712, textY: 330};
+        this.textlocation = {textX: PARAMS.canvas_width*0.557, textY: PARAMS.canvas_height*0.47};
 
-        this.textlocationbuy = {textX: 730, textY: 372};
+        this.textlocationbuy = {textX: PARAMS.canvas_width*0.57, textY: PARAMS.canvas_height*0.43};
 
         this.rutherpos = this.game.camera.char.x; //Don't need to know Y.
 
@@ -396,15 +396,15 @@ class Merchant {
         if(this.mainmenu) {
             //Reset to false, if otherwise proven true.
             this.hoveredtalk = false;
-            if(e.x >= 732 && e.x < 822) {
-                if(e.y >= 460 && e.y < 480) {
+            if(e.x >= PARAMS.canvas_width*0.55 && e.x < PARAMS.canvas_width*0.65) {
+                if(e.y >= PARAMS.canvas_height*0.52 && e.y < PARAMS.canvas_height*0.55) {
                     this.hoveredtalk = true;
                 }
             }
 
             this.hoveredbuy = false;
-            if(e.x >= 732 && e.x < 872) {
-                if(e.y >= 430 && e.y < 455) {
+            if(e.x >= PARAMS.canvas_width*0.55 && e.x < PARAMS.canvas_width*0.65) {
+                if(e.y >= PARAMS.canvas_height*0.49 && e.y < PARAMS.canvas_height*0.52) {
                     this.hoveredbuy = true;
                 }
             }
@@ -413,57 +413,57 @@ class Merchant {
         //If we're in the shop.
         if(this.shop) {
             this.hoveredbuy0 = false;
-            if(e.x >= 730 && e.x < 1000) {
-                if(e.y >= 382 && e.y < 407) {
+            if(e.x >= this.textlocationbuy.textX+20 && e.x < this.textlocationbuy.textX+160) {
+                if(e.y >= this.textlocationbuy.textY-15 && e.y < this.textlocationbuy.textY+10) {
                     this.hoveredbuy0 = true;
                 }
             }
 
             this.hoveredbuy1 = false;
-            if(e.x >= 730 && e.x < 930) {
-                if(e.y >= 412 && e.y < 437) {
+            if(e.x >= this.textlocationbuy.textX+20 && e.x < this.textlocationbuy.textX+160) {
+                if(e.y >= this.textlocationbuy.textY+15 && e.y < this.textlocationbuy.textY+40) {
                     this.hoveredbuy1 = true;
                 }
             }
 
             this.hoveredbuy2 = false;
-            if(e.x >= 730 && e.x < 930) {
-                if(e.y >= 442 && e.y < 467) {
+            if(e.x >= this.textlocationbuy.textX+20 && e.x < this.textlocationbuy.textX+160) {
+                if(e.y >= this.textlocationbuy.textY+45 && e.y < this.textlocationbuy.textY+70) {
                     this.hoveredbuy2 = true;
                 }
             }
 
             this.hoveredbuy3 = false;
-            if(e.x >= 730 && e.x < 930) {
-                if(e.y >= 472 && e.y < 497) {
+            if(e.x >= this.textlocationbuy.textX+20 && e.x < this.textlocationbuy.textX+160) {
+                if(e.y >= this.textlocationbuy.textY+75 && e.y < this.textlocationbuy.textY+100) {
                     this.hoveredbuy3 = true;
                 }
             }
 
             this.hoveredbuy4 = false;
-            if(e.x >= 730 && e.x < 930) {
-                if(e.y >= 502 && e.y < 527) {
+            if(e.x >= this.textlocationbuy.textX+20 && e.x < this.textlocationbuy.textX+160) {
+                if(e.y >= this.textlocationbuy.textY+105 && e.y < this.textlocationbuy.textY+130) {
                     this.hoveredbuy4 = true;
                 }
             }
 
             this.hoveredbuy5 = false;
-            if(e.x >= 730 && e.x < 950) {
-                if(e.y >= 532 && e.y < 557) {
+            if(e.x >= this.textlocationbuy.textX+20 && e.x < this.textlocationbuy.textX+160) {
+                if(e.y >= this.textlocationbuy.textY+135 && e.y < this.textlocationbuy.textY+160) {
                     this.hoveredbuy5 = true;
                 }
             }
 
             this.hoveredbuy6 = false;
-            if(e.x >= 730 && e.x < 1050) {
-                if(e.y >= 562 && e.y < 587) {
+            if(e.x >= this.textlocationbuy.textX+20 && e.x < this.textlocationbuy.textX+260) {
+                if(e.y >= this.textlocationbuy.textY+165 && e.y < this.textlocationbuy.textY+190) {
                     this.hoveredbuy6 = true;
                 }
             }
 
             this.hoveredback = false;
-            if(e.x >= 730 && e.x < 808) {
-                if(e.y >= 592 && e.y < 622) {
+            if(e.x >= this.textlocationbuy.textX+20 && e.x < this.textlocationbuy.textX+100) {
+                if(e.y >= this.textlocationbuy.textY+195 && e.y < this.textlocationbuy.textY+220) {
                     this.hoveredback = true;
                 }
             }
@@ -472,13 +472,13 @@ class Merchant {
 
     determineClick(e) {
         if(this.mainmenu) {
-            if(e.x >= 732 && e.x < 822) {
-                if(e.y >= 460 && e.y < 480) {
+            if(e.x >= PARAMS.canvas_width*0.55 && e.x < PARAMS.canvas_width*0.65) {
+                if(e.y >= PARAMS.canvas_height*0.52 && e.y < PARAMS.canvas_height*0.55) {
                     this.currChoice = this.dialoguenum;
                 }
             }
-            if(e.x >= 732 && e.x < 872) {
-                if(e.y >= 430 && e.y < 455) {
+            if(e.x >= PARAMS.canvas_width*0.55 && e.x < PARAMS.canvas_width*0.65) {
+                if(e.y >= PARAMS.canvas_height*0.49 && e.y < PARAMS.canvas_height*0.52) {
                     this.currChoice = itemsToSell;
                 }
             }
@@ -486,8 +486,8 @@ class Merchant {
 
         if(this.shop) {
             //INCREASE TOTAL HEALTH
-            if(e.x >= 730 && e.x < 1000) {
-                if(e.y >= 382 && e.y < 407) {
+            if(e.x >= this.textlocationbuy.textX+20 && e.x < this.textlocationbuy.textX+160) {
+                if(e.y >= this.textlocationbuy.textY-15 && e.y < this.textlocationbuy.textY+10) {
                     if(this.game.camera.char.coins >= 10) {
                         this.game.camera.char.coins -= 10;
                         this.game.camera.char.hp.maxHealth += 70;
@@ -503,8 +503,8 @@ class Merchant {
                 }
             }
             //INCREASE TOTAL MANA
-            if(e.x >= 730 && e.x < 930) {
-                if(e.y >= 412 && e.y < 437) {
+            if(e.x >= this.textlocationbuy.textX+20 && e.x < this.textlocationbuy.textX+160) {
+                if(e.y >= this.textlocationbuy.textY+15 && e.y < this.textlocationbuy.textY+40) {
                     if(this.game.camera.char.coins >= 10) {
                         this.game.camera.char.coins -= 10;
                         this.game.camera.char.hp.maxMana += 120;
@@ -520,8 +520,8 @@ class Merchant {
                 }
             }
             //BUY A BIG RED VIAL
-            if(e.x >= 730 && e.x < 930) {
-                if(e.y >= 442 && e.y < 467) {
+            if(e.x >= this.textlocationbuy.textX+20 && e.x < this.textlocationbuy.textX+160) {
+                if(e.y >= this.textlocationbuy.textY+45 && e.y < this.textlocationbuy.textY+70) {
                     if(this.game.camera.char.coins >= 5) {
                         this.game.camera.char.coins -= 5;
                         this.game.camera.inventory.slots[0]++;
@@ -536,8 +536,8 @@ class Merchant {
                 } 
             }
             //BUY A SMALL RED VIAL
-            if(e.x >= 730 && e.x < 930) {
-                if(e.y >= 472 && e.y < 497) {
+            if(e.x >= this.textlocationbuy.textX+20 && e.x < this.textlocationbuy.textX+160) {
+                if(e.y >= this.textlocationbuy.textY+75 && e.y < this.textlocationbuy.textY+100) {
                     if(this.game.camera.char.coins >= 3) {
                         this.game.camera.char.coins -= 3;
                         this.game.camera.inventory.slots[1]++;
@@ -552,8 +552,8 @@ class Merchant {
                 }
             }
             //BUY A BIG BLUE VIAL
-            if(e.x >= 730 && e.x < 930) {
-                if(e.y >= 502 && e.y < 527) {
+            if(e.x >= this.textlocationbuy.textX+20 && e.x < this.textlocationbuy.textX+160) {
+                if(e.y >= this.textlocationbuy.textY+105 && e.y < this.textlocationbuy.textY+130) {
                     if(this.game.camera.char.coins >= 5) {
                         this.game.camera.char.coins -= 5;
                         this.game.camera.inventory.slots[2]++;
@@ -568,8 +568,8 @@ class Merchant {
                 }
             }
             //BUY A SMALL BLUE VIAL
-            if(e.x >= 730 && e.x < 950) {
-                if(e.y >= 532 && e.y < 557) {
+            if(e.x >= this.textlocationbuy.textX+20 && e.x < this.textlocationbuy.textX+160) {
+                if(e.y >= this.textlocationbuy.textY+135 && e.y < this.textlocationbuy.textY+160) {
                     if(this.game.camera.char.coins >= 3) {
                         this.game.camera.char.coins -= 3;
                         this.game.camera.inventory.slots[3]++;
@@ -584,8 +584,8 @@ class Merchant {
                 }
             }
             //BUY A PET
-            if(e.x >= 730 && e.x < 1050) {
-                if(e.y >= 562 && e.y < 587) {
+            if(e.x >= this.textlocationbuy.textX+20 && e.x < this.textlocationbuy.textX+260) {
+                if(e.y >= this.textlocationbuy.textY+165 && e.y < this.textlocationbuy.textY+190) {
                     if(this.game.camera.char.coins >= 20 && !this.game.camera.char.pet) {
                         this.game.camera.char.coins -= 20;
                         this.game.camera.char.hasapet = true;
@@ -600,8 +600,8 @@ class Merchant {
                 }
             }
             //BACK
-            if(e.x >= 730 && e.x < 808) {
-                if(e.y >= 592 && e.y < 622) {
+            if(e.x >= this.textlocationbuy.textX+20 && e.x < this.textlocationbuy.textX+100) {
+                if(e.y >= this.textlocationbuy.textY+195 && e.y < this.textlocationbuy.textY+220) {
                     this.currChoice = main;
                 }
             }
