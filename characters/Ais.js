@@ -13,6 +13,8 @@ class Ais extends Enemy{
         
         this.cooldown = false; //In environment collision, go on cooldown for normal patterns.
 
+        this.dropchanceondeath = 0.4;
+
         this.atkleftorright = 0; //Attack left or right depending on player's location.
 
         this.toofarmovement = Date.now(); //If we're not triggered, use this variable to do timed pattern.
@@ -79,7 +81,11 @@ class Ais extends Enemy{
         //As long as we don't trigger the enemy, do a pattern movement.
         if(this.state == 3) {
             if(this.animations[this.state][this.face].isDone()) {
-               this.removeFromWorld = true;
+                let drop = Math.random();
+                if(drop < this.dropchanceondeath) {
+                    this.game.addEntity(new Onecoin(this.game, this.x, this.y));
+                }
+                this.removeFromWorld = true;
             }
        } else {
            //If we are too far away, move left, stand still, move right, stand still, repeat.
