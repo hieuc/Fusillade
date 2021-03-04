@@ -20,7 +20,7 @@ class Fernight extends Enemy {
     }
 
     loadAnimations() {
-        for (var i = 0; i < 5; i++) { // 5 states
+        for (var i = 0; i < 6; i++) { // 5 states
             this.animations.push([]);
             for (var j = 0; j < 2; j++) { // 2 directions
                 this.animations[i].push([]);
@@ -52,17 +52,23 @@ class Fernight extends Enemy {
         // facing left = 1
         this.animations[3][1] = new Animator(this.spritesheet, 1088, 448, 64, 64, 3, 0.2, 0, true, true);
 
-        //Death animation for state = 3
+        //Death animation for state = 4
         this.animations[4][0] = new Animator(this.spritesheet, 0, 512, 64, 64, 10, 0.1, 0, true, true);
 
         // facing left = 1
         this.animations[4][1] = new Animator(this.spritesheet, 640, 512, 64, 64, 10, 0.1, 0, false, true);
+
+        //Death animation for state = 5
+        this.animations[5][0] = new Animator(this.spritesheet, 256, 128, 64, 64, 2, 0.25, 0, true, true);
+
+        // facing left = 1
+        this.animations[5][1] = new Animator(this.spritesheet, 896, 128, 64, 64, 2, 0.25, 0, false, true);
     }
 
     update() {
-        this.state = 4;
+        this.state = 5;
 
-        this.face = 0;
+        this.face = 1;
 
         this.updateBound();
     }   
