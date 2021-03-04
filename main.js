@@ -39,6 +39,8 @@ ASSET_MANAGER.queueDownload("./sprites/cyclopshit.png");
 ASSET_MANAGER.queueDownload("./sprites/mainmenu.png");
 ASSET_MANAGER.queueDownload("./sprites/Doublops.png");
 ASSET_MANAGER.queueDownload("./sprites/Fernight.png");
+ASSET_MANAGER.queueDownload("./sprites/mainmenu.jpg");
+
 
 // sounds
 ASSET_MANAGER.queueDownload("./sounds/music/buck.mp3");
