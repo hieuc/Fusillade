@@ -5,7 +5,7 @@ class SceneManager {
 
         this.main = ASSET_MANAGER.getAsset("./sprites/mainmenu.png");
 
-        this.animations = new Animator(this.main, 0, 0, 1280, 720, 50, 0.05, 0, false, true);
+        this.animations = new Animator(this.main, 0, 0, 1280, 720, 15, 0.05, 0, false, true);
 
         this.minimap = new Minimap(game, 0, 0);
         this.inventory = new Inventory(game, PARAMS.canvas_width/15, PARAMS.canvas_height/15);
