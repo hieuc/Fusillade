@@ -5,6 +5,8 @@ class SceneManager {
 
         this.main = ASSET_MANAGER.getAsset("./sprites/mainmenu.png");
 
+        this.animations = new Animator(this.main, 0, 0, 1280, 720, 50, 0.05, 0, false, true);
+
         this.minimap = new Minimap(game, 0, 0);
         this.inventory = new Inventory(game, PARAMS.canvas_width/15, PARAMS.canvas_height/15);
         this.playonce = true;
@@ -271,7 +273,7 @@ class SceneManager {
                 ASSET_MANAGER.autoRepeat("./sounds/music/maintheme.mp3");
                 this.playonce = false;
             ctx.font = "BOLD 30px Fantasy";
-            ctx.drawImage(this.main, 0, 0, PARAMS.canvas_width, PARAMS.canvas_height);
+            this.animations.drawFrame(this.game.clockTick, this.game.ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, 1);
             ctx.fillStyle = "#F2D0A9";
             //If our mouse has come on canvas
             if(this.game.hover != null) {
