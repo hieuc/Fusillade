@@ -62,7 +62,6 @@ function lockRoom(game, room, m, p) {
             r.push(e);
         }
     }
-    console.log(r.length);
     return r;
 }
 
@@ -340,6 +339,8 @@ function createLevel2(w, h) {
                 }
             });
     }
+
+    fillEnemiesLevel1(rooms);
 
     m = applyEdgePadding(m, rooms);
     

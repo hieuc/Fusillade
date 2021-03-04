@@ -16,7 +16,7 @@ class SceneManager {
         this.rotation = 0;
         this.char = null;
         this.camlock = true;
-        this.debug = false;
+        this.debug = false;  // for map layout debug
         this.rooms = null;
         this.map = null; // map of terrain: 0 = obstacles, 1 = open space
         this.tree = null;
@@ -45,6 +45,7 @@ class SceneManager {
         this.gameover = false;
         this.stage = 1;
         this.tempObstacles = null;
+        this.locked = false;
 
         var w = 100;
         var h = 75;
@@ -127,7 +128,8 @@ class SceneManager {
                     this.game.addEntity(enemy);
                     
                 } else if (e[0] === "buck") {
-                    this.game.addEntity(new Drumbuck(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale));
+                    this.boss = new Drumbuck(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale);
+                    this.game.addEntity(this.boss);
                 }
             });
         });
@@ -193,6 +195,8 @@ class SceneManager {
         this.game.addEntity(this.merchant);
 
         this.game.addEntity(character);
+
+        this.tempObstacles = lockRoom(this.game, this.rooms[8], this.map, this.tree);
         
         //this.game.addEntity(new Slippey(this.game, character.x- 500, character.y));
         ASSET_MANAGER.pauseBackgroundMusic();
@@ -230,14 +234,22 @@ class SceneManager {
                 ASSET_MANAGER.playAsset("./sounds/music/greenpath-action.mp3");
                 ASSET_MANAGER.autoRepeat("./sounds/music/greenpath-action.mp3");
                 this.stage = 2;
+                this.releaseLock();
             }
             // check if rutherford is in boss room
-            else if (this.isInRoom(this.rooms[8])) {
-                lockRoom(this.game, this.rooms[8], this.map, this.tree);
+            else if (this.stage === 2 && this.isInRoom(this.rooms[8])) {
+                this.tempObstacles = lockRoom(this.game, this.rooms[8], this.map, this.tree);
                 this.locked = true;
                 ASSET_MANAGER.pauseBackgroundMusic();
                 ASSET_MANAGER.playAsset("./sounds/music/buck.mp3");
                 ASSET_MANAGER.autoRepeat("./sounds/music/buck.mp3");
+            } else if (this.boss && this.boss.removeFromWorld) {
+                this.boss = null;
+                ASSET_MANAGER.pauseBackgroundMusic();
+                ASSET_MANAGER.playAsset("./sounds/music/greenpath-ambient.mp3");
+                ASSET_MANAGER.autoRepeat("./sounds/music/greenpath-ambient.mp3");
+                this.releaseLock();
+                this.stage = 3;
             }
         }  
     };
