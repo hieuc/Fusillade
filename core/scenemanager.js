@@ -128,7 +128,7 @@ class SceneManager {
                     this.game.addEntity(enemy);
                     
                 } else if (e[0] === "buck") {
-                    this.boss = new Drumbuck(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale);
+                    this.boss = new Buck(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale);
                     this.game.addEntity(this.boss);
                 }
             });
