@@ -319,7 +319,7 @@ class Cyclopshit {
 
     loadAnimations() {
 
-        this.animations[0] = new Animator(this.spritesheet, 0, 0, 110, 110, 11, 0.04, 0, false, false);
+        this.animations[0] = new Animator(this.spritesheet, 440, 0, 110, 110, 7, 0.04, 0, false, false);
 
     }
 

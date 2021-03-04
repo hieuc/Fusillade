@@ -2,8 +2,8 @@ class Deflectprojectile extends Projectiles {
     /*
     * returnpoint is a scale of lifetime at the point projectiles start returning.
     */
-    constructor(game, friendly, x, y, velocity, speed, lifetime, damage, turnangle, proj) {
-        super(game, friendly, x, y, velocity, speed, lifetime, damage, proj);
+    constructor(game, friendly, x, y, velocity, speed, lifetime, damage, turnangle, proj, effect) {
+        super(game, friendly, x, y, velocity, speed, lifetime, damage, proj, effect);
         Object.assign(this, {turnangle});
 
         this.timeshit = 0; 

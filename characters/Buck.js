@@ -297,7 +297,7 @@ class Buck extends Enemy {
         for(var i = 0; i < partitions; i++) {
             var pp = {sx: 96, sy: 112, size: 16};
             var p = new ScaleBoomerProjectiles(this.game, false, this.x+80, this.y+80, {x :Math.cos(this.blitz), y:Math.sin(this.blitz)}, 
-                        this.projspeed, 5500, this.damage, 0.012, true, pp);
+                        this.projspeed, 5500, this.damage, 0.012, true, pp, "buckhit");
             this.blitz += Math.PI/partitions;
             this.game.entities.splice(this.game.entities.length - 1, 0, p);        
         }
@@ -311,13 +311,13 @@ class Buck extends Enemy {
         var velocity = this.calculateVel();
         var offset = this.face == 0? 100: 0;
         var pp = {sx: 96, sy: 112, size: 16};
-        var p = new ScaleBoomerProjectiles(this.game, false, this.x+offset, this.y, velocity, this.projspeed, 2500, this.damage, 0.005, false, pp);
+        var p = new ScaleBoomerProjectiles(this.game, false, this.x+offset, this.y, velocity, this.projspeed, 2500, this.damage, 0.005, false, pp, "buckhit");
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }
 
     attackportal() {
         var pp = {sx: 96, sy: 112, size: 16};
-        var p = new Projectiles(this.game, false, this.x, this.y, {x: Math.cos(Math.PI), y:Math.sin(Math.PI)}, 4, 2000, this.damage, pp);
+        var p = new Projectiles(this.game, false, this.x, this.y, {x: Math.cos(Math.PI), y:Math.sin(Math.PI)}, 4, 2000, this.damage, pp, "buckhit");
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }
 
