@@ -270,24 +270,22 @@ class SceneManager {
                 ASSET_MANAGER.playAsset("./sounds/music/maintheme.mp3");
                 ASSET_MANAGER.autoRepeat("./sounds/music/maintheme.mp3");
                 this.playonce = false;
-            ctx.font = "30px Comic Sans MS";
+            ctx.font = "BOLD 30px Fantasy";
             ctx.drawImage(this.main, 0, 0, PARAMS.canvas_width, PARAMS.canvas_height);
-            ctx.strokeStyle = "#ffffff";
-            ctx.fillStyle = "#ffffff";
-
+            ctx.fillStyle = "#F2D0A9";
             //If our mouse has come on canvas
             if(this.game.hover != null) {
                 //If we are hovering over button.
                 if(this.game.hover.x >= PARAMS.canvas_width*0.42 && this.game.hover.x < PARAMS.canvas_width*0.57) {
                     if(this.game.hover.y >= PARAMS.canvas_height*0.8 && this.game.hover.y < PARAMS.canvas_height*0.88) {
-                        ctx.strokeStyle = "#000000";
-                        ctx.fillStyle = "#000000";
+                        ctx.fillStyle = "#F1E3D3";
                     }
                 }
             }
             ctx.lineWidth = 10;
-            ctx.strokeRect(PARAMS.canvas_width*0.42, PARAMS.canvas_height*0.8, PARAMS.canvas_width*0.15, PARAMS.canvas_height*0.08);
-            ctx.fillText("START", PARAMS.canvas_width*0.45 + 5, PARAMS.canvas_height*0.85);
+            ctx.fillRect(PARAMS.canvas_width*0.42, PARAMS.canvas_height*0.8, PARAMS.canvas_width*0.15, PARAMS.canvas_height*0.08);
+            ctx.fillStyle = "#654321";
+            ctx.fillText("START", PARAMS.canvas_width*0.465, PARAMS.canvas_height*0.855);
             //If our mouse has clicked canvas
             if(this.game.click != null) {
                 //If we are clicking in range load lvl 1.
