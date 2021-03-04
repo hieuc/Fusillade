@@ -3,7 +3,7 @@ class SceneManager {
         this.game = game;
         this.game.camera = this;
 
-        this.main = ASSET_MANAGER.getAsset("./sprites/mainmenu.jpg");
+        this.main = ASSET_MANAGER.getAsset("./sprites/mainmenu.png");
 
         this.minimap = new Minimap(game, 0, 0);
         this.inventory = new Inventory(game, PARAMS.canvas_width/15, PARAMS.canvas_height/15);
