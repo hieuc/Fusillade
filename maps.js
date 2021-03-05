@@ -393,6 +393,12 @@ function createRoomsLevel2(w, h) {
     start.room.key = "start";
     end.room.key = "final";
 
+    // end room will have max size
+    end.room.x = end.x + 1;
+    end.room.y = end.y;
+    end.room.w = end.w - 1;
+    end.room.h = end.h - 1;
+
     // randomly remove 30-40% of rooms
     var totalRemove = randomInt(Math.floor(m.length*0.1)) + Math.floor(m.length*0.45);
     for (var i = 0; i < totalRemove; i++) {

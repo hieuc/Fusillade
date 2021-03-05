@@ -251,13 +251,18 @@ class SceneManager {
             }
         }
         // spawn main character and enemiessss
+        var start;
+        var end;
         for (var i = 0; i < rooms.length; i++) {
             if (rooms[i].key === "start") {
-                var character = new Rutherford(this.game, (rooms[i].x + rooms[i].w/2) * 32 * scale,  (rooms[i].y + rooms[i].h/2) * 32 * scale, false); 
-                this.char = character;
-                break;
+                start = rooms[i];
+            } else if (rooms[i].key === "end") {
+                end = rooms[i];
             }
         }
+
+        var character = new Rutherford(this.game, (start.x + start.w/2) * 32 * scale,  (start.y + start.h/2) * 32 * scale, false); 
+        this.char = character;
         
 
         /*
@@ -327,16 +332,21 @@ class SceneManager {
             }
         } 
         
-        this.merchant = new Merchant(this.game, character.x, character.y, 1);
-        this.game.addEntity(this.merchant);
+        //this.merchant = new Merchant(this.game, character.x, character.y, 1);
+        //this.game.addEntity(this.merchant);
 
         this.game.addEntity(character);
 
         //this.game.addEntity(new Drumbuck(this.game, character.x, character.y));
 
         //this.tempObstacles = lockRoom(this.game, this.rooms[8], this.map, this.tree);
-        
-        //this.game.addEntity(new Slippey(this.game, character.x- 500, character.y));
+        var knifes = [];
+        for (var i = 0; i < start.w*2; i++) {
+            var k = new KnifePortal(this.game, start.x * 64 + 32 * i, start.y * 64);
+            this.game.addEntity(k);
+            knifes.push(k);
+        }
+        this.game.addEntity(new Dummy(this.game, character.x, character.y, knifes));
         ASSET_MANAGER.pauseBackgroundMusic();
         ASSET_MANAGER.playAsset("./sounds/music/greenpath-ambient.mp3");
         ASSET_MANAGER.autoRepeat("./sounds/music/greenpath-ambient.mp3");

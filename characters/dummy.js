@@ -2,8 +2,8 @@
  * Class to test patterns and animations.
  */
 class Dummy {
-    constructor (game, x, y) {
-        Object.assign(this, {game, x, y});
+    constructor (game, x, y, knifes) {
+        Object.assign(this, {game, x, y, knifes});
 
         this.sprite = ASSET_MANAGER.getAsset("./sprites/dummy.png");
 
@@ -14,12 +14,20 @@ class Dummy {
         this.bound = new BoundingBox(this.x, this.y, 17 * this.scale, 28 * this.scale);
 
         this.timestamp = Date.now();
-
-        this.attack3();
     }
 
     update() {
-        
+        // knifes every 1 second
+        if (Date.now() - this.timestamp > 1000) {
+            // decide 2 knifes to omit
+            var omit = randomInt(this.knifes.length) + 1;
+            for (var i = 0; i < this.knifes.length; i++) {
+                if (i !== omit && i !== omit - 1) {
+                    this.knifes[i].attack();
+                }
+            }
+            this.timestamp = Date.now();
+        }
     }
 
     draw(ctx) {
