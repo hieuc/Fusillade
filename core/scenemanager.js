@@ -27,22 +27,25 @@ class SceneManager {
         this.debug = false;  // for map layout debug
         this.rooms = null;
         this.map = null; // map of terrain: 0 = obstacles, 1 = open space
-        this.tree = null;
         this.tempObstacles = null;
         this.locked = false;
+        this.level = 1;
         this.stage = 1; // stage 1 = start, stage 2 = miniboss, stage 3 = boss
         this.gameover = true;
         this.merchant = null;
 
         if (this.debug) {
-            var t = createLevel2(150, 150);
+            var t = createLevel2(100, 100);
             this.test = t[0];
+            this.rooms = t[1];
+            console.log(this.rooms);
         } else {
             //this.loadSandbox();
         }
     };
     
     /**
+     * Load Level 1.
      * 
      * @param {*} x starting point of main char 
      * @param {*} y starting point of main char
@@ -54,6 +57,7 @@ class SceneManager {
         this.stage = 1;
         this.tempObstacles = null;
         this.locked = false;
+        this.level = 1;
 
         var w = 100;
         var h = 75;
@@ -69,8 +73,6 @@ class SceneManager {
         var scale = 2;
         var p = { spritesheet: ASSET_MANAGER.getAsset("./sprites/forest_tiles.png"), sx: 0, sy: 192, width: 64, height: 64, scale: scale/ (64/32), 
                     bound: {x: 0, y: 0, w: 1, h: 1}};
-
-        this.tree = p;
 
         for (var i = 0; i < m.length; i++) {
             for (var j = 0; j < m[0].length; j++) {
@@ -91,10 +93,10 @@ class SceneManager {
                 if (m[i][j] === 0) {
                     // check surround, only assign bound if reachable to player:
                     // a space is a block if 1 of 4 neighbors is empty
-                    if ((m[i-1] !== undefined && m[i-1][j] !== undefined && m[i-1][j] === 1) ||
-                            (m[i+1] !== undefined && m[i+1][j] !== undefined && m[i+1][j] === 1) ||
-                            (m[i] !== undefined && m[i][j-1] !== undefined && m[i][j-1] === 1) ||
-                            (m[i] !== undefined && m[i][j+1] !== undefined && m[i][j+1] === 1)) {
+                    if ((m[i-1] !== undefined && m[i-1][j] === 1) ||
+                            (m[i+1] !== undefined && m[i+1][j] === 1) ||
+                            (m[i] !== undefined && m[i][j-1] === 1) ||
+                            (m[i] !== undefined && m[i][j+1] === 1)) {
                         var tree = new Obstacle(this.game, j * 32 * scale, i * 32 * scale, p);
                         this.game.addEntity(tree);
                     } else {
@@ -109,6 +111,7 @@ class SceneManager {
         var character = new Rutherford(this.game, (startRoom.x + startRoom.w/2) * 32 * scale,  (startRoom.y + startRoom.h/2) * 32 * scale, false); 
         this.char = character;
 
+        
         rooms.forEach(r => {
             r.enemies.forEach(e => {
                 if (e[0] === "ais") {
@@ -141,7 +144,7 @@ class SceneManager {
                 }
             });
         });
-
+        
         // spawn barrels and bunnies
         // barrels will only spawn next to trees
         // the more trees, the higher chance
@@ -173,38 +176,167 @@ class SceneManager {
             }
         } 
 
-        /*
-        var fayereCharacter = new Fayere(this.game, 900, 600);
-        var theBarrel = new Barrel(this.game, -50, -50, "Red");
-        var theBarrel2 = new Barrel(this.game, -50, 300, "SRed");
-        var theBarrel3 = new Barrel(this.game, 550, 50, "SRed");
-        var theBarrel4 = new Barrel(this.game, 50, 800, "SBlue");
-        var aisCharacter = new Ais(this.game, 900, 200);
-        var slimeCharacter = new Slippey(this.game, 500, 500);
-        var buckCharacter = new Buck(this.game, 400, 300);
-        */
-        
-        
-        
-        
-        //this.game.addEntity(new Dummy(this.game, 400, 200));
-        //this.game.addEntity(theBarrel);
-        //this.game.addEntity(theBarrel2);
-        //this.game.addEntity(theBarrel3);
-        //this.game.addEntity(theBarrel4);
-        //this.game.addEntity(buckCharacter);
-        //this.game.addEntity(aisCharacter);
-        
-        //this.game.addEntity(fayereCharacter);
-        /*
-        this.game.addEntity(new Propportal(this.game, 100, 0, "Cyclops"));
-        */
         this.merchant = new Merchant(this.game, 840, 4100, 1);
         this.game.addEntity(this.merchant);
 
         this.game.addEntity(character);
 
-        this.tempObstacles = lockRoom(this.game, this.rooms[8], this.map, this.tree);
+        // lock the boss room from the beginning
+        this.tempObstacles = lockRoom(this.game, this.rooms[8], this.map, p);
+        
+        //this.game.addEntity(new Slippey(this.game, character.x- 500, character.y));
+        ASSET_MANAGER.pauseBackgroundMusic();
+        ASSET_MANAGER.playAsset("./sounds/music/greenpath-ambient.mp3");
+        ASSET_MANAGER.autoRepeat("./sounds/music/greenpath-ambient.mp3");
+    };
+
+    /**
+     * Load Level 2.
+     * 
+     * @param {*} x starting point of main char 
+     * @param {*} y starting point of main char
+     */
+    loadLevel2() {
+        this.game.entities = [];
+        this.game.background = [];
+        this.gameover = false;
+        this.stage = 1;
+        this.tempObstacles = null;
+        this.locked = false;
+        this.level = 2;
+
+        var w = 120;
+        var h = 120;
+        //var m = this.createPerlinMap(w, h);
+        //var threshold = 0.3;
+
+        var rooms = createLevel2(w, h);
+        var m = rooms[0];
+        rooms = rooms[1];
+
+        this.rooms = rooms;
+        this.map = m;
+        
+        // right now this is just an empty space
+        var scale = 2;
+        
+        // brick
+        var gp = { spritesheet: ASSET_MANAGER.getAsset("./sprites/dungeon.png"), sx: 480, sy: 160, width: 32, height: 32, scale: scale / (32/32)};
+        var gp1 = { spritesheet: ASSET_MANAGER.getAsset("./sprites/dungeon.png"), sx: 160, sy: 256, width: 32, height: 32, scale: scale / (32/32)};
+
+        for (var i = 0; i < m.length; i++) {
+            for (var j = 0; j < m[0].length; j++) {
+                if (m[i][j] === 1) {
+                    var bg = new Ground(this.game, j * 32 * scale, i * 32 * scale, ((i + j) % 2 === 0) ? gp : gp1);
+                    this.game.addBg(bg);
+                }
+                else {
+                    // choose sprite for room's edge here
+                    // property for the obstacles
+                    var p = { spritesheet: ASSET_MANAGER.getAsset("./sprites/dungeon.png"), sx: 32, sy: 32, width: 32, height: 32, scale: scale/ (32/32), 
+                        bound: {x: 0, y: 0, w: 1, h: 1}};
+
+                    
+                    // check surround, only assign bound if reachable to player:
+                    // a space is a block if 1 of 4 neighbors is empty
+                    if ((m[i-1] !== undefined && m[i-1][j] === 1) ||
+                            (m[i+1] !== undefined && m[i+1][j] === 1) ||
+                            (m[i] !== undefined && m[i][j-1] === 1) ||
+                            (m[i] !== undefined && m[i][j+1] === 1)) {
+                        var space = new Obstacle(this.game, j * 32 * scale, i * 32 * scale, p);
+                        this.game.addEntity(space);
+                    } else {
+                        this.game.addBg(new Ground(this.game, j * 32 * scale, i * 32 * scale, p));
+                    }
+                    
+                }
+            }
+        }
+        // spawn main character and enemiessss
+        for (var i = 0; i < rooms.length; i++) {
+            if (rooms[i].key === "start") {
+                var character = new Rutherford(this.game, (rooms[i].x + rooms[i].w/2) * 32 * scale,  (rooms[i].y + rooms[i].h/2) * 32 * scale, false); 
+                this.char = character;
+                break;
+            }
+        }
+        
+
+        /*
+        rooms.forEach(r => {
+            r.enemies.forEach(e => {
+                if (e[0] === "ais") {
+                    for (var i = 0; i < e[1]; i ++) {
+                        var sx = 0;
+                        var sy = 0;
+                        while (m[sy][sx] === 0) {
+                            sx = r.x + randomInt(Math.floor(r.w * 0.6)) + Math.floor(r.w * 0.2);
+                            sy = r.y + randomInt(Math.floor(r.h * 0.6)) + Math.floor(r.h * 0.2);
+                        }
+                        this.game.addEntity(new Ais(this.game, sx * 32 * scale, sy * 32 * scale));
+                    }
+                } else if (e[0] === "fayere") {
+                    for (var i = 0; i < e[1]; i ++) {
+                        var sx = 0;
+                        var sy = 0;
+                        while (m[sy][sx] === 0) {
+                            sx = r.x + randomInt(Math.floor(r.w * 0.6)) + Math.floor(r.w * 0.2);
+                            sy = r.y + randomInt(Math.floor(r.h * 0.6)) + Math.floor(r.h * 0.2);
+                        }
+                        this.game.addEntity(new Fayere(this.game, sx * 32 * scale, sy * 32 * scale));
+                    }
+                } else if (e[0] === "cyclops") {
+                    var enemy = new Cyclops(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale);
+                    this.game.addEntity(enemy);
+                    
+                } else if (e[0] === "buck") {
+                    this.boss = new Drumbuck(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale);
+                    this.game.addEntity(this.boss);
+                }
+            });
+        });
+        */
+        // spawn barrels and bunnies
+        // barrels will only spawn next to trees
+        // the more trees, the higher chance
+        // the total will be purely random
+        for (var i = 0; i < m.length; i++) {
+            for (var j = 0; j < m[0].length; j++) {
+                // i is y, j is x
+                if (m[i][j] === 1) {
+                    // count trees surround
+                    var count = 0;
+                    for (var a = i - 1; a <= i + 1; a++) {
+                        for (var b = j - 1; b <= j + 1; b++) {
+                            if (m[a] !== undefined && m[a][b] !== undefined && m[a][b] === 0)
+                                count++;
+                        }
+                    }
+                    // spawn barrels
+                    var base = 0.01; // 1%
+                    if (Math.random() < base * count) {
+                        var pool = ["red", "sred", "blue", "sblue", "fayere", "onecoin", "threecoin"];
+                        this.game.addEntity(new Barrel(this.game, j*32*scale, i*32*scale, pool[randomInt(pool.length)]));
+                    }
+                    /*
+                    // spawn bunnies
+                    base = 0.001;
+                    if (Math.random() < base * count) {
+                        this.game.addEntity(new Bunny(this.game, j*32*scale, i*32*scale));
+                    }
+                    */
+                }
+            }
+        } 
+        
+        this.merchant = new Merchant(this.game, character.x, character.y, 1);
+        this.game.addEntity(this.merchant);
+
+        this.game.addEntity(character);
+
+        //this.game.addEntity(new Drumbuck(this.game, character.x, character.y));
+
+        //this.tempObstacles = lockRoom(this.game, this.rooms[8], this.map, this.tree);
         
         //this.game.addEntity(new Slippey(this.game, character.x- 500, character.y));
         ASSET_MANAGER.pauseBackgroundMusic();
@@ -235,30 +367,37 @@ class SceneManager {
             }
 
             
+            if (this.level === 1) {
+                // check if rutherford enters miniboss room
+                if (this.stage === 1 && this.isInRoom(this.rooms[0])) {
+                    ASSET_MANAGER.pauseBackgroundMusic();
+                    ASSET_MANAGER.playAsset("./sounds/music/greenpath-action.mp3");
+                    ASSET_MANAGER.autoRepeat("./sounds/music/greenpath-action.mp3");
+                    this.stage = 2;
+                    this.releaseLock();
+                }
+                // check if rutherford is in boss room
+                else if (this.stage === 2 && this.isInRoom(this.rooms[8])) {
+                    // sprite for tree
+                    var p = { spritesheet: ASSET_MANAGER.getAsset("./sprites/forest_tiles.png"), sx: 0, sy: 192, width: 64, height: 64, scale: 1, 
+                                bound: {x: 0, y: 0, w: 1, h: 1}};
+                    this.tempObstacles = lockRoom(this.game, this.rooms[8], this.map, p);
+                    this.locked = true;
+                    ASSET_MANAGER.pauseBackgroundMusic();
+                    ASSET_MANAGER.playAsset("./sounds/music/buck.mp3");
+                    ASSET_MANAGER.autoRepeat("./sounds/music/buck.mp3");
+                } else if (this.boss && this.boss.removeFromWorld && this.char.hp.current > 0) {
+                    this.boss = null;
+                    ASSET_MANAGER.pauseBackgroundMusic();
+                    ASSET_MANAGER.playAsset("./sounds/music/greenpath-ambient.mp3");
+                    ASSET_MANAGER.autoRepeat("./sounds/music/greenpath-ambient.mp3");
+                    this.releaseLock();
+                    this.stage = 3;
+                }
+            } else if (this.level === 2) {
+                // level 2 interaction here
+            }
             
-            // check if rutherford enters miniboss room
-            if (this.stage === 1 && this.isInRoom(this.rooms[0])) {
-                ASSET_MANAGER.pauseBackgroundMusic();
-                ASSET_MANAGER.playAsset("./sounds/music/greenpath-action.mp3");
-                ASSET_MANAGER.autoRepeat("./sounds/music/greenpath-action.mp3");
-                this.stage = 2;
-                this.releaseLock();
-            }
-            // check if rutherford is in boss room
-            else if (this.stage === 2 && this.isInRoom(this.rooms[8])) {
-                this.tempObstacles = lockRoom(this.game, this.rooms[8], this.map, this.tree);
-                this.locked = true;
-                ASSET_MANAGER.pauseBackgroundMusic();
-                ASSET_MANAGER.playAsset("./sounds/music/buck.mp3");
-                ASSET_MANAGER.autoRepeat("./sounds/music/buck.mp3");
-            } else if (this.boss && this.boss.removeFromWorld) {
-                this.boss = null;
-                ASSET_MANAGER.pauseBackgroundMusic();
-                ASSET_MANAGER.playAsset("./sounds/music/greenpath-ambient.mp3");
-                ASSET_MANAGER.autoRepeat("./sounds/music/greenpath-ambient.mp3");
-                this.releaseLock();
-                this.stage = 3;
-            }
         }  
     };
 
@@ -272,6 +411,11 @@ class SceneManager {
                         ctx.fillRect(j * scale, i * scale , scale, scale);
                     } 
                 }
+            }
+            for (var i = 0; i < this.rooms.length; i++) {
+                ctx.fillStyle = "red";
+                ctx.lineWidth = 10;
+                ctx.fillText(i, this.rooms[i].x * scale, this.rooms[i].y * scale);
             }
         } else if (!this.game.started && !this.extra) {
             let starthover = false;
@@ -388,10 +532,20 @@ class Minimap {
         // use the generated map to draw the terrain first
         for(var i = Math.round(cy) - Math.round((this.size-1)/2); i <= Math.round(cy) + Math.round((this.size-1)/2); i++) {
             for (var j = Math.round(cx) - Math.round((this.size-1)/2); j <= Math.round(cx) + Math.round((this.size-1)/2); j++) {
-                if (this.game.camera.map[i] !== undefined && this.game.camera.map[i][j] === 1)
-                    ctx.fillStyle = "#00b530";
-                else 
-                    ctx.fillStyle = "darkgreen";
+                if (this.game.camera.map[i] !== undefined && this.game.camera.map[i][j] === 1) {
+                    if (this.game.camera.level === 1) {
+                        ctx.fillStyle = "#00b530";
+                    } else if (this.game.camera.level === 2) {
+                        ctx.fillStyle = "darkgrey";
+                    }
+                }
+                else { 
+                    if (this.game.camera.level === 1) {
+                        ctx.fillStyle = "darkgreen";
+                    } else if (this.game.camera.level === 2) {
+                        ctx.fillStyle = "#454545";
+                    }
+                }
                 ctx.fillRect(this.x + (j - cx + (this.size-1)/2) * this.psize, 
                     this.y + (i- cy + (this.size-1)/2) * this.psize, this.psize, this.psize);
             }
