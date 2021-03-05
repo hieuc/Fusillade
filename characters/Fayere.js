@@ -16,6 +16,8 @@ class Fayere extends Enemy {
 
         this.speed = 1.2;
 
+        this.dropchanceondeath = 0.4;
+
         this.cooldown = false;
 
         this.toofarmovement = Date.now(); //We want to give a behavior pattern when enemy is too far.
@@ -83,6 +85,10 @@ class Fayere extends Enemy {
         if(this.state == 3) {
              if(this.animations[this.state][this.face].isDone()) {
                 this.removeFromWorld = true;
+                let drop = Math.random();
+                if(drop < this.dropchanceondeath) {
+                    this.game.addEntity(new Onecoin(this.game, this.x, this.y));
+                }
              }
         } else {
             if(Math.abs(this.x - this.enemyX) > 800 || Math.abs(this.y - this.enemyY) > 600 || this.cooldown) {

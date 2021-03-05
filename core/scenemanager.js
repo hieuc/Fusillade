@@ -4,6 +4,12 @@ class SceneManager {
         this.game.camera = this;
 
         this.main = ASSET_MANAGER.getAsset("./sprites/mainmenu.png");
+        this.title = ASSET_MANAGER.getAsset("./sprites/Fusillade.png");
+        this.buttons = ASSET_MANAGER.getAsset("./sprites/GUI.png");
+
+        this.animations = new Animator(this.main, 0, 0, 1280, 720, 15, 0.35, 0, false, true);
+
+        this.buttonanimations = new Animator(this.buttons, 113, 81, 32, 16, 1, 1, 0, false, true);
 
         this.minimap = new Minimap(game, 0, 0);
         this.inventory = new Inventory(game, PARAMS.canvas_width/15, PARAMS.canvas_height/15);
@@ -131,7 +137,7 @@ class SceneManager {
                     this.game.addEntity(enemy);
                     
                 } else if (e[0] === "buck") {
-                    this.boss = new Drumbuck(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale);
+                    this.boss = new Buck(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale);
                     this.game.addEntity(this.boss);
                 }
             });
@@ -414,29 +420,31 @@ class SceneManager {
                 ASSET_MANAGER.playAsset("./sounds/music/maintheme.mp3");
                 ASSET_MANAGER.autoRepeat("./sounds/music/maintheme.mp3");
                 this.playonce = false;
-            ctx.font = "30px Comic Sans MS";
-            ctx.drawImage(this.main, 0, 0, PARAMS.canvas_width, PARAMS.canvas_height);
-            ctx.strokeStyle = "#ffffff";
-            ctx.fillStyle = "#ffffff";
-
+            ctx.font = "BOLD 40px Comic Sans";
+            this.animations.drawFrame(this.game.clockTick, this.game.ctx, 0, 0, 1);
+            //START BUTTON
+            this.buttonanimations.drawFrame(this.game.clockTick, this.game.ctx, PARAMS.canvas_width *0.43, PARAMS.canvas_height*0.65, 6);
+            //EXTRA BUTTON
+            this.buttonanimations.drawFrame(this.game.clockTick, this.game.ctx, PARAMS.canvas_width *0.43, PARAMS.canvas_height*0.82, 6);
+            ctx.drawImage(this.title, PARAMS.canvas_width*0.355, PARAMS.canvas_height*0.07, 354, 145);
+            ctx.fillStyle = "#A9A9A9";
             //If our mouse has come on canvas
             if(this.game.hover != null) {
                 //If we are hovering over button.
                 if(this.game.hover.x >= PARAMS.canvas_width*0.42 && this.game.hover.x < PARAMS.canvas_width*0.57) {
-                    if(this.game.hover.y >= PARAMS.canvas_height*0.8 && this.game.hover.y < PARAMS.canvas_height*0.88) {
-                        ctx.strokeStyle = "#000000";
-                        ctx.fillStyle = "#000000";
+                    if(this.game.hover.y >= PARAMS.canvas_height*0.65 && this.game.hover.y < PARAMS.canvas_height*0.75) {
+                        ctx.fillStyle = "#ffffff";
                     }
                 }
             }
             ctx.lineWidth = 10;
-            ctx.strokeRect(PARAMS.canvas_width*0.42, PARAMS.canvas_height*0.8, PARAMS.canvas_width*0.15, PARAMS.canvas_height*0.08);
-            ctx.fillText("START", PARAMS.canvas_width*0.45 + 5, PARAMS.canvas_height*0.85);
+            ctx.fillText("START", PARAMS.canvas_width*0.45, PARAMS.canvas_height*0.72);
+            ctx.fillText("EXTRA", PARAMS.canvas_width*0.445, PARAMS.canvas_height*0.89);
             //If our mouse has clicked canvas
             if(this.game.click != null) {
                 //If we are clicking in range load lvl 1.
                 if(this.game.click.x >= PARAMS.canvas_width*0.42 && this.game.click.x < PARAMS.canvas_width * 0.57) {
-                    if(this.game.click.y >= PARAMS.canvas_height * 0.8 && this.game.click.y < PARAMS.canvas_height*0.88) {
+                    if(this.game.click.y >= PARAMS.canvas_height * 0.65 && this.game.click.y < PARAMS.canvas_height*0.75) {
                         this.game.started = true;
                         this.loadLevel1();
                     }
