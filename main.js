@@ -40,6 +40,7 @@ ASSET_MANAGER.queueDownload("./sprites/mainmenu.png");
 ASSET_MANAGER.queueDownload("./sprites/Doublops.png");
 ASSET_MANAGER.queueDownload("./sprites/Fernight.png");
 ASSET_MANAGER.queueDownload("./sprites/mainmenu.png");
+ASSET_MANAGER.queueDownload("./sprites/Fusillade.png");
 
 
 // sounds
