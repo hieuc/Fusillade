@@ -37,15 +37,12 @@ ASSET_MANAGER.queueDownload("./sprites/Aishit.png");
 ASSET_MANAGER.queueDownload("./sprites/buckhit.png");
 ASSET_MANAGER.queueDownload("./sprites/cyclopshit.png");
 ASSET_MANAGER.queueDownload("./sprites/mainmenu.png");
-<<<<<<< HEAD
 ASSET_MANAGER.queueDownload("./sprites/dungeon.png");
-=======
 ASSET_MANAGER.queueDownload("./sprites/Doublops.png");
 ASSET_MANAGER.queueDownload("./sprites/Fernight.png");
 ASSET_MANAGER.queueDownload("./sprites/mainmenu.png");
 ASSET_MANAGER.queueDownload("./sprites/Fusillade.png");
 
->>>>>>> a62d03930815e25844acf2161d1194ee69d51dd1
 
 // sounds
 ASSET_MANAGER.queueDownload("./sounds/music/buck.mp3");
