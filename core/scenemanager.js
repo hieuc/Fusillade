@@ -7,9 +7,11 @@ class SceneManager {
         this.title = ASSET_MANAGER.getAsset("./sprites/Fusillade.png");
         this.buttons = ASSET_MANAGER.getAsset("./sprites/GUI.png");
 
-        this.animations = new Animator(this.main, 0, 0, 1280, 720, 15, 0.35, 0, false, true);
+        this.animations = new Animator(this.main, 0, 0, 1280, 720, 15, 0.1, 0, false, true);
 
         this.buttonanimations = new Animator(this.buttons, 113, 81, 32, 16, 1, 1, 0, false, true);
+
+        this.extra = false;
 
         this.minimap = new Minimap(game, 0, 0);
         this.inventory = new Inventory(game, PARAMS.canvas_width/15, PARAMS.canvas_height/15);
@@ -271,7 +273,9 @@ class SceneManager {
                     } 
                 }
             }
-        } else if (!this.game.started) {
+        } else if (!this.game.started && !this.extra) {
+            let starthover = false;
+            let extrahover = false;
             if(this.playonce)
                 ASSET_MANAGER.playAsset("./sounds/music/maintheme.mp3");
                 ASSET_MANAGER.autoRepeat("./sounds/music/maintheme.mp3");
@@ -279,34 +283,54 @@ class SceneManager {
             ctx.font = "BOLD 40px Comic Sans";
             this.animations.drawFrame(this.game.clockTick, this.game.ctx, 0, 0, 1);
             //START BUTTON
-            this.buttonanimations.drawFrame(this.game.clockTick, this.game.ctx, PARAMS.canvas_width *0.43, PARAMS.canvas_height*0.65, 6);
+            this.buttonanimations.drawFrame(this.game.clockTick, this.game.ctx, PARAMS.canvas_width *0.32, PARAMS.canvas_height*0.75, 6);
             //EXTRA BUTTON
-            this.buttonanimations.drawFrame(this.game.clockTick, this.game.ctx, PARAMS.canvas_width *0.43, PARAMS.canvas_height*0.82, 6);
+            this.buttonanimations.drawFrame(this.game.clockTick, this.game.ctx, PARAMS.canvas_width *0.52, PARAMS.canvas_height*0.75, 6);
             ctx.drawImage(this.title, PARAMS.canvas_width*0.355, PARAMS.canvas_height*0.07, 354, 145);
             ctx.fillStyle = "#A9A9A9";
             //If our mouse has come on canvas
             if(this.game.hover != null) {
                 //If we are hovering over button.
-                if(this.game.hover.x >= PARAMS.canvas_width*0.42 && this.game.hover.x < PARAMS.canvas_width*0.57) {
-                    if(this.game.hover.y >= PARAMS.canvas_height*0.65 && this.game.hover.y < PARAMS.canvas_height*0.75) {
-                        ctx.fillStyle = "#ffffff";
+                if(this.game.hover.x >= PARAMS.canvas_width*0.32 && this.game.hover.x < PARAMS.canvas_width*0.45) {
+                    if(this.game.hover.y >= PARAMS.canvas_height*0.75 && this.game.hover.y < PARAMS.canvas_height*0.91) {
+                        starthover = true;
+                    }
+                }
+                if(this.game.hover.x >= PARAMS.canvas_width*0.515 && this.game.hover.x < PARAMS.canvas_width*0.64) {
+                    if(this.game.hover.y >= PARAMS.canvas_height*0.75 && this.game.hover.y < PARAMS.canvas_height*0.91) {
+                        extrahover = true;
                     }
                 }
             }
             ctx.lineWidth = 10;
-            ctx.fillText("START", PARAMS.canvas_width*0.45, PARAMS.canvas_height*0.72);
-            ctx.fillText("EXTRA", PARAMS.canvas_width*0.445, PARAMS.canvas_height*0.89);
+            if(starthover)
+                ctx.fillStyle = "#ffffff";
+            ctx.fillText("START", PARAMS.canvas_width*0.34, PARAMS.canvas_height*0.82);
+
+            ctx.fillStyle = "#A9A9A9";
+            if(extrahover)
+                ctx.fillStyle = "#ffffff";
+            ctx.fillText("EXTRA", PARAMS.canvas_width*0.535, PARAMS.canvas_height*0.82);
+            ctx.fillStyle = "#A9A9A9";
+
             //If our mouse has clicked canvas
             if(this.game.click != null) {
                 //If we are clicking in range load lvl 1.
-                if(this.game.click.x >= PARAMS.canvas_width*0.42 && this.game.click.x < PARAMS.canvas_width * 0.57) {
-                    if(this.game.click.y >= PARAMS.canvas_height * 0.65 && this.game.click.y < PARAMS.canvas_height*0.75) {
+                if(this.game.click.x >= PARAMS.canvas_width*0.32 && this.game.click.x < PARAMS.canvas_width * 0.45) {
+                    if(this.game.click.y >= PARAMS.canvas_height * 0.75 && this.game.click.y < PARAMS.canvas_height*0.91) {
                         this.game.started = true;
                         this.loadLevel1();
                     }
                 }
+                if(this.game.click.x >= PARAMS.canvas_width*0.515 && this.game.click.x < PARAMS.canvas_width * 0.64) {
+                    if(this.game.click.y >= PARAMS.canvas_height * 0.75 && this.game.click.y < PARAMS.canvas_height*0.91) {
+                        this.extra = true;
+                        this.game.entities = [];
+                        this.game.addEntity(new Barrel(this.game, 0, 0));
+                    }
+                }
             }
-        } 
+        }
 
         if(this.game.started) {
             this.minimap.draw(ctx);
