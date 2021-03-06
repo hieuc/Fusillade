@@ -11,8 +11,6 @@ class SceneManager {
 
         this.buttonanimations = new Animator(this.buttons, 113, 81, 32, 16, 1, 1, 0, false, true);
 
-        this.extra = false;
-
         this.minimap = new Minimap(game, 0, 0);
         this.inventory = new Inventory(game, PARAMS.canvas_width/15, PARAMS.canvas_height/15);
         this.playonce = true;
@@ -345,7 +343,7 @@ class SceneManager {
     };
 
     update() {
-        if (this.game.started) {
+        if (this.game.started && !this.game.extra) {
             // update camera
             if (!this.debug) {
                 this.x = this.char.x - PARAMS.canvas_width/2 + 25;
@@ -396,8 +394,7 @@ class SceneManager {
                 }
             } else if (this.level === 2) {
                 // level 2 interaction here
-            }
-            
+            } 
         }  
     };
 
@@ -417,7 +414,7 @@ class SceneManager {
                 ctx.lineWidth = 10;
                 ctx.fillText(i, this.rooms[i].x * scale, this.rooms[i].y * scale);
             }
-        } else if (!this.game.started && !this.extra) {
+        } else if (!this.game.started && !this.game.extra) {
             let starthover = false;
             let extrahover = false;
             if(this.playonce)
@@ -463,20 +460,22 @@ class SceneManager {
                 if(this.game.click.x >= PARAMS.canvas_width*0.32 && this.game.click.x < PARAMS.canvas_width * 0.45) {
                     if(this.game.click.y >= PARAMS.canvas_height * 0.75 && this.game.click.y < PARAMS.canvas_height*0.91) {
                         this.game.started = true;
+                        this.game.leftclick = false;
+                        this.game.click = null;
                         this.loadLevel1();
                     }
-                }
-                if(this.game.click.x >= PARAMS.canvas_width*0.515 && this.game.click.x < PARAMS.canvas_width * 0.64) {
+                } else if(this.game.click.x >= PARAMS.canvas_width*0.515 && this.game.click.x < PARAMS.canvas_width * 0.64) {
                     if(this.game.click.y >= PARAMS.canvas_height * 0.75 && this.game.click.y < PARAMS.canvas_height*0.91) {
-                        this.extra = true;
-                        this.game.entities = [];
-                        this.game.addEntity(new Barrel(this.game, 0, 0));
+                        this.game.extra = true;
+                        this.game.started = true;
+                        this.game.click = null; //reset click
+                        this.game.addEntity(new Extras(this.game, 0, 0));
                     }
                 }
             }
         }
 
-        if(this.game.started) {
+        if(this.game.started && !this.game.extra) {
             this.minimap.draw(ctx);
             this.inventory.draw(ctx);
         }

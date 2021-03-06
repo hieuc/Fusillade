@@ -7,6 +7,7 @@ class GameEngine {
         this.showOutlines = false;
 
         this.ctx = null;
+        this.extra = false;
         this.click = null;
         this.hover = null;
         this.mouse = { x:0, y: 0 };
@@ -133,7 +134,7 @@ class GameEngine {
 
         this.ctx.canvas.addEventListener("mousemove", e =>  {
             this.mouse = getXandY(e);
-            if (this.started) {
+            if (this.started && !this.extra) {
                 this.camera.merchant.determineHover(this.mouse);
             }
 
@@ -152,24 +153,28 @@ class GameEngine {
 
         this.ctx.canvas.addEventListener("mouseup", e => {
             // only left click counts
-            if(e.button === 0 && this.started) {
+            if(e.button === 0 && this.started && !this.extra) {
                 this.camera.merchant.determineClick(getXandY(e));
                 this.leftclick = false;
             }
 
-            if(!this.started) {
+            if(!this.started && !this.extra) {
                 this.click = getXandY(e);
+            }
+
+            if(this.extra) {
+                this.entities[0].determineClick(getXandY(e));
             }
         }, false);
 
         this.ctx.canvas.addEventListener("wheel", e => {
             if (this.started ) {
                 // scrolling up
-                if (e.deltaY < 0) {
+                if (e.deltaY < 0 && !this.extra) {
                     this.camera.minimap.updateScale(-0.25);
                 }
                 // scrolling down
-                else if (e.deltaY > 0) {
+                else if (e.deltaY > 0 && !this.extra) {
                     this.camera.minimap.updateScale(0.25);
                 }
             }
@@ -222,6 +227,10 @@ class GameEngine {
 
         for (var i = 0; i < entitiesCount; i++) {
             var entity = this.entities[i];
+
+            if(this.extra && !entity.removeFromWorld) {
+                entity.update();
+            }
 
             if (this.camera.gameover) {
                 if (entity === this.camera.char) {
