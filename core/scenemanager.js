@@ -337,16 +337,11 @@ class SceneManager {
 
         this.game.addEntity(character);
 
-        //this.game.addEntity(new Drumbuck(this.game, character.x, character.y));
+        //this.game.addEntity(new Slippey(this.game, character.x, character.y));
 
         //this.tempObstacles = lockRoom(this.game, this.rooms[8], this.map, this.tree);
-        var knifes = [];
-        for (var i = 0; i < start.w*2; i++) {
-            var k = new KnifePortal(this.game, start.x * 64 + 32 * i, start.y * 64);
-            this.game.addEntity(k);
-            knifes.push(k);
-        }
-        this.game.addEntity(new Dummy(this.game, character.x, character.y, knifes));
+        
+        this.game.addEntity(new Dummy(this.game, character.x, character.y, start));
         ASSET_MANAGER.pauseBackgroundMusic();
         ASSET_MANAGER.playAsset("./sounds/music/greenpath-ambient.mp3");
         ASSET_MANAGER.autoRepeat("./sounds/music/greenpath-ambient.mp3");
@@ -457,6 +452,14 @@ class SceneManager {
                     if(this.game.click.y >= PARAMS.canvas_height * 0.65 && this.game.click.y < PARAMS.canvas_height*0.75) {
                         this.game.started = true;
                         this.loadLevel1();
+                        
+                        // resize canvas when game start
+                        var canvas = document.getElementById("gameWorld");
+                        canvas.getContext('2d').imageSmoothingEnabled = true;
+                        canvas.height = 900;
+                        PARAMS.canvas_height = 900;
+                        canvas.getContext('2d').imageSmoothingEnabled = false;
+                        
                     }
                 }
             }
