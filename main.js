@@ -7,6 +7,7 @@ ASSET_MANAGER.queueDownload("./sprites/rutherford.png");
 ASSET_MANAGER.queueDownload("./sprites/rutherford-main.png");
 ASSET_MANAGER.queueDownload("./sprites/Fayere.png");
 ASSET_MANAGER.queueDownload("./sprites/Ais.png");
+ASSET_MANAGER.queueDownload("./sprites/Wormy.png");
 ASSET_MANAGER.queueDownload("./sprites/forest_tiles.png");
 ASSET_MANAGER.queueDownload("./sprites/projectiles.png");
 ASSET_MANAGER.queueDownload("./sprites/Buck.png");
@@ -14,6 +15,7 @@ ASSET_MANAGER.queueDownload("./sprites/Buck.png");
 ASSET_MANAGER.queueDownload("./sprites/Drumbuck.png");
 ASSET_MANAGER.queueDownload("./sprites/dummy.png");
 ASSET_MANAGER.queueDownload("./sprites/Portal.png");
+ASSET_MANAGER.queueDownload("./sprites/ruthericon.png");
 ASSET_MANAGER.queueDownload("./sprites/Cyclops.png");
 ASSET_MANAGER.queueDownload("./sprites/Crate.png");
 ASSET_MANAGER.queueDownload("./sprites/Meat.png");
@@ -38,9 +40,11 @@ ASSET_MANAGER.queueDownload("./sprites/Aishit.png");
 ASSET_MANAGER.queueDownload("./sprites/buckhit.png");
 ASSET_MANAGER.queueDownload("./sprites/cyclopshit.png");
 ASSET_MANAGER.queueDownload("./sprites/mainmenu.png");
+ASSET_MANAGER.queueDownload("./sprites/dungeon.png");
 ASSET_MANAGER.queueDownload("./sprites/Doublops.png");
 ASSET_MANAGER.queueDownload("./sprites/Fernight.png");
 ASSET_MANAGER.queueDownload("./sprites/mainmenu.png");
+ASSET_MANAGER.queueDownload("./sprites/Fusillade.png");
 
 
 // sounds

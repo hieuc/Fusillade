@@ -292,7 +292,10 @@ function createLevel1(w, h) {
  * @param {*} h 
  */
 function createLevel2(w, h) {
-    var rooms = createRoomsLevel2(w, h);
+    var a = createRoomsLevel2(w, h);
+
+    var rooms = a[0];
+    var path = a[1];
 
     var m = [];
 
@@ -321,9 +324,9 @@ function createLevel2(w, h) {
                     for (var a = 0; a < Math.abs(e.x2 - e.x1); a++) {
                         // width of path is 5
                         //m[e.y1 - 2][e.x1 + a*v] = 1;
-                        m[e.y1 - 1][e.x1 + a*v] = 1;
+                        //m[e.y1 - 1][e.x1 + a*v] = 1;
                         m[e.y1][e.x1 + a*v] = 1;
-                        m[e.y1 + 1][e.x1 + a*v] = 1;
+                        //m[e.y1 + 1][e.x1 + a*v] = 1;
                         //m[e.y1 + 2][e.x1 + a*v] = 1;
                     }
                 } else {
@@ -331,9 +334,9 @@ function createLevel2(w, h) {
                     for (var a = 0; a < Math.abs(e.y2 - e.y1); a++) {
                         // width of path is 5
                         //m[e.y1 + a*v][e.x1 - 2] = 1;
-                        m[e.y1 + a*v][e.x1 - 1] = 1;
+                        //m[e.y1 + a*v][e.x1 - 1] = 1;
                         m[e.y1 + a*v][e.x1] = 1;
-                        m[e.y1 + a*v][e.x1 + 1] = 1;
+                        //m[e.y1 + a*v][e.x1 + 1] = 1;
                         //m[e.y1 + a*v][e.x1 + 2] = 1;
                     }
                 }
@@ -356,7 +359,6 @@ function createLevel2(w, h) {
  * @param {*} h 
  */
 function createRoomsLevel2(w, h) {
-    
     var m = [];
     // partition space
     new Space(0, 0, w, h, 6, m, 0.05);
@@ -365,21 +367,46 @@ function createRoomsLevel2(w, h) {
     for (var i = 0; i < m.length; i++) {
         var e = m[i];
         // room will occupy 70-80% area of space
-        var w = Math.floor(e.w * (randomInt(11) + 75) / 100);
-        var h = Math.floor(e.h * (randomInt(11) + 75) / 100);
+        var rw = Math.floor(e.w * (randomInt(11) + 85) / 100);
+        var rh = Math.floor(e.h * (randomInt(11) + 85) / 100);
         // position will also be randomized, but always within space bound
-        var x = e.x + randomInt(Math.floor((e.w - w) * 0.8)) + Math.floor((e.w - w) * 0.1);
-        var y = e.y + randomInt(Math.floor((e.h - h) * 0.8)) + Math.floor((e.h - h) * 0.1);
+        var x = e.x + randomInt(Math.floor((e.w - rw) * 0.8)) + Math.floor((e.w - rw) * 0.1);
+        var y = e.y + randomInt(Math.floor((e.h - rh) * 0.8)) + Math.floor((e.h - rh) * 0.1);
         
-        e.room = new Room(x, y, w, h, "normal");
+        e.room = new Room(x, y, rw, rh, "normal");
     };
 
-    // randomly remove 30-40% of rooms
-    for (var i = 0; i < randomInt(Math.floor(m.length*0.1)) + Math.floor(m.length*0.5); i++) {
-        m.splice(randomInt(m.length-3)+1, 1);
-    }
+    // choose starting and end room
+    // starting room: bottom left, end room: top right
+    var start = m[0];
+    var end = m[0];
+    m.forEach(e => {
+        // bottom left room
+        if (e.x <= start.x && e.y >= start.y) {
+            start = e;
+        } 
+        // top right
+        else if (e.x >= end.x && e.y <= end.y) {
+            end = e;
+        }
+    });
+    start.room.key = "start";
+    end.room.key = "final";
 
-    // create paths between rooms
+    // end room will have max size
+    end.room.x = end.x + 1;
+    end.room.y = end.y;
+    end.room.w = end.w - 1;
+    end.room.h = end.h - 1;
+
+    // randomly remove 30-40% of rooms
+    var totalRemove = randomInt(Math.floor(m.length*0.1)) + Math.floor(m.length*0.45);
+    for (var i = 0; i < totalRemove; i++) {
+        var toRemove = randomInt(m.length-3)+1;
+        if(m[toRemove].room.key !== "start" && m[toRemove].room.key !== "final")
+            m.splice(toRemove, 1);
+    }
+    
     
     // generate distance between rooms
     var dist = [];
@@ -405,26 +432,22 @@ function createRoomsLevel2(w, h) {
             if(!connection.connected(dist[i].r1, dist[i].r2)) {
                 createPath(m[dist[i].r1].room, m[dist[i].r2].room);
                 connection.union(dist[i].r1, dist[i].r2);
+                m[dist[i].r1].room.connectTo.push(dist[i].r2);
+                m[dist[i].r2].room.connectTo.push(dist[i].r1);
             }
         } else {
             break;
         }
     }
-    // do a second pass
-    for (var i = 0; i < dist.length; i++) {
-        if (!connection.allConnected()) {
-            if(!connection.connected(dist[i].r1, dist[i].r2)) {
-                createPath(m[dist[i].r1].room, m[dist[i].r2].room);
-                connection.union(dist[i].r1, dist[i].r2);
-            }
-        } else {
-            break;
-        }
-    }
+
     for (var i = 0; i < m.length; i++) {
         m[i] = m[i].room;
+        m[i].index = i;
     }
-    return m;
+    
+    var path = findPathway(m, start.room, end.room);
+    
+    return [m, path];
 }
 
 
@@ -665,7 +688,12 @@ class Room {
     constructor (x, y, w, h, key) {
         Object.assign(this, { x, y, w, h, key});
 
-        
+        // this.path : path from 1 room to another
+        this.connectTo = [];
+
+        // an array of connecting rooms,
+        // used to build start to finish path
+        this.currentPath = [];
     }
 }
 
@@ -716,10 +744,34 @@ class UnionFind {
 
     // need to fix this
     allConnected() {
-        for (var i = 0; i < this.count - 1; i++) {
-            if (this.find(this.elements[i]) !== this.find(this.elements[i+1]))
-                return false;
+        for (var i = 0; i < this.count; i++) {
+            for (var j = i + 1; j < this.count; j++)
+                if (this.find(this.elements[i]) !== this.find(this.elements[j]))
+                    return false;
         }
         return true;
     }
  }
+
+ // find the sequence of start to final room
+function findPathway(m, start, end) {
+    // DFS 
+    var loop = function (current, array) {
+        array.push(current.index);
+            
+        for(var i = 0; i < current.connectTo.length; i++) {
+            // we do not want to loop back
+            if (array.includes(current.connectTo[i]))
+                continue;
+            
+                // recursion
+            var a = loop(m[current.connectTo[i]], JSON.parse(JSON.stringify(array)));
+            
+            if (a.includes(end.index))
+                return a;
+        }
+        return array;
+    }
+
+    return loop(start, []);
+}

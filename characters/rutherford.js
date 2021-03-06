@@ -4,6 +4,12 @@ class Rutherford {
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/rutherford-main.png");
 
+        this.panel = ASSET_MANAGER.getAsset("./sprites/GUI.png");
+
+        this.ruthericon = ASSET_MANAGER.getAsset("./sprites/ruthericon.png");
+
+        this.panelanimations = [];
+
         this.scale = 2;
 
         this.action = 0; // 0 = idle, 1 = run, 2 = attack, 3 = transform
@@ -54,7 +60,7 @@ class Rutherford {
 
         this.bound = new BoundingBox(this.game, this.x, this.y, 16, 24);
 
-        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y, 20 * this.scale, 300, 300, true); //Has mana field too.
+        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y, 203 * this.scale, 300, 300, true); //Has mana field too.
 
         this.animations = [];
 
@@ -71,6 +77,12 @@ class Rutherford {
                 }
             }
         }
+
+        this.panelanimations[0] = new Animator(this.panel, 95, 36, 27, 25, 1, 1, 0, false, true);
+
+        this.panelanimations[1] = new Animator(this.panel, 135, 20, 50, 8, 1, 1, 0, false, true);
+
+        this.panelanimations[2] = new Animator(this.ruthericon, 0, 0, 172, 87, 4, 0.2, 27, false, true);
 
         //The 3rd dimension refers to whether you're in Ascended form or not.
         // idle
@@ -347,6 +359,9 @@ class Rutherford {
     }
 
     draw(ctx) {
+        this.panelanimations[0].drawFrame(this.game.clockTick, ctx, -5, PARAMS.canvas_height*0.885, 4);
+        this.panelanimations[1].drawFrame(this.game.clockTick, ctx, PARAMS.canvas_width*0.08, PARAMS.canvas_height*0.92, 9);
+        this.panelanimations[2].drawFrame(this.game.clockTick, ctx, PARAMS.canvas_width*0.008, PARAMS.canvas_height*0.897, 0.85);
         this.animations[this.action][this.face][this.form].drawFrame(this.game.clockTick, ctx, this.x - 25 - this.game.camera.x, this.y - 25 - this.game.camera.y, this.scale);
         this.hp.draw();
         if (PARAMS.debug) {
@@ -357,8 +372,8 @@ class Rutherford {
     updateBound() {
         this.bound.update(this.x + 16, this.y + 8);
 
-        this.hp.x = this.bound.x - 12;
-        this.hp.y = this.bound.y + 25 * this.scale;;
+        this.hp.x = this.bound.x - PARAMS.canvas_width*0.406;
+        this.hp.y = this.bound.y + PARAMS.canvas_height*0.225 * this.scale;
     }
 
     //Transforms Rutherford into Ascended Rutherford.

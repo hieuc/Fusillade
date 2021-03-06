@@ -4,7 +4,10 @@ class HealthMpBar {
         
         this.current = this.maxHealth;
         this.currMana = this.maxMana;
-        this.h = 6;
+        if(mc)
+            this.h = 17;
+        else
+            this.h = 6;
     }
 
     draw() {
@@ -21,9 +24,9 @@ class HealthMpBar {
             var percentageMana = this.currMana / this.maxMana;
             if (percentageMana < 0) percentageMana = 0;
             ctx.fillStyle = "rgb(30, 100, 255)";
-            ctx.fillRect(this.x - this.game.camera.x, this.y + 5 - this.game.camera.y, this.w * percentageMana, this.h);
+            ctx.fillRect(this.x - this.game.camera.x, this.y + 16 - this.game.camera.y, this.w * percentageMana, this.h);
             ctx.strokeStyle = 'black';
-            ctx.strokeRect(this.x - this.game.camera.x, this.y + 5 - this.game.camera.y, this.w, this.h);
+            ctx.strokeRect(this.x - this.game.camera.x, this.y + 16 - this.game.camera.y, this.w, this.h);
         }
     }
 
