@@ -14,7 +14,7 @@ class Wormy extends Enemy {
 
         this.bound = new BoundingBox(this.game, this.x, this.y, 60, 50);
 
-        this.hp = new HealthMpBar(this.game, this.x + 2 * this.scale, this.y + 90 * this.scale, 90 * this.scale, 100, 0, false); //change this to fit Wormy
+        this.hp = new HealthMpBar(this.game, this.x * this.scale, this.y * this.scale, 50 * this.scale, 150, 0, false); //change this to fit Wormy
 
         this.toofarmovement = Date.now(); //We want to give a behavior pattern when enemy is too far.
 
@@ -22,7 +22,7 @@ class Wormy extends Enemy {
 
         this.attackbuffer = Date.now(); //Used to calculate when the last shot was fired.
 
-        this.succession = 200; // the larger the number the less projectiles Wormy shoots out
+        this.succession = 100; // the larger the number the less projectiles Wormy shoots out
 
         this.barrage = Date.now();
 
@@ -72,11 +72,11 @@ class Wormy extends Enemy {
 
         // Death animation for state = 4
         // facing right
-        this.animations[4][0] = new Animator(this.spritesheet, 1440, 0, 90, 90, 8, 0.3, 0.15, false, false);
+        this.animations[4][0] = new Animator(this.spritesheet, 1440, 0, 90, 90, 8, 0.3, 0.05, false, false);
 
         // Death amimation facing left
         // facing left = 1
-        this.animations[4][1] = new Animator(this.spritesheet, 1890, 90, 90, 90, 8, 0.3, 0.15, true, false);
+        this.animations[4][1] = new Animator(this.spritesheet, 1890, 90, 90, 90, 8, 0.3, 0.05, true, false);
 
     }
 
@@ -84,7 +84,7 @@ class Wormy extends Enemy {
 
         this.enemyX = this.game.camera.char.x;
         this.enemyY = this.game.camera.char.y;
-        this.speed = 5;
+        this.speed = 3.5;
 
         // if Wormy dies
         if(this.state == 4) 
@@ -98,47 +98,72 @@ class Wormy extends Enemy {
         // attack pattern
         else 
         {
-            this.howlong = Date.now() - this.toofarmovement;
-            // move to the right in a straight line
-            if(this.howlong < 2000)
+            // movement pattern when Rutherford is not in trigger range
+            if(Math.abs(this.x - this.enemyX) > 400 || Math.abs(this.y - this.enemyY) > 200)
             {
-                this.state = 1;
-                this.decideDir();
-                this.x += this.speed;
-            }
-            else if(this.howlong >= 2000 && this.howlong < 4000)
-            {
-                this.state = 1;
-                this.decideDir();
-                this.y += -1 * this.speed;
-            }
-            else if(this.howlong >= 4000 && this.howlong < 6000)
-            {
-                this.state = 1;
-                this.decideDir();
-                this.x += -1 * this.speed;
-            }
-            else if(this.howlong >= 6000 && this.howlong < 8000)
-            {
-                this.state = 1;
-                this.decideDir();
-                this.y += this.speed;
-            }
-            else
-            {
-                this.toofarmovement = Date.now();
-            }
-            var timepass = Date.now() - this.attackbuffer;
-            if(timepass > this.firerate)
-            {
-                if(Date.now() - this.barrage > this.succession)
+                this.howlong = Date.now() - this.toofarmovement;
+                // move to the right in a straight line
+                if(this.howlong < 2000)
                 {
-                    this.attack();
-                    this.barrage = Date.now();
+                    this.state = 1;
+                    this.decideDir();
+                    this.x += this.speed;
                 }
-                if(timepass > this.firerate + 250)
+                else if(this.howlong >= 2000 && this.howlong < 4000)
                 {
-                    this.attackbuffer = Date.now();
+                    this.state = 1;
+                    this.decideDir();
+                    let tf = this.decideYDir();
+                    if(tf)
+                    {
+                        this.y += 1 * this.speed;
+                    }
+                    else
+                    {
+                        this.y += -1 * this.speed;
+                    }
+                }
+                else if(this.howlong >= 4000 && this.howlong < 6000)
+                {
+                    this.state = 1;
+                    this.decideDir();
+                    this.x += -1 * this.speed;
+                }
+                else if(this.howlong >= 6000 && this.howlong < 8000)
+                {
+                    this.state = 1;
+                    this.decideDir();
+                    let tf = this.decideYDir();
+                    if(tf)
+                    {
+                        this.y += 1 * this.speed;
+                    }
+                    else
+                    {
+                        this.y += -1 * this.speed;
+                    }
+                }
+                else
+                {
+                    this.toofarmovement = Date.now();
+                }
+            }
+            // If Rutherford is in trigger range, then fire off attacks
+            else if(Math.abs(this.x - this.enemyX) < 300 || Math.abs(this.y - this.enemyY) < 100)
+            {
+                var timepass = Date.now() - this.attackbuffer;
+                this.decideDir();
+                if(timepass > this.firerate)
+                {
+                    if(Date.now() - this.barrage > this.succession)
+                    {
+                        this.attack();
+                        this.barrage = Date.now();
+                    }
+                    if(timepass > this.firerate + 250)
+                    {
+                        this.attackbuffer = Date.now();
+                    }
                 }
             }
         }
@@ -208,16 +233,27 @@ class Wormy extends Enemy {
     updateBound() {
         this.bound.update(this.x + 65, this.y + 70);
 
-        this.hp.x = this.x + 30 * this.scale;
-        this.hp.y = this.y + 30 * this.scale;
+        this.hp.x = this.x + 20 * this.scale;
+        this.hp.y = this.y + 65 * this.scale;
     }
 
-    decideDir() {
+    decideDir() 
+    {
         if(this.x - this.enemyX> 0) {
             this.face = 1;
         } else {
             this.face = 0;
         }
+    }
+
+    decideYDir()
+    {
+        let truthVal = false;
+        if(this.y - this.enemyY < 0)
+        {
+            truthVal = true;
+        }
+        return truthVal;
     }
 
     attack() {
@@ -230,8 +266,8 @@ class Wormy extends Enemy {
 
     calculateVel() {
         var enemy = this.game.camera.char;
-        var dx = enemy.bound.x - (this.bound.x) + 40; // to deal with the projectiles that miss, change the number you are adding
-        var dy = enemy.bound.y - (this.bound.y) + 53; // to deal with the projectiles that miss, change the number you are adding
+        var dx = enemy.bound.x - (this.bound.x) + 45; // to deal with the projectiles that miss, change the number you are adding
+        var dy = enemy.bound.y - (this.bound.y) + 55; // to deal with the projectiles that miss, change the number you are adding
 
         // find unit vector
         var length = Math.sqrt(dx * dx + dy * dy);
