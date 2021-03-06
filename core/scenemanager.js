@@ -5,11 +5,14 @@ class SceneManager {
 
         this.main = ASSET_MANAGER.getAsset("./sprites/mainmenu.png");
         this.title = ASSET_MANAGER.getAsset("./sprites/Fusillade.png");
-        this.buttons = ASSET_MANAGER.getAsset("./sprites/GUI.png");
+        this.panel = ASSET_MANAGER.getAsset("./sprites/GUI.png");
+
+        this.ruthericon = ASSET_MANAGER.getAsset("./sprites/ruthericon.png");
+        this.avaanimation = new Animator(this.ruthericon, 0, 0, 172, 45, 4, 0.35, 28, false, true);
 
         this.animations = new Animator(this.main, 0, 0, 1280, 720, 15, 0.1, 0, false, true);
 
-        this.buttonanimations = new Animator(this.buttons, 113, 81, 32, 16, 1, 1, 0, false, true);
+        this.buttonanimations = new Animator(this.panel, 113, 81, 32, 16, 1, 1, 0, false, true);
 
         this.minimap = new Minimap(game, 0, 0);
         this.inventory = new Inventory(game, PARAMS.canvas_width/15, PARAMS.canvas_height/15);
@@ -523,6 +526,45 @@ class SceneManager {
         if(this.game.started && !this.game.extra) {
             this.minimap.draw(ctx);
             this.inventory.draw(ctx);
+
+                // -----------------draw hp bar section:
+            // draw gui
+            ctx.drawImage(this.panel, 95, 36, 27, 25, -5, PARAMS.canvas_height*0.885, 27*4, 25*4);
+            ctx.drawImage(this.panel, 135, 20, 50, 8, PARAMS.canvas_width*0.08, PARAMS.canvas_height*0.92, 50*9, 8*9);
+            this.avaanimation.drawFrame(this.game.clockTick, ctx, PARAMS.canvas_width*0.008 - 20, PARAMS.canvas_height*0.911, 1.4);
+            // fetch hp bar from rutherford then draw
+            var hp = this.char.hp;
+            var percentage = hp.current / hp.maxHealth;
+            ctx.font = `bold 18px Comic Sans MS`;
+            
+        
+            // draw hp
+            if (percentage < 0) percentage = 0;
+            ctx.fillStyle = hp.getColor(percentage);
+            ctx.fillRect(PARAMS.canvas_width*0.08 + 9, PARAMS.canvas_height*0.92 + 10, 405*percentage, 21);
+            ctx.strokeStyle = 'black';
+            ctx.strokeRect(PARAMS.canvas_width*0.08 + 9, PARAMS.canvas_height*0.92 + 10, 405, 21);
+            // give text
+            ctx.fillStyle = "white";
+            ctx.fillText(`${Math.round(hp.current)}/${hp.maxHealth}`, PARAMS.canvas_width*0.08 + 192, PARAMS.canvas_height*0.92 + 27);
+            
+            ctx.strokeStyle = "black";
+            ctx.lineWidth = 1;
+            ctx.strokeText(`${Math.round(hp.current)}/${hp.maxHealth}`, PARAMS.canvas_width*0.08 + 192, PARAMS.canvas_height*0.92 + 27); 
+
+            //draw mp
+            var percentageMana = hp.currMana / hp.maxMana;
+            if (percentageMana < 0) percentageMana = 0;
+            ctx.fillStyle = "rgb(30, 100, 255)";
+            ctx.fillRect(PARAMS.canvas_width*0.08 + 9, PARAMS.canvas_height*0.92 + 32, 405*percentageMana, 21);
+            ctx.strokeStyle = 'black';
+            ctx.strokeRect(PARAMS.canvas_width*0.08 + 9,  PARAMS.canvas_height*0.92 + 32, 405, 21);
+            // give text
+            ctx.fillStyle = "white";
+            ctx.fillText(`${Math.round(hp.currMana)}/${hp.maxMana}`, PARAMS.canvas_width*0.08 + 192, PARAMS.canvas_height*0.92 + 49);
+            ctx.strokeStyle = "black";
+            ctx.strokeText(`${Math.round(hp.currMana)}/${hp.maxMana}`, PARAMS.canvas_width*0.08 + 192, PARAMS.canvas_height*0.92 + 49);
+            ctx.lineWidth = 1;
         }
     }
 
@@ -568,7 +610,6 @@ class Minimap {
 
     draw(ctx) {
         
-        
         // calculate rutherford current coordinatea
         var cx = this.game.camera.char.x / 64;
         var cy = this.game.camera.char.y / 64;
@@ -607,25 +648,6 @@ class Minimap {
                 ctx.fillRect(this.x + (e.x/64 - cx + (this.size-1)/2) * this.psize, 
                         this.y + (e.y/64 - cy + (this.size-1)/2) * this.psize, this.psize, this.psize);
             }
-
-            /*
-            if (e instanceof Obstacle) {
-                var x = Math.round(e.x/64);
-                var y = Math.round(e.y/64);
-                if (x >= cx - (this.size-1)/2 && x <= cx + (this.size-1)/2 &&
-                    y >= cy - (this.size-1)/2 && y <= cy + (this.size-1)/2) {
-
-                    if (this.game.camera.map[y] !== undefined && this.game.camera.map[y][x] === 1) {
-                        ctx.fillStyle = "green";
-                    } else {
-                        ctx.fillStyle = "darkgreen";
-                    }
-
-                    ctx.fillRect(this.x + (x - cx + (this.size-1)/2) * this.scale, 
-                        this.y + (y - cy + (this.size-1)/2) * this.scale, this.scale, this.scale);
-                }
-            }
-            */
         });
 
         // draw rutherford
@@ -642,7 +664,7 @@ class Minimap {
         ctx.lineWidth = 1; // return the stroke size back
     }
 
-    // check if entity is within rutherford range to draw in mapa
+    // check if entity is within rutherford range to draw in map
     isInMapRange(cx, cy, ex, ey) {
         var x = ex/64;
         var y = ey/64;
@@ -680,8 +702,6 @@ class Inventory {
     }
 
     draw(ctx) {
-        var oldAlpha = ctx.globalAlpha;
-        
 
         // custom properties for each item
         var p = [{sx: 32, ox: -5}, {sx: 64, ox: -2}, {sx: 48, ox: 1}, {sx: 80, ox: 4}];
@@ -689,6 +709,7 @@ class Inventory {
         for (var i = 0; i < this.slots.length; i++) {
             var extrascale = 1; // scale when item is selected
             if (i+1 === this.current) {
+                // change opacity
                 ctx.globalAlpha = 0.9;
                 extrascale = 1.15;
             } else {
@@ -713,7 +734,7 @@ class Inventory {
             ctx.fillText(i + 1, this.x + 38*i*this.scale - p[i].ox - 3 - offset, this.y + 8 * this.scale - offset);
         }
         
-        ctx.globalAlpha = oldAlpha;
+        ctx.globalAlpha = 1;
     }
 
     useItem() {

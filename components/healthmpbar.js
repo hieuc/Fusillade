@@ -4,29 +4,28 @@ class HealthMpBar {
         
         this.current = this.maxHealth;
         this.currMana = this.maxMana;
-        if(mc)
-            this.h = 17;
-        else
-            this.h = 6;
+        this.h = 6;
     }
 
     draw() {
         var ctx = this.game.ctx;
         var percentage = this.current / this.maxHealth;
         
+        // draw hp
         if (percentage < 0) percentage = 0;
         ctx.fillStyle = this.getColor(percentage);
         ctx.fillRect(this.x - this.game.camera.x, this.y - this.game.camera.y, this.w * percentage, this.h);
         ctx.strokeStyle = 'black';
         ctx.strokeRect(this.x - this.game.camera.x, this.y - this.game.camera.y, this.w, this.h);
 
+        //draw mp
         if(this.mc) {
             var percentageMana = this.currMana / this.maxMana;
             if (percentageMana < 0) percentageMana = 0;
             ctx.fillStyle = "rgb(30, 100, 255)";
-            ctx.fillRect(this.x - this.game.camera.x, this.y + 16 - this.game.camera.y, this.w * percentageMana, this.h);
+            ctx.fillRect(this.x - this.game.camera.x, this.y - this.game.camera.y +this.h, this.w * percentageMana, this.h);
             ctx.strokeStyle = 'black';
-            ctx.strokeRect(this.x - this.game.camera.x, this.y + 16 - this.game.camera.y, this.w, this.h);
+            ctx.strokeRect(this.x - this.game.camera.x, this.y - this.game.camera.y+ this.h, this.w, this.h);
         }
     }
 

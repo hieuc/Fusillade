@@ -4,15 +4,9 @@ class Rutherford {
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/rutherford-main.png");
 
-        this.panel = ASSET_MANAGER.getAsset("./sprites/GUI.png");
+        
 
         this.shadow = ASSET_MANAGER.getAsset("./sprites/shadow.png");
-
-        this.ruthericon = ASSET_MANAGER.getAsset("./sprites/ruthericon.png");
-
-        this.shadowanimation;
-
-        this.panelanimations = [];
 
         this.scale = 2;
 
@@ -64,7 +58,7 @@ class Rutherford {
 
         this.bound = new BoundingBox(this.game, this.x, this.y, 16, 24);
 
-        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y, 203 * this.scale, 300, 400, true); //Has mana field too.
+        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y, 22 * this.scale, 300, 400, true); //Has mana field too.
 
         this.animations = [];
 
@@ -81,14 +75,6 @@ class Rutherford {
                 }
             }
         }
-
-        this.panelanimations[0] = new Animator(this.panel, 95, 36, 27, 25, 1, 1, 0, false, true);
-
-        this.panelanimations[1] = new Animator(this.panel, 135, 20, 50, 8, 1, 1, 0, false, true);
-
-        this.panelanimations[2] = new Animator(this.ruthericon, 0, 0, 172, 45, 4, 0.35, 28, false, true);
-
-        this.shadowanimation = new Animator(this.shadow, 0, 0, 512, 512, 1, 1, 0, false, true);
 
         //The 3rd dimension refers to whether you're in Ascended form or not.
         // idle
@@ -366,13 +352,13 @@ class Rutherford {
 
     draw(ctx) {
         //draw the shadow
-        this.shadowanimation.drawFrame(this.game.clockTick, ctx, this.x - 13 - this.game.camera.x, this.y + 8 - this.game.camera.y, 0.15);
-        //Draw the health panel
-        this.panelanimations[0].drawFrame(this.game.clockTick, ctx, -5, PARAMS.canvas_height*0.885, 4);
-        this.panelanimations[1].drawFrame(this.game.clockTick, ctx, PARAMS.canvas_width*0.08, PARAMS.canvas_height*0.92, 9);
-        this.panelanimations[2].drawFrame(this.game.clockTick, ctx, PARAMS.canvas_width*0.008 - 20, PARAMS.canvas_height*0.911, 1.4);
+        ctx.globalAlpha = 0.6; // change opacity
+        ctx.drawImage(this.shadow, 0, 0, 64, 32, this.x - this.game.camera.x + 7, this.y - this.game.camera.y + 36, 36, 20);
+        ctx.globalAlpha = 1;
+        
         //Draw hero
         this.animations[this.action][this.face][this.form].drawFrame(this.game.clockTick, ctx, this.x - 25 - this.game.camera.x, this.y - 25 - this.game.camera.y, this.scale);
+        
         this.hp.draw();
         if (PARAMS.debug) {
             this.bound.draw(ctx, this.game);
@@ -380,10 +366,10 @@ class Rutherford {
     }
 
     updateBound() {
-        this.bound.update(this.x + 16, this.y + 8);
+        this.bound.update(this.x + 16, this.y + 12);
 
-        this.hp.x = this.bound.x - PARAMS.canvas_width*0.406;
-        this.hp.y = this.bound.y + PARAMS.canvas_height*0.225 * this.scale;
+        this.hp.x = this.bound.x + -13;
+        this.hp.y = this.bound.y + 46;
     }
 
     //Transforms Rutherford into Ascended Rutherford.
