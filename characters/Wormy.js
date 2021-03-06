@@ -14,7 +14,7 @@ class Wormy extends Enemy {
 
         this.bound = new BoundingBox(this.game, this.x, this.y, 60, 50);
 
-        this.hp = new HealthMpBar(this.game, this.x * this.scale, this.y * this.scale, 50 * this.scale, 150, 0, false); //change this to fit Wormy
+        this.hp = new HealthMpBar(this.game, this.x * this.scale, this.y * this.scale, 50 * this.scale, 400, 0, false); //change this to fit Wormy
 
         this.toofarmovement = Date.now(); //We want to give a behavior pattern when enemy is too far.
 
@@ -48,11 +48,11 @@ class Wormy extends Enemy {
 
         // walk animation for state = 1
         // facing right
-        this.animations[1][0] = new Animator(this.spritesheet, 3150, 0, 90, 90, 9, 0.05, 0, false, true);
+        this.animations[1][0] = new Animator(this.spritesheet, 3150, 0, 90, 90, 9, 0.1, 0, false, true);
 
         // walking animation facing left
         // facing left = 1
-        this.animations[1][1] = new Animator(this.spritesheet, 0, 90, 90, 90, 9, 0.05, 0, true, true);
+        this.animations[1][1] = new Animator(this.spritesheet, 0, 90, 90, 90, 9, 0.1, 0, true, true);
 
         // Get hit animation for state = 2
         // facing right
@@ -72,11 +72,11 @@ class Wormy extends Enemy {
 
         // Death animation for state = 4
         // facing right
-        this.animations[4][0] = new Animator(this.spritesheet, 1440, 0, 90, 90, 8, 0.3, 0.05, false, false);
+        this.animations[4][0] = new Animator(this.spritesheet, 1440, 0, 90, 90, 8, 0.1, 0, false, false);
 
         // Death amimation facing left
         // facing left = 1
-        this.animations[4][1] = new Animator(this.spritesheet, 1890, 90, 90, 90, 8, 0.3, 0.05, true, false);
+        this.animations[4][1] = new Animator(this.spritesheet, 1890, 90, 90, 90, 8, 0.1, 0.0, true, false);
 
     }
 
@@ -99,7 +99,7 @@ class Wormy extends Enemy {
         else 
         {
             // movement pattern when Rutherford is not in trigger range
-            if(Math.abs(this.x - this.enemyX) > 400 || Math.abs(this.y - this.enemyY) > 200)
+            if(Math.abs(this.x - this.enemyX) > 500 || Math.abs(this.y - this.enemyY) > 500)
             {
                 this.howlong = Date.now() - this.toofarmovement;
                 // move to the right in a straight line
@@ -259,15 +259,15 @@ class Wormy extends Enemy {
     attack() {
         var velocity = this.calculateVel();
         var pp = { sx: 160, sy: 336, size: 16};
-        var p = new SquareProjectile(this.game, false, this.x, this.y, velocity, 7, 14000, 10, pp);
+        var p = new SquareProjectile(this.game, false, this.x + 48, this.y + 56, velocity, 7, 14000, 30, pp);
         p.bound.r = 10;
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }
 
     calculateVel() {
         var enemy = this.game.camera.char;
-        var dx = enemy.bound.x - (this.bound.x) + 45; // to deal with the projectiles that miss, change the number you are adding
-        var dy = enemy.bound.y - (this.bound.y) + 55; // to deal with the projectiles that miss, change the number you are adding
+        var dx = enemy.bound.x - (this.x + 48); // to deal with the projectiles that miss, change the number you are adding
+        var dy = enemy.bound.y - (this.y + 56); // to deal with the projectiles that miss, change the number you are adding
 
         // find unit vector
         var length = Math.sqrt(dx * dx + dy * dy);
