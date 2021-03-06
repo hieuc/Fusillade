@@ -680,8 +680,6 @@ class Inventory {
     }
 
     draw(ctx) {
-        var oldAlpha = ctx.globalAlpha;
-        
 
         // custom properties for each item
         var p = [{sx: 32, ox: -5}, {sx: 64, ox: -2}, {sx: 48, ox: 1}, {sx: 80, ox: 4}];
@@ -689,6 +687,7 @@ class Inventory {
         for (var i = 0; i < this.slots.length; i++) {
             var extrascale = 1; // scale when item is selected
             if (i+1 === this.current) {
+                // change opacity
                 ctx.globalAlpha = 0.9;
                 extrascale = 1.15;
             } else {
@@ -713,7 +712,7 @@ class Inventory {
             ctx.fillText(i + 1, this.x + 38*i*this.scale - p[i].ox - 3 - offset, this.y + 8 * this.scale - offset);
         }
         
-        ctx.globalAlpha = oldAlpha;
+        ctx.globalAlpha = 1;
     }
 
     useItem() {
