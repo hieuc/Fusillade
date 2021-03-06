@@ -60,7 +60,7 @@ class Rutherford {
 
         this.bound = new BoundingBox(this.game, this.x, this.y, 16, 24);
 
-        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y, 203 * this.scale, 300, 300, true); //Has mana field too.
+        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y, 203 * this.scale, 300, 400, true); //Has mana field too.
 
         this.animations = [];
 
@@ -359,9 +359,11 @@ class Rutherford {
     }
 
     draw(ctx) {
+        //Draw the health panel
         this.panelanimations[0].drawFrame(this.game.clockTick, ctx, -5, PARAMS.canvas_height*0.885, 4);
         this.panelanimations[1].drawFrame(this.game.clockTick, ctx, PARAMS.canvas_width*0.08, PARAMS.canvas_height*0.92, 9);
         this.panelanimations[2].drawFrame(this.game.clockTick, ctx, PARAMS.canvas_width*0.008, PARAMS.canvas_height*0.897, 0.85);
+        //Draw hero
         this.animations[this.action][this.face][this.form].drawFrame(this.game.clockTick, ctx, this.x - 25 - this.game.camera.x, this.y - 25 - this.game.camera.y, this.scale);
         this.hp.draw();
         if (PARAMS.debug) {
