@@ -88,7 +88,7 @@ class Rutherford {
 
         this.panelanimations[2] = new Animator(this.ruthericon, 0, 0, 172, 45, 4, 0.35, 28, false, true);
 
-        this.shadowanimation = new Animator(this.shadow, 0, 0, 512, 512, 1, 1, 0, false, true);
+        //this.shadowanimation = new Animator(this.shadow, 0, 0, 512, 512, 1, 1, 0, false, true);
 
         //The 3rd dimension refers to whether you're in Ascended form or not.
         // idle
@@ -366,7 +366,7 @@ class Rutherford {
 
     draw(ctx) {
         //draw the shadow
-        this.shadowanimation.drawFrame(this.game.clockTick, ctx, this.x - 13 - this.game.camera.x, this.y + 8 - this.game.camera.y, 0.15);
+        ctx.drawImage(this.shadow, 0, 0, 512, 512, this.x - 22 - this.game.camera.x, this.y - 2 - this.game.camera.y, 95 ,95);
         //Draw the health panel
         this.panelanimations[0].drawFrame(this.game.clockTick, ctx, -5, PARAMS.canvas_height*0.885, 4);
         this.panelanimations[1].drawFrame(this.game.clockTick, ctx, PARAMS.canvas_width*0.08, PARAMS.canvas_height*0.92, 9);

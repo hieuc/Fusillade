@@ -3,6 +3,8 @@ class Ais extends Enemy{
         super(game, x, y );
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Ais.png");
 
+        this.ss = 18;
+
         this.scale = 2; //size of Ais
 
         this.state = 0; //0 = idle, 1 = move, 2 = attack, 3 = die

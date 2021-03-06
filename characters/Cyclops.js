@@ -4,7 +4,7 @@ class Cyclops extends Enemy
     {
         super(game, x, y);
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Cyclops.png");
-
+        
         // sprite size
         this.ss = 64;
 

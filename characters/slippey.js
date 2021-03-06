@@ -4,6 +4,8 @@ class Slippey extends Enemy {
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Slime.png");
 
+        this.ss = 32;
+
         this.state = 0; 
 
         this.start = false; //are we morphing or doing death animation.

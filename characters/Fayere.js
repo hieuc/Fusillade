@@ -5,6 +5,8 @@ class Fayere extends Enemy {
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Fayere.png");
 
         this.damage = 8;
+
+        this.ss = 18;
         
         this.removeFromWorld = false;
 
