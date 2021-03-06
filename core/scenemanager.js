@@ -504,7 +504,7 @@ class SceneManager {
                         this.game.started = true;
                         this.game.leftclick = false;
                         this.game.click = null;
-                        this.loadLevel1();
+                        this.loadLevel2();
                         
                         
                         
