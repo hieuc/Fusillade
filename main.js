@@ -27,8 +27,9 @@ ASSET_MANAGER.queueDownload("./sprites/Burn.png");
 ASSET_MANAGER.queueDownload("./sprites/ThunEffect.png");
 ASSET_MANAGER.queueDownload("./sprites/BBeam.png");
 ASSET_MANAGER.queueDownload("./sprites/RBeam.png");
-ASSET_MANAGER.queueDownload("./sprites/Slime.png");
+ASSET_MANAGER.queueDownload("./sprites/Slippey.png");
 ASSET_MANAGER.queueDownload("./sprites/SlimeRuther.png");
+ASSET_MANAGER.queueDownload("./sprites/slime.png");
 ASSET_MANAGER.queueDownload("./sprites/GUI.png");
 ASSET_MANAGER.queueDownload("./sprites/minimap.png");
 ASSET_MANAGER.queueDownload("./sprites/merchan.png");
@@ -64,6 +65,7 @@ ASSET_MANAGER.queueDownload("./sounds/sfx/use_potion.mp3");
 ASSET_MANAGER.queueDownload("./sounds/sfx/warpI.mp3");
 ASSET_MANAGER.queueDownload("./sounds/sfx/warpO.mp3");
 ASSET_MANAGER.queueDownload("./sounds/sfx/body-fall.mp3");
+ASSET_MANAGER.queueDownload("./sounds/sfx/coin.mp3");
 
 
 

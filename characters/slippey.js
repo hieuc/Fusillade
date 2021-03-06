@@ -2,7 +2,7 @@ class Slippey extends Enemy {
     constructor(game, x, y) {
         super(game, x, y);
 
-        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Slime.png");
+        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Slippey.png");
 
         this.ss = 32;
 
@@ -162,7 +162,7 @@ class Slippey extends Enemy {
                     this.spritesheet = ASSET_MANAGER.getAsset("./sprites/SlimeRuther.png");
                     this.loadAnimations();
                 } else {
-                    this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Slime.png");
+                    this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Slippey.png");
                     this.loadAnimations();
                 }
             }
