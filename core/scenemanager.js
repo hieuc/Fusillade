@@ -335,6 +335,9 @@ class SceneManager {
         //this.merchant = new Merchant(this.game, character.x, character.y, 1);
         //this.game.addEntity(this.merchant);
 
+        var worm = new Wormy(this.game, 6000,  7000);
+        this.game.addEntity(worm);
+
         this.game.addEntity(character);
 
         //this.game.addEntity(new Slippey(this.game, character.x, character.y));

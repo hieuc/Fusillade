@@ -1,6 +1,6 @@
 class ScaleBoomerProjectiles extends Projectiles{
 
-    constructor(game, friendly, x, y, velocity, speed, lifetime, damage, scaleIncrease, boomerang, proj, effect) {
+    constructor(game, friendly, x, y, velocity, speed, lifetime, damage, scaleIncrease, boomerang, proj, effect) { 
         super(game, friendly, x, y, velocity, speed, lifetime, damage, proj, effect);
         Object.assign(this, {scaleIncrease, boomerang});
 
