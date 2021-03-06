@@ -134,7 +134,7 @@ class GameEngine {
 
         this.ctx.canvas.addEventListener("mousemove", e =>  {
             this.mouse = getXandY(e);
-            if (this.started && !this.extra) {
+            if (this.started && this.camera.merchant && !this.extra) {
                 this.camera.merchant.determineHover(this.mouse);
             }
 
@@ -154,7 +154,8 @@ class GameEngine {
         this.ctx.canvas.addEventListener("mouseup", e => {
             // only left click counts
             if(e.button === 0 && this.started && !this.extra) {
-                this.camera.merchant.determineClick(getXandY(e));
+                if (this.camera.merchant)
+                    this.camera.merchant.determineClick(getXandY(e));
                 this.leftclick = false;
             }
 

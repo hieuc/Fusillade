@@ -251,13 +251,18 @@ class SceneManager {
             }
         }
         // spawn main character and enemiessss
+        var start;
+        var end;
         for (var i = 0; i < rooms.length; i++) {
             if (rooms[i].key === "start") {
-                var character = new Rutherford(this.game, (rooms[i].x + rooms[i].w/2) * 32 * scale,  (rooms[i].y + rooms[i].h/2) * 32 * scale, false); 
-                this.char = character;
-                break;
+                start = rooms[i];
+            } else if (rooms[i].key === "end") {
+                end = rooms[i];
             }
         }
+
+        var character = new Rutherford(this.game, (start.x + start.w/2) * 32 * scale,  (start.y + start.h/2) * 32 * scale, false); 
+        this.char = character;
         
 
         /*
@@ -327,16 +332,16 @@ class SceneManager {
             }
         } 
         
-        this.merchant = new Merchant(this.game, character.x, character.y, 1);
-        this.game.addEntity(this.merchant);
+        //this.merchant = new Merchant(this.game, character.x, character.y, 1);
+        //this.game.addEntity(this.merchant);
 
         this.game.addEntity(character);
 
-        //this.game.addEntity(new Drumbuck(this.game, character.x, character.y));
+        //this.game.addEntity(new Slippey(this.game, character.x, character.y));
 
         //this.tempObstacles = lockRoom(this.game, this.rooms[8], this.map, this.tree);
         
-        //this.game.addEntity(new Slippey(this.game, character.x- 500, character.y));
+        this.game.addEntity(new Dummy(this.game, character.x, character.y, start));
         ASSET_MANAGER.pauseBackgroundMusic();
         ASSET_MANAGER.playAsset("./sounds/music/greenpath-ambient.mp3");
         ASSET_MANAGER.autoRepeat("./sounds/music/greenpath-ambient.mp3");
@@ -463,6 +468,14 @@ class SceneManager {
                         this.game.leftclick = false;
                         this.game.click = null;
                         this.loadLevel1();
+                        
+                        // resize canvas when game start
+                        var canvas = document.getElementById("gameWorld");
+                        canvas.getContext('2d').imageSmoothingEnabled = true;
+                        canvas.height = 900;
+                        PARAMS.canvas_height = 900;
+                        canvas.getContext('2d').imageSmoothingEnabled = false;
+                        
                     }
                 } else if(this.game.click.x >= PARAMS.canvas_width*0.515 && this.game.click.x < PARAMS.canvas_width * 0.64) {
                     if(this.game.click.y >= PARAMS.canvas_height * 0.75 && this.game.click.y < PARAMS.canvas_height*0.91) {
