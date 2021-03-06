@@ -14,7 +14,7 @@ class Dummy {
         this.bound = new BoundingBox(this.x, this.y, 17 * this.scale, 28 * this.scale);
 
         this.knife = false;
-        this.miasma = true;
+        this.miasma = false;
         
         if (this.knife) {
             this.knives = [];

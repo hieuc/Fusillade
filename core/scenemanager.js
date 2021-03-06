@@ -218,22 +218,41 @@ class SceneManager {
         // right now this is just an empty space
         var scale = 2;
         
-        // brick
-        var gp = { spritesheet: ASSET_MANAGER.getAsset("./sprites/dungeon.png"), sx: 480, sy: 160, width: 32, height: 32, scale: scale / (32/32)};
-        var gp1 = { spritesheet: ASSET_MANAGER.getAsset("./sprites/dungeon.png"), sx: 160, sy: 256, width: 32, height: 32, scale: scale / (32/32)};
+        // ground
+        var gp = [{ spritesheet: ASSET_MANAGER.getAsset("./sprites/dungeon.png"), sx: 29, sy: 108, width: 16, height: 16, scale: scale / (16/32)},
+                { spritesheet: ASSET_MANAGER.getAsset("./sprites/dungeon.png"), sx: 16, sy: 160, width: 16, height: 16, scale: scale / (16/32)},
+                { spritesheet: ASSET_MANAGER.getAsset("./sprites/dungeon.png"), sx: 32, sy: 160, width: 16, height: 16, scale: scale / (16/32)},
+                { spritesheet: ASSET_MANAGER.getAsset("./sprites/dungeon.png"), sx: 48, sy: 160, width: 16, height: 16, scale: scale / (16/32)}];
+        // moss ground
+        var mg = [{ spritesheet: ASSET_MANAGER.getAsset("./sprites/dungeon.png"), sx: 16, sy: 144, width: 16, height: 16, scale: scale / (16/32)},
+                { spritesheet: ASSET_MANAGER.getAsset("./sprites/dungeon.png"), sx: 32, sy: 144, width: 16, height: 16, scale: scale / (16/32)}, 
+                { spritesheet: ASSET_MANAGER.getAsset("./sprites/dungeon.png"), sx: 48, sy: 144, width: 16, height: 16, scale: scale / (16/32)}];
 
         for (var i = 0; i < m.length; i++) {
             for (var j = 0; j < m[0].length; j++) {
                 if (m[i][j] === 1) {
-                    var bg = new Ground(this.game, j * 32 * scale, i * 32 * scale, ((i + j) % 2 === 0) ? gp : gp1);
+                    var bg;
+                    if (m[i-1] !== undefined && m[i-1][j] === 0) {
+                        bg = new Ground(this.game, j * 32 * scale, i * 32 * scale, mg[randomInt(3)]);
+                    } else {
+                        if (Math.random() < 0.15) {
+                            bg = new Ground(this.game, j * 32 * scale, i * 32 * scale, gp[randomInt(3)+1]);
+                        } else {
+                            bg = new Ground(this.game, j * 32 * scale, i * 32 * scale, gp[0]);
+                        }
+                    }
                     this.game.addBg(bg);
                 }
                 else {
                     // choose sprite for room's edge here
-                    // property for the obstacles
-                    var p = { spritesheet: ASSET_MANAGER.getAsset("./sprites/dungeon.png"), sx: 32, sy: 32, width: 32, height: 32, scale: scale/ (32/32), 
-                        bound: {x: 0, y: 0, w: 1, h: 1}};
 
+                    // property for the obstacles
+                    var wall = { spritesheet: ASSET_MANAGER.getAsset("./sprites/dungeon.png"), sx: 16, sy: 12, width: 16, height: 16, scale: scale/ (16/32), 
+                        bound: {x: 0, y: 0, w: 1, h: 1}};
+                    var bwall = { spritesheet: ASSET_MANAGER.getAsset("./sprites/dungeon.png"), sx: 48, sy: 128, width: 16, height: 16, scale: scale/ (16/32), 
+                        bound: {x: 0, y: 0, w: 1, h: 1}};
+                    var empty = { spritesheet: ASSET_MANAGER.getAsset("./sprites/dungeon.png"), sx: 16, sy: 128, width: 16, height: 16, scale: scale/ (16/32), 
+                        bound: {x: 0, y: 0, w: 1, h: 1}};
                     
                     // check surround, only assign bound if reachable to player:
                     // a space is a block if 1 of 4 neighbors is empty
@@ -241,10 +260,18 @@ class SceneManager {
                             (m[i+1] !== undefined && m[i+1][j] === 1) ||
                             (m[i] !== undefined && m[i][j-1] === 1) ||
                             (m[i] !== undefined && m[i][j+1] === 1)) {
-                        var space = new Obstacle(this.game, j * 32 * scale, i * 32 * scale, p);
+                        var space;
+                        if (m[i+1] !== undefined && m[i+1][j] === 1) {
+                            space = new Obstacle(this.game, j * 32 * scale, i * 32 * scale, wall);
+                        } else if (m[i-1] !== undefined && m[i-1][j] === 1) {
+                            space = new Obstacle(this.game, j * 32 * scale, i * 32 * scale, bwall);
+                        } else {
+                            space = new Obstacle(this.game, j * 32 * scale, i * 32 * scale, empty);
+                        }
+                        
                         this.game.addEntity(space);
                     } else {
-                        this.game.addBg(new Ground(this.game, j * 32 * scale, i * 32 * scale, p));
+                        this.game.addBg(new Ground(this.game, j * 32 * scale, i * 32 * scale, empty));
                     }
                     
                 }
@@ -467,17 +494,19 @@ class SceneManager {
                 //If we are clicking in range load lvl 1.
                 if(this.game.click.x >= PARAMS.canvas_width*0.32 && this.game.click.x < PARAMS.canvas_width * 0.45) {
                     if(this.game.click.y >= PARAMS.canvas_height * 0.75 && this.game.click.y < PARAMS.canvas_height*0.91) {
-                        this.game.started = true;
-                        this.game.leftclick = false;
-                        this.game.click = null;
-                        this.loadLevel1();
-                        
                         // resize canvas when game start
                         var canvas = document.getElementById("gameWorld");
                         canvas.getContext('2d').imageSmoothingEnabled = true;
                         canvas.height = 900;
                         PARAMS.canvas_height = 900;
                         canvas.getContext('2d').imageSmoothingEnabled = false;
+                        
+                        this.game.started = true;
+                        this.game.leftclick = false;
+                        this.game.click = null;
+                        this.loadLevel1();
+                        
+                        
                         
                     }
                 } else if(this.game.click.x >= PARAMS.canvas_width*0.515 && this.game.click.x < PARAMS.canvas_width * 0.64) {
