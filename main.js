@@ -65,6 +65,7 @@ ASSET_MANAGER.queueDownload("./sounds/sfx/use_potion.mp3");
 ASSET_MANAGER.queueDownload("./sounds/sfx/warpI.mp3");
 ASSET_MANAGER.queueDownload("./sounds/sfx/warpO.mp3");
 ASSET_MANAGER.queueDownload("./sounds/sfx/body-fall.mp3");
+ASSET_MANAGER.queueDownload("./sounds/sfx/coin.mp3");
 
 
 

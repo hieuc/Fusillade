@@ -514,9 +514,11 @@ class Rutherford {
                 }
             } else if(e instanceof Onecoin && this.bound.collide(e.bound)) {
                 this.coins += 1;
+                ASSET_MANAGER.playAsset("./sounds/sfx/coin.mp3");
                 e.removeFromWorld = true;
             } else if(e instanceof Threecoin && this.bound.collide(e.bound)) {
                 this.coins += 3;
+                ASSET_MANAGER.playAsset("./sounds/sfx/coin.mp3");
                 e.removeFromWorld = true;
             }
         });
