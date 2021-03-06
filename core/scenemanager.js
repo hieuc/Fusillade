@@ -196,6 +196,9 @@ class SceneManager {
         this.merchant = new Merchant(this.game, 840, 4100, 1);
         this.game.addEntity(this.merchant);
 
+        var worm = new Wormy(this.game, 6000,  7000);
+        this.game.addEntity(worm);
+
         this.game.addEntity(character);
 
         this.tempObstacles = lockRoom(this.game, this.rooms[8], this.map, this.tree);

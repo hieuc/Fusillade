@@ -295,9 +295,9 @@ class Buck extends Enemy {
     rageAttack() {
         var partitions = 10;
         for(var i = 0; i < partitions; i++) {
-            var pp = {sx: 96, sy: 112, size: 16};
+            var pp = {sx: 96, sy: 112, size: 16}; // position of projectile in default sprite sheet
             var p = new ScaleBoomerProjectiles(this.game, false, this.x+80, this.y+80, {x :Math.cos(this.blitz), y:Math.sin(this.blitz)}, 
-                        this.projspeed, 5500, this.damage, 0.012, true, pp, "buckhit");
+                        this.projspeed, 5500, this.damage, 0.012, true, pp, "buckhit"); // projectile that is actually produced
             this.blitz += Math.PI/partitions;
             this.game.entities.splice(this.game.entities.length - 1, 0, p);        
         }
