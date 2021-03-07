@@ -153,7 +153,23 @@ class Bunny extends Enemy {
                 if (this.hp.current <= 0) {
                     this.removeFromWorld = true;
                 }
-            } else if (e instanceof Obstacle && this.bound.collide(e.bound)) {
+            } else if(e instanceof Bluebeam && this.bound.collide(e.bound)) {
+                this.hp.current -= e.damage;
+                this.game.addEntity(new Star(this.game, e.x, e.y + 180));
+                this.game.addEntity(new Score(this.game, this.bound.x + this.bound.w/2, this.bound.y, e.damage));
+                //var audio = new Audio("./sounds/Hit.mp3");
+                //audio.volume = PARAMS.hit_volume;
+                //audio.play();
+            } else if(e instanceof Redbeam && this.bound.collide(e.bound) ) {
+                this.hp.current -= e.damage;
+                this.game.addEntity(new Burn(this.game, e.x, e.y + 180));
+                this.game.addEntity(new Score(this.game, this.bound.x + this.bound.w/2, this.bound.y, e.damage));
+                //var audio = new Audio("./sounds/Hit.mp3");
+                //audio.volume = PARAMS.hit_volume;
+                //audio.play();
+            }
+            
+            else if (e instanceof Obstacle && this.bound.collide(e.bound)) {
                 var changed = false;
                 // check horizontal
                 if (this.velocity.x > 0 && this.bound.left < e.bound.left & this.bound.right >= e.bound.left) {

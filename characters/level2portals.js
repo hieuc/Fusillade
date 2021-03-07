@@ -3,7 +3,7 @@ class KnifePortal {
         Object.assign(this, {game, x, y});
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/projectiles.png");
-        this.state = 1; // 0: spawning, 1: ready, 2: depawning
+        this.state = 0; // 0: spawning, 1: ready, 2: depawning
         this.scale = 2;
         this.animations = []; 
         this.loadAnimations();
@@ -14,17 +14,21 @@ class KnifePortal {
 
     loadAnimations() {
         // spawning
-        this.animations[0] = new Animator(this.spritesheet, 0, 224, 16, 16, 7, 0.5, 0, false, false);
+        this.animations[0] = new Animator(this.spritesheet, 0, 224, 16, 16, 7, 0.2, 0, false, false);
 
         // ready
-        this.animations[1] = new Animator(this.spritesheet, 96, 224, 16, 16, 5, 0.5, 0, false, true);
+        this.animations[1] = new Animator(this.spritesheet, 96, 224, 16, 16, 5, 0.2, 0, false, true);
 
         // despawning
-        this.animations[2] = new Animator(this.spritesheet, 192, 224, 16, 16, 4, 0.5, 0, false, false);
+        this.animations[2] = new Animator(this.spritesheet, 192, 224, 16, 16, 4, 0.2, 0, false, false);
     }
 
     update() {
-
+        if (this.state === 0 && this.animations[0].isAlmostDone(this.game.clockTick)) {
+            this.state = 1;
+        } else if (this.state === 2 && this.animations[2].isAlmostDone(this.game.clockTick)) {
+            this.removeFromWorld = true;
+        }
     }
 
     draw(ctx) {
@@ -81,7 +85,7 @@ class MiasmaPortal {
         Object.assign(this, {game, x, y, velocity, spdx, spdy, rotationtime});
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/projectiles.png");
-        this.state = 1; // 0: spawning, 1: ready, 2: depawning
+        this.state = 0; // 0: spawning, 1: ready, 2: depawning
         this.scale = 3;
         //this.rotationtime is  estimated travel time before switching direction
         if (this.velocity.x !== 0) {
@@ -103,46 +107,51 @@ class MiasmaPortal {
 
     loadAnimations() {
         // spawning
-        this.animations[0] = new Animator(this.spritesheet, 0, 240, 16, 16, 7, 0.5, 0, false, false);
+        this.animations[0] = new Animator(this.spritesheet, 0, 240, 16, 16, 7, 0.2, 0, false, false);
 
         // ready
-        this.animations[1] = new Animator(this.spritesheet, 96, 240, 16, 16, 5, 0.5, 0, false, true);
+        this.animations[1] = new Animator(this.spritesheet, 96, 240, 16, 16, 5, 0.2, 0, false, true);
 
         // despawning
-        this.animations[2] = new Animator(this.spritesheet, 192, 240, 16, 16, 4, 0.5, 0, false, false);
+        this.animations[2] = new Animator(this.spritesheet, 192, 240, 16, 16, 4, 0.2, 0, false, false);
     }
 
     update() {
-        if (Date.now() - this.timestamp >= this.delay) {
-            this.attack();
-            this.timestamp = Date.now();
-        }
-
-        // switch velocity if travelled enough
-        if (this.d >= this.totaldist) {
-            if (this.velocity.x === 1 && this.velocity.y === 0) {
-                this.velocity = { x: 0, y: 1};
-            } else if (this.velocity.x === 0 && this.velocity.y === 1) {
-                this.velocity = { x: -1, y: 0};
-            } else if (this.velocity.x === -1 && this.velocity.y === 0) {
-                this.velocity = { x: 0, y: -1};
-            } else if (this.velocity.x === 0 && this.velocity.y === -1) {
-                this.velocity = { x: 1, y: 0};
+        if (this.state === 0 && this.animations[0].isAlmostDone(this.game.clockTick)) {
+            this.state = 1;
+        } else if(this.state === 1) {
+            if (Date.now() - this.timestamp >= this.delay) {
+                this.attack();
+                this.timestamp = Date.now();
             }
-            if (this.velocity.x !== 0) {
-                this.totaldist = this.spdx * this.rotationtime / 60;
-                this.speed = this.spdx;
+    
+            // switch velocity if travelled enough
+            if (this.d >= this.totaldist) {
+                if (this.velocity.x === 1 && this.velocity.y === 0) {
+                    this.velocity = { x: 0, y: 1};
+                } else if (this.velocity.x === 0 && this.velocity.y === 1) {
+                    this.velocity = { x: -1, y: 0};
+                } else if (this.velocity.x === -1 && this.velocity.y === 0) {
+                    this.velocity = { x: 0, y: -1};
+                } else if (this.velocity.x === 0 && this.velocity.y === -1) {
+                    this.velocity = { x: 1, y: 0};
+                }
+                if (this.velocity.x !== 0) {
+                    this.totaldist = this.spdx * this.rotationtime / 60;
+                    this.speed = this.spdx;
+                } else {
+                    this.totaldist = this.spdy * this.rotationtime / 60;
+                    this.speed = this.spdy;
+                }
+                this.d = 0;
             } else {
-                this.totaldist = this.spdy * this.rotationtime / 60;
-                this.speed = this.spdy;
+                this.x += this.velocity.x * this.speed;
+                this.y += this.velocity.y * this.speed;
+                this.d += Math.abs(this.velocity.x + this.velocity.y) * this.speed;
             }
-            this.d = 0;
-        } else {
-            this.x += this.velocity.x * this.speed;
-            this.y += this.velocity.y * this.speed;
-            this.d += Math.abs(this.velocity.x + this.velocity.y) * this.speed;
+        } else if (this.state === 2 && this.animations[2].isAlmostDone(this.game.clockTick)) {
+            this.removeFromWorld = true;
         }
-        
     }
 
     draw(ctx) {
@@ -188,19 +197,25 @@ class SunPortal {
 
     loadAnimations() {
         // spawning
-        this.animations[0] = new Animator(this.spritesheet, 0, 256, 16, 16, 7, 0.5, 0, false, false);
+        this.animations[0] = new Animator(this.spritesheet, 0, 256, 16, 16, 7, 0.2, 0, false, false);
 
         // ready
-        this.animations[1] = new Animator(this.spritesheet, 96, 256, 16, 16, 5, 0.5, 0, false, true);
+        this.animations[1] = new Animator(this.spritesheet, 96, 256, 16, 16, 5, 0.2, 0, false, true);
 
         // despawning
-        this.animations[2] = new Animator(this.spritesheet, 192, 256, 16, 16, 4, 0.5, 0, false, false);
+        this.animations[2] = new Animator(this.spritesheet, 192, 256, 16, 16, 4, 0.2, 0, false, false);
     }
 
     update() {
-        if (Date.now() - this.timestamp >= this.delay) {
-            this.attack();
-            this.timestamp = Date.now();
+        if (this.state === 0 && this.animations[0].isAlmostDone(this.game.clockTick)) {
+        this.state = 1;
+        } else if(this.state === 1) {
+            if (Date.now() - this.timestamp >= this.delay) {
+                this.attack();
+                this.timestamp = Date.now();
+            }
+        } else if (this.state === 2 && this.animations[2].isAlmostDone(this.game.clockTick)) {
+            this.removeFromWorld = true;
         }
     }
 

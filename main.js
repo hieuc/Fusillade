@@ -30,6 +30,7 @@ ASSET_MANAGER.queueDownload("./sprites/RBeam.png");
 ASSET_MANAGER.queueDownload("./sprites/Slippey.png");
 ASSET_MANAGER.queueDownload("./sprites/SlimeRuther.png");
 ASSET_MANAGER.queueDownload("./sprites/slime.png");
+ASSET_MANAGER.queueDownload("./sprites/polnariff.png");
 ASSET_MANAGER.queueDownload("./sprites/GUI.png");
 ASSET_MANAGER.queueDownload("./sprites/minimap.png");
 ASSET_MANAGER.queueDownload("./sprites/merchan.png");

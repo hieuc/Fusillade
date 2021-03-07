@@ -23,7 +23,7 @@ class Extras {
 
         this.bucksheet = ASSET_MANAGER.getAsset("./sprites/Buck.png");
 
-        this.slippeysheet = ASSET_MANAGER.getAsset("./sprites/Slime.png");
+        this.slippeysheet = ASSET_MANAGER.getAsset("./sprites/Slippey.png");
 
         this.backgroundanimation = [];
 
