@@ -1,8 +1,8 @@
-class Wormy extends Enemy {
+class Wormito extends Enemy {
     constructor(game, x, y) {
         super(game,x,y);
 
-        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Wormy.png");
+        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Wormito.png");
 
         this.ss = 90;
 
@@ -258,7 +258,6 @@ class Wormy extends Enemy {
     }
 
     attack() {
-        this.state = 3;
         var velocity = this.calculateVel();
         var pp = { sx: 160, sy: 336, size: 16};
         var p = new SquareProjectile(this.game, false, this.x + 48, this.y + 56, velocity, 7, 14000, 30, pp);

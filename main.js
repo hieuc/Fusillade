@@ -38,6 +38,7 @@ ASSET_MANAGER.queueDownload("./sprites/Dine-O.png");
 ASSET_MANAGER.queueDownload("./sprites/p.png");
 ASSET_MANAGER.queueDownload("./sprites/bunny.png");
 ASSET_MANAGER.queueDownload("./sprites/Wormy.png");
+ASSET_MANAGER.queueDownload("./sprites/Wormito.png");
 ASSET_MANAGER.queueDownload("./sprites/fayerehit.png");
 ASSET_MANAGER.queueDownload("./sprites/Aishit.png");
 ASSET_MANAGER.queueDownload("./sprites/buckhit.png");
