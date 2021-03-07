@@ -3,11 +3,19 @@ class SquareProjectile extends Projectiles
     /*
     * returnpoint is a scale of lifetime at the point projectiles start returning.
     */
-    constructor(game, friendly, x, y, velocity, speed, lifetime, damage, proj, effect) {
+    constructor(game, friendly, x, y, velocity, speed, lifetime, damage, random, proj, effect) {
         super(game, friendly, x, y, velocity, speed, lifetime, damage, proj, effect);
-        Object.assign(this, {});
+        Object.assign(this, {random});
+
         this.directiontimer = Date.now(); // how long the projectile should go in this direction
+
+        this.directionlifetime = lifetime/8;
+
         this.istime = true;
+
+        this.leftright;
+
+        this.updown;
     }
 
     update() {
@@ -17,29 +25,32 @@ class SquareProjectile extends Projectiles
             if(this.istime)
             {
                 let slowfast = Math.random() < 0.51 ? 1 : -1;
-                this.speed += 3 * slowfast * Math.random();
+                if(this.random)
+                    this.speed += 3 * slowfast * Math.random();
                 this.directiontimer = Date.now();
                 this.istime = false;
+                this.leftright = this.x - this.game.camera.char.x < 0? 1: -1;
+                this.updown = this.y - this.game.camera.char.y < 0? 1: -1;
             }
-            if(Date.now() - this.directiontimer < 2000)
+            if(Date.now() - this.directiontimer < this.directionlifetime)
             {
-                this.velocity.x = 1;
+                this.velocity.x = this.leftright;
                 this.velocity.y = 0;
             }
-            else if(Date.now() - this.directiontimer >= 2000 && Date.now() - this.directiontimer < 4000)
+            else if(Date.now() - this.directiontimer >= this.directionlifetime && Date.now() - this.directiontimer < this.directionlifetime * 2)
             {
                 this.velocity.x = 0;
-                this.velocity.y = 1;
+                this.velocity.y = this.updown;
             }
-            else if(Date.now() - this.directiontimer >= 4000 && Date.now() - this.directiontimer < 6000)
+            else if(Date.now() - this.directiontimer >= this.directionlifetime * 2 && Date.now() - this.directiontimer < this.directionlifetime * 3)
             {
-                this.velocity.x = -1;
+                this.velocity.x = -1*this.leftright;
                 this.velocity.y = 0;
             }
-            else if(Date.now() - this.directiontimer >= 6000 && Date.now() - this.directiontimer < 8000)
+            else if(Date.now() - this.directiontimer >= this.directionlifetime * 3 && Date.now() - this.directiontimer < this.directionlifetime * 4)
             {
                 this.velocity.x = 0;
-                this.velocity.y = -1;
+                this.velocity.y = -1*this.updown;
             }
             else
             {

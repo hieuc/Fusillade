@@ -4,8 +4,6 @@ class Rutherford {
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/rutherford-main.png");
 
-        
-
         this.shadow = ASSET_MANAGER.getAsset("./sprites/shadow.png");
 
         this.scale = 2;
@@ -14,7 +12,7 @@ class Rutherford {
 
         this.form = 0;
 
-        this.coins = 20;
+        this.coins = 0;
 
         this.face = 0; // 0 = right, 1 = left
 
