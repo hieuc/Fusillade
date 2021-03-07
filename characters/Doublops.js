@@ -117,7 +117,7 @@ class Doublops extends Enemy
         } 
         else 
         {
-            if(Math.abs(this.x - this.enemyX) < 600 && Math.abs(this.y - this.enemyY) < 500) {
+            if(Math.abs(this.x - this.enemyX) < 800 && Math.abs(this.y - this.enemyY) < 800) {
                 this.attackbehavior = Date.now() - this.attackpatterntime;
                 if(this.attackbehavior < 1500) 
                 {

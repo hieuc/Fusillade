@@ -147,7 +147,7 @@ class Drumbuck extends Enemy {
             }
 
             //First check if player triggered the enemy.
-            if((Math.abs(this.x - this.enemyX) < 300 && Math.abs(this.y - this.enemyY) < 200) && !this.triggered) {
+            if((Math.abs(this.x - this.enemyX) < 900 && Math.abs(this.y - this.enemyY) < 900) && !this.triggered) {
                 this.triggered = true;
                 this.summontime = Date.now();
             }

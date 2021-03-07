@@ -149,7 +149,7 @@ class Buck extends Enemy {
             }
 
             //First check if player triggered the enemy.
-            if((Math.abs(this.x - this.enemyX) < 600 && Math.abs(this.y - this.enemyY) < 500) && !this.triggered) {
+            if((Math.abs(this.x - this.enemyX) < 900 && Math.abs(this.y - this.enemyY) < 900) && !this.triggered) {
                 this.triggered = true;
                 this.summontime = Date.now();
             }
@@ -229,7 +229,6 @@ class Buck extends Enemy {
     }
 
     draw(ctx) {
-        ctx.drawImage(this.shadow, 0, 0, 512, 512, this.x + this.ss*0.05 - this.game.camera.x, this.y*0.9999 + (this.ss)*0.6 - this.game.camera.y, this.ss * this.scale, this.ss * this.scale);
         this.animations[this.state][this.face].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale);
         if (this.hp) {
             this.hp.draw();
