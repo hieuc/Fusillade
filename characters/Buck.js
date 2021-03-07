@@ -4,6 +4,8 @@ class Buck extends Enemy {
         
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Buck.png");
 
+        this.ss = 96;
+
         this.projspeed = 5; //Buck's projectiles speed.
 
         this.damage = 30;
@@ -223,6 +225,18 @@ class Buck extends Enemy {
         //Collision detection and damage type detection.
         if(this.state !== 5) {
             this.checkCollisions();
+        }
+    }
+
+    draw(ctx) {
+        ctx.drawImage(this.shadow, 0, 0, 512, 512, this.x + this.ss*0.05 - this.game.camera.x, this.y*0.9999 + (this.ss)*0.6 - this.game.camera.y, this.ss * this.scale, this.ss * this.scale);
+        this.animations[this.state][this.face].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale);
+        if (this.hp) {
+            this.hp.draw();
+        }
+        
+        if (PARAMS.debug) {
+            this.bound.draw();
         }
     }
 

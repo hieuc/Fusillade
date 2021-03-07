@@ -12,6 +12,8 @@ class Merchant {
 
         this.tickorxsheet = ASSET_MANAGER.getAsset("./sprites/projectiles.png");
 
+        this.ss = 80;
+
         this.scale = 2;
 
         this.showTextTimer = Date.now();

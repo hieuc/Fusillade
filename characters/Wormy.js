@@ -4,6 +4,8 @@ class Wormy extends Enemy {
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Wormy.png");
 
+        this.ss = 90;
+
         this.scale = 2;
 
         this.state = 0; // idle, walk, get hit, attack, die
@@ -81,7 +83,7 @@ class Wormy extends Enemy {
     }
 
     update() {
-
+        ctx.drawImage(this.shadow, 0, 0, 512, 512, this.x - 22 - this.game.camera.x, this.y - 2 - this.game.camera.y, 95 ,95);
         this.enemyX = this.game.camera.char.x;
         this.enemyY = this.game.camera.char.y;
         this.speed = 3.5;

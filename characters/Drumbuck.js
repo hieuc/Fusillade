@@ -4,6 +4,8 @@ class Drumbuck extends Enemy {
         
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Drumbuck.png");
 
+        this.ss = 96;
+        
         this.projspeed = 5; //Buck's projectiles speed.
         
         this.removeFromWorld = false;

@@ -4,6 +4,8 @@ class DineO {
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Dine-O.png");
 
+        this.ss = 24;
+
         this.damage = 7; //Dino's damage
 
         this.scale = 2;
