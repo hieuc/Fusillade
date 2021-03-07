@@ -169,7 +169,7 @@ class SceneManager {
                         this.game.addEntity(new Barrel(this.game, j*32*scale, i*32*scale, pool[randomInt(pool.length)]));
                     }
                     // spawn bunnies
-                    base = 0.002;
+                    base = 0.001;
                     if (Math.random() < base * count) {
                         this.game.addEntity(new Bunny(this.game, j*32*scale, i*32*scale));
                     }
