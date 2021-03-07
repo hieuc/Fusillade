@@ -180,7 +180,6 @@ class SceneManager {
         this.merchant = new Merchant(this.game, 840, 4100, 1);
         this.game.addEntity(new Wormy(this.game, character.x, character.y));
         this.game.addEntity(this.merchant);
-
         this.game.addEntity(character);
 
         // lock the boss room from the beginning
@@ -365,9 +364,7 @@ class SceneManager {
         
         //this.merchant = new Merchant(this.game, character.x, character.y, 1);
         //this.game.addEntity(this.merchant);
-        //1050, 7770
-        //var worm = new Wormy(this.game, 900,  7400);
-        
+        //var worm = new Wormy(this.game, 1050,  7700);
         //this.game.addEntity(worm);
 
         this.game.addEntity(character);
