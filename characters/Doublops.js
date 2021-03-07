@@ -9,7 +9,7 @@ class Doublops extends Enemy
         this.ss = 64;
 
         // damage for each shot 
-        this.damage = 100;
+        this.damage = 70;
         
         this.removeFromWorld = false;
 

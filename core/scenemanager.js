@@ -169,7 +169,7 @@ class SceneManager {
                         this.game.addEntity(new Barrel(this.game, j*32*scale, i*32*scale, pool[randomInt(pool.length)]));
                     }
                     // spawn bunnies
-                    base = 0.001;
+                    base = 0.002;
                     if (Math.random() < base * count) {
                         this.game.addEntity(new Bunny(this.game, j*32*scale, i*32*scale));
                     }
@@ -365,16 +365,16 @@ class SceneManager {
         //this.merchant = new Merchant(this.game, character.x, character.y, 1);
         //this.game.addEntity(this.merchant);
         //1050, 7770
-        var worm = new Wormy(this.game, 900,  7400);
-        this.game.addEntity(worm);
+        //var worm = new Wormy(this.game, 900,  7400);
+        
+        //this.game.addEntity(worm);
 
         this.game.addEntity(character);
 
-        //this.game.addEntity(new Slippey(this.game, character.x, character.y));
-
-        //this.tempObstacles = lockRoom(this.game, this.rooms[8], this.map, this.tree);
+        this.game.addEntity(new Doublops(this.game, character.x, character.y));
         
-        this.game.addEntity(new Dummy(this.game, character.x, character.y, start));
+        //this.game.addEntity(new Dummy(this.game, character.x, character.y, start));
+        //this.game.addEntity(new Polnariff(this.game, character.x, character.y, start));
         ASSET_MANAGER.pauseBackgroundMusic();
         ASSET_MANAGER.playAsset("./sounds/music/greenpath-ambient.mp3");
         ASSET_MANAGER.autoRepeat("./sounds/music/greenpath-ambient.mp3");
@@ -507,7 +507,7 @@ class SceneManager {
                         this.game.started = true;
                         this.game.leftclick = false;
                         this.game.click = null;
-                        this.loadLevel2();
+                        this.loadLevel1();
                         
                         
                         
