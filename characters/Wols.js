@@ -11,6 +11,8 @@ class Wols extends Enemy {
 
         this.reduceone = true;
 
+        this.tested = false;
+
         this.wallcd = 10000;
 
         this.lastcreated = -50;
@@ -103,9 +105,12 @@ class Wols extends Enemy {
                 } 
 
                 if(that.hp.current <= 0) {
-                    that.removeFromWorld = true;
-                    that.game.addEntity(new Redbeam(that.game, that.x + 75, that.y-10));
-                    that.game.camera.char.speed /= 0.8;
+                    if(!that.tested) {
+                        that.removeFromWorld = true;
+                        that.tested = true;
+                        that.game.addEntity(new Redbeam(that.game, that.x + 75, that.y-10));
+                        that.game.camera.char.speed /= 0.8;
+                    }
                 }
             }
         })
