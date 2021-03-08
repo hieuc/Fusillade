@@ -334,3 +334,53 @@ class Cyclopshit {
     }
 }
 
+class Mirror {
+    constructor(game, x, y) {
+        Object.assign(this, {game, x, y});
+
+        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/mirror.png");
+
+        this.scale = 0.55;
+
+        this.removetimer = Date.now();
+
+        this.removeafter = 10000;
+
+        this.bound = new BoundingBox(this.game, this.x, this.y-30, 64, 600*this.scale);
+
+        this.animations = [];
+
+        this.loadAnimations();
+    }
+
+    loadAnimations() {
+
+        this.animations[0] = new Animator(this.spritesheet, 0, 0, 128, 640, 1, 1, 0, false, true);
+
+    }
+
+    update() {
+        let that = this;
+        if(Date.now() - this.removetimer > this.removeafter) {
+            this.removeFromWorld = true;
+        }
+
+        this.game.entities.forEach(function (entity) {
+            if (entity.bound && that.bound.collide(entity.bound)) {
+                if(entity instanceof Projectiles && entity.friendly) {
+                    entity.hit(that.game.camera.char);
+                }
+            }
+        })
+    }
+
+    draw(ctx) {
+        this.animations[0].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - 50 - this.game.camera.y, this.scale);
+    }
+
+    
+    updateBound() {
+        this.bound.update(this.x, this.y);
+    }
+}
+

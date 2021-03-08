@@ -179,6 +179,7 @@ class SceneManager {
 
         this.merchant = new Merchant(this.game, 840, 4100, 1);
         this.game.addEntity(new Wormito(this.game, character.x, character.y));
+        this.game.addEntity(new Wols(this.game, character.x - 200, character.y));
         this.game.addEntity(this.merchant);
         this.game.addEntity(character);
 

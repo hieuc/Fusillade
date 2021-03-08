@@ -126,6 +126,7 @@ class Rutherford {
     }
 
     update() {
+        console.log(this.speed);
         if(this.hasapet) {
             this.game.addEntity(new DineO(this.game, this.x-20, this.y));
             this.hasapet = false;
