@@ -370,7 +370,9 @@ class SceneManager {
 
         this.game.addEntity(character);
 
-        this.game.addEntity(new Doublops(this.game, character.x, character.y));
+        //this.game.addEntity(new Doublops(this.game, character.x, character.y));
+
+        this.game.addEntity(new Slime(this.game, character.x - 50, character.y - 50, 5));
         
         //this.game.addEntity(new Dummy(this.game, character.x, character.y, start));
         //this.game.addEntity(new Polnariff(this.game, character.x, character.y, start));
@@ -486,6 +488,7 @@ class SceneManager {
         }
 
         var character = new Rutherford(this.game, 500,  500, false); 
+
         this.char = character;
         this.game.addEntity(character);
     }
