@@ -92,7 +92,7 @@ class Wormy extends Enemy {
         else 
         {
             // movement pattern when Rutherford is not in trigger range
-            if(Math.abs(this.x - this.enemyX) > 500 || Math.abs(this.y - this.enemyY) > 500)
+            if(Math.abs(this.x - this.enemyX) > 400 || Math.abs(this.y - this.enemyY) > 400)
             {
                 this.howlong = Date.now() - this.toofarmovement;
                 // move to the right in a straight line

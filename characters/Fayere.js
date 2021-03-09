@@ -4,7 +4,7 @@ class Fayere extends Enemy {
         
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Fayere.png");
 
-        this.damage = 8;
+        this.damage = 20;
 
         this.ss = 18;
         
@@ -229,7 +229,7 @@ class Fayere extends Enemy {
     attack() {
         var velocity = this.calculateVel();
         var pp = { sx: 80, sy: 96, size: 16};
-        var p = new Projectiles(this.game, false, this.x, this.y, velocity, 3, 2000, 10, pp, "fayerehit");
+        var p = new Projectiles(this.game, false, this.x, this.y, velocity, 3, 2000, this.damage, pp, "fayerehit");
         p.bound.r = 10;
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }

@@ -135,6 +135,16 @@ class SceneManager {
                         }
                         this.game.addEntity(new Fayere(this.game, sx * 32 * scale, sy * 32 * scale));
                     }
+                } else if (e[0] === "wormy") {
+                    for (var i = 0; i < e[1]; i ++) {
+                        var sx = 0;
+                        var sy = 0;
+                        while (m[sy][sx] === 0) {
+                            sx = r.x + randomInt(Math.floor(r.w * 0.6)) + Math.floor(r.w * 0.2);
+                            sy = r.y + randomInt(Math.floor(r.h * 0.6)) + Math.floor(r.h * 0.2);
+                        }
+                        this.game.addEntity(new Wormy(this.game, sx * 32 * scale, sy * 32 * scale));
+                    }
                 } else if (e[0] === "cyclops") {
                     var enemy = new Cyclops(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale);
                     this.game.addEntity(enemy);
@@ -178,8 +188,8 @@ class SceneManager {
         } 
 
         this.merchant = new Merchant(this.game, 840, 4100, 1);
-        this.game.addEntity(new Wormito(this.game, character.x, character.y));
-        this.game.addEntity(new Wols(this.game, character.x - 200, character.y));
+        //this.game.addEntity(new Wormito(this.game, character.x, character.y));
+        //this.game.addEntity(new Wols(this.game, character.x - 200, character.y));
         this.game.addEntity(this.merchant);
         this.game.addEntity(character);
 
@@ -329,16 +339,17 @@ class SceneManager {
                 }
             });
         });
+
         */
-        // spawn barrels and bunnies
-        // barrels will only spawn next to trees
+        // spawn barrels 
+        // barrels will only spawn next to walls
         // the more trees, the higher chance
         // the total will be purely random
         for (var i = 0; i < m.length; i++) {
             for (var j = 0; j < m[0].length; j++) {
                 // i is y, j is x
                 if (m[i][j] === 1) {
-                    // count trees surround
+                    // count awalls surround
                     var count = 0;
                     for (var a = i - 1; a <= i + 1; a++) {
                         for (var b = j - 1; b <= j + 1; b++) {
@@ -352,30 +363,12 @@ class SceneManager {
                         var pool = ["red", "sred", "blue", "sblue", "fayere", "onecoin", "threecoin"];
                         this.game.addEntity(new Barrel(this.game, j*32*scale, i*32*scale, pool[randomInt(pool.length)]));
                     }
-                    /*
-                    // spawn bunnies
-                    base = 0.001;
-                    if (Math.random() < base * count) {
-                        this.game.addEntity(new Bunny(this.game, j*32*scale, i*32*scale));
-                    }
-                    */
                 }
             }
         } 
-        
-        //this.merchant = new Merchant(this.game, character.x, character.y, 1);
-        //this.game.addEntity(this.merchant);
-        //var worm = new Wormy(this.game, 1050,  7700);
-        //this.game.addEntity(worm);
 
         this.game.addEntity(character);
 
-        //this.game.addEntity(new Doublops(this.game, character.x, character.y));
-
-        this.game.addEntity(new Slime(this.game, character.x - 50, character.y - 50, 5));
-        
-        //this.game.addEntity(new Dummy(this.game, character.x, character.y, start));
-        //this.game.addEntity(new Polnariff(this.game, character.x, character.y, start));
         ASSET_MANAGER.pauseBackgroundMusic();
         ASSET_MANAGER.playAsset("./sounds/music/greenpath-ambient.mp3");
         ASSET_MANAGER.autoRepeat("./sounds/music/greenpath-ambient.mp3");
@@ -738,7 +731,8 @@ class SceneManager {
                 // -----------------draw hp bar section:
             // draw gui
             ctx.drawImage(this.panel, 95, 36, 27, 25, -5, PARAMS.canvas_height*0.885, 27*4, 25*4);
-            ctx.drawImage(this.panel, 135, 20, 50, 8, PARAMS.canvas_width*0.08, PARAMS.canvas_height*0.92, 50*9, 8*9);
+            ctx.drawImage(this.panel, 135, 20, 50, 8, PARAMS.canvas_width*0.08, PARAMS.canvas_height*0.885, 50*9, 8*9);
+            ctx.drawImage(this.panel, 122, 48, 26, 12, PARAMS.canvas_width*0.08, PARAMS.canvas_height*0.885 + 60, 26*3, 12*3);
             this.avaanimation.drawFrame(this.game.clockTick, ctx, PARAMS.canvas_width*0.008 - 20, PARAMS.canvas_height*0.911, 1.4);
             // fetch hp bar from rutherford then draw
             var hp = this.char.hp;
@@ -749,29 +743,35 @@ class SceneManager {
             // draw hp
             if (percentage < 0) percentage = 0;
             ctx.fillStyle = hp.getColor(percentage);
-            ctx.fillRect(PARAMS.canvas_width*0.08 + 9, PARAMS.canvas_height*0.92 + 10, 405*percentage, 21);
+            ctx.fillRect(PARAMS.canvas_width*0.08 + 9, PARAMS.canvas_height*0.885 + 10, 405*percentage, 21);
             ctx.strokeStyle = 'black';
-            ctx.strokeRect(PARAMS.canvas_width*0.08 + 9, PARAMS.canvas_height*0.92 + 10, 405, 21);
+            ctx.strokeRect(PARAMS.canvas_width*0.08 + 9, PARAMS.canvas_height*0.885 + 10, 405, 21);
             // give text
             ctx.fillStyle = "white";
-            ctx.fillText(`${Math.round(hp.current)}/${hp.maxHealth}`, PARAMS.canvas_width*0.08 + 192, PARAMS.canvas_height*0.92 + 27);
+            ctx.fillText(`${Math.round(hp.current)}/${hp.maxHealth}`, PARAMS.canvas_width*0.08 + 192, PARAMS.canvas_height*0.885 + 27);
             
             ctx.strokeStyle = "black";
             ctx.lineWidth = 1;
-            ctx.strokeText(`${Math.round(hp.current)}/${hp.maxHealth}`, PARAMS.canvas_width*0.08 + 192, PARAMS.canvas_height*0.92 + 27); 
+            ctx.strokeText(`${Math.round(hp.current)}/${hp.maxHealth}`, PARAMS.canvas_width*0.08 + 192, PARAMS.canvas_height*0.885 + 27); 
 
             //draw mp
             var percentageMana = hp.currMana / hp.maxMana;
             if (percentageMana < 0) percentageMana = 0;
             ctx.fillStyle = "rgb(30, 100, 255)";
-            ctx.fillRect(PARAMS.canvas_width*0.08 + 9, PARAMS.canvas_height*0.92 + 32, 405*percentageMana, 21);
+            ctx.fillRect(PARAMS.canvas_width*0.08 + 9, PARAMS.canvas_height*0.885 + 32, 405*percentageMana, 21);
             ctx.strokeStyle = 'black';
-            ctx.strokeRect(PARAMS.canvas_width*0.08 + 9,  PARAMS.canvas_height*0.92 + 32, 405, 21);
+            ctx.strokeRect(PARAMS.canvas_width*0.08 + 9,  PARAMS.canvas_height*0.885 + 32, 405, 21);
             // give text
             ctx.fillStyle = "white";
-            ctx.fillText(`${Math.round(hp.currMana)}/${hp.maxMana}`, PARAMS.canvas_width*0.08 + 192, PARAMS.canvas_height*0.92 + 49);
+            ctx.fillText(`${Math.round(hp.currMana)}/${hp.maxMana}`, PARAMS.canvas_width*0.08 + 192, PARAMS.canvas_height*0.885 + 49);
             ctx.strokeStyle = "black";
-            ctx.strokeText(`${Math.round(hp.currMana)}/${hp.maxMana}`, PARAMS.canvas_width*0.08 + 192, PARAMS.canvas_height*0.92 + 49);
+            ctx.strokeText(`${Math.round(hp.currMana)}/${hp.maxMana}`, PARAMS.canvas_width*0.08 + 192, PARAMS.canvas_height*0.885 + 49);
+            
+            // draw amount of coins
+            // give text
+            ctx.fillStyle = "white";
+            ctx.fillText(this.char.coins, PARAMS.canvas_width*0.08 + 25, PARAMS.canvas_height*0.885 + 84);
+
             ctx.lineWidth = 1;
         }
     }

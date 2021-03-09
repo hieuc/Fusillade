@@ -5,6 +5,8 @@ class Ais extends Enemy{
 
         this.ss = 18;
 
+        this.damage = 20;
+
         this.scale = 2; //size of Ais
 
         this.state = 0; //0 = idle, 1 = move, 2 = attack, 3 = die
@@ -240,11 +242,11 @@ class Ais extends Enemy{
         var pp = { sx: 80, sy: 128, size: 16}
         this.atkleftorright = this.enemyX - this.x > 0? 0: Math.PI;
         
-        var p = new Projectiles(this.game, false, this.x, this.y, {x: Math.cos(this.atkleftorright), y:Math.sin(this.atkleftorright)}, 3, 2000, 10, pp, "Aishit");
+        var p = new Projectiles(this.game, false, this.x, this.y, {x: Math.cos(this.atkleftorright), y:Math.sin(this.atkleftorright)}, 3, 2000, this.damage, pp, "Aishit");
         this.atkleftorright += Math.PI/4;
-        var p2 = new Projectiles(this.game, false, this.x, this.y, {x: Math.cos(this.atkleftorright), y:Math.sin(this.atkleftorright)}, 3, 2000, 10, pp, "Aishit");
+        var p2 = new Projectiles(this.game, false, this.x, this.y, {x: Math.cos(this.atkleftorright), y:Math.sin(this.atkleftorright)}, 3, 2000, this.damage, pp, "Aishit");
         this.atkleftorright -= Math.PI/2;
-        var p3 = new Projectiles(this.game, false, this.x, this.y, {x: Math.cos(this.atkleftorright), y:Math.sin(this.atkleftorright)}, 3, 2000, 10, pp, "Aishit");
+        var p3 = new Projectiles(this.game, false, this.x, this.y, {x: Math.cos(this.atkleftorright), y:Math.sin(this.atkleftorright)}, 3, 2000, this.damage, pp, "Aishit");
 
         p.bound.r = 10;
         p2.bound.r = 10;

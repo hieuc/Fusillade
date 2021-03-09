@@ -473,10 +473,10 @@ class Rutherford {
             if (PARAMS.meme) {
                 pp = {sx: 0, sy: 0, size: 16, spritesheet: ASSET_MANAGER.getAsset("./sprites/p.png")};
                 p =  new Projectiles(this.game, true, this.x, this.y, velocity, 4, 
-                    1200, 20 + randomInt(10) + (f ? 0 : 5), pp, f ? "star" : "burn");;
+                    1200, 15 + randomInt(10) + (f ? 0 : 5), pp, f ? "star" : "burn");;
             } else {
                 p = new Projectiles(this.game, true, this.x, this.y, velocity, 7, 
-                    1200, 20 + randomInt(10) + (f ? 0 : 5), f ? undefined : pp, f ? "star" : "burn");
+                    1200, 15 + randomInt(10) + (f ? 0 : 5), f ? undefined : pp, f ? "star" : "burn");
             }
             this.game.entities.splice(this.game.entities.length - 1, 0, p);
             

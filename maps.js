@@ -79,7 +79,31 @@ function fillEnemiesLevel1(rooms) {
         } else if (e.key === "boss") {
             e.enemies = [["buck", 1]];
         } else if (e.key === "normal"){
-            e.enemies = [["fayere", randomInt(5)+1], ["ais", randomInt(5) + 1]];
+            e.enemies = [["fayere", randomInt(3)+1], ["ais", randomInt(3)+1], ["wormy", randomInt(3)]];
+        } else if (e.key === "start") {
+            e.enemies = [["fayere", 2]];
+        } else {
+            // empty room
+            e.enemies = [];
+        }
+    });
+}
+
+/**
+ * Attach rooms object with enemy names + amount
+ * 
+ * @param {*} rooms 
+ */
+ function fillEnemiesLevel2(rooms) {
+    //var pool = [];
+
+    rooms.forEach(e => {
+        if (e.key === "miniboss") {
+            e.enemies = [["cyclops", 1]];
+        } else if (e.key === "boss") {
+            e.enemies = [["buck", 1]];
+        } else if (e.key === "normal"){
+            e.enemies = [["fayere", randomInt(3)+1], ["ais", randomInt(3)+1], ["wormy", randomInt(3)]];
         } else {
             // empty room
             e.enemies = [];
@@ -225,7 +249,7 @@ function createLevel1(w, h) {
     var boss = new Room(Math.floor(w * 0.1), 0, 30, 30, "boss");
     createPath(rooms[0], boss, true);
     rooms[0].key = "miniboss";
-    rooms[7].key = ""; // delete this line since it was just for placing Cyclops next to Rutherford for debugging purposes
+    rooms[7].key = "start"; 
     rooms.push(boss);
 
     fillEnemiesLevel1(rooms);
