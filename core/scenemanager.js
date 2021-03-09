@@ -565,12 +565,27 @@ class SceneManager {
         } else if (!this.game.started && !this.game.extra) {
             let starthover = false;
             let extrahover = false;
+            let lvl1hover = false;
+            let lvl2hover = false;
+            let lvl3hover = false;
+            let credits = false;
+
             if(this.playonce)
                 ASSET_MANAGER.playAsset("./sounds/music/maintheme.mp3");
                 ASSET_MANAGER.autoRepeat("./sounds/music/maintheme.mp3");
                 this.playonce = false;
             ctx.font = "BOLD 40px Comic Sans";
             this.animations.drawFrame(this.game.clockTick, this.game.ctx, 0, 0, 1);
+            //Select Level Background
+            ctx.drawImage(this.panel, 2, 33, 43, 43, PARAMS.canvas_width*0.01 - 17, PARAMS.canvas_height*0.65+9, 120, 240);
+            //Level 1 Button
+            ctx.drawImage(this.panel, 113, 81, 32, 16, PARAMS.canvas_width*0.01-2.5, PARAMS.canvas_height*0.69+9, 100, 60);
+            //Level 2 Button
+            ctx.drawImage(this.panel, 113, 81, 32, 16, PARAMS.canvas_width*0.01-2.5, PARAMS.canvas_height*0.76+9, 100, 60);
+            //Level 3 Button
+            ctx.drawImage(this.panel, 113, 81, 32, 16, PARAMS.canvas_width*0.01-2.5, PARAMS.canvas_height*0.83+9, 100, 60);
+            //Credits Button
+            ctx.drawImage(this.panel, 113, 81, 32, 16, PARAMS.canvas_width*0.01-2.5, PARAMS.canvas_height*0.9+9, 100, 60);
             //START BUTTON
             this.buttonanimations.drawFrame(this.game.clockTick, this.game.ctx, PARAMS.canvas_width *0.32, PARAMS.canvas_height*0.75, 6);
             //EXTRA BUTTON
@@ -590,6 +605,26 @@ class SceneManager {
                         extrahover = true;
                     }
                 }
+                if(this.game.hover.x >= PARAMS.canvas_width*0.01 && this.game.hover.x < PARAMS.canvas_width*0.08) {
+                    if(this.game.hover.y >= PARAMS.canvas_height*0.7 && this.game.hover.y < PARAMS.canvas_height*0.76) {
+                        lvl1hover = true;
+                    }
+                }
+                if(this.game.hover.x >= PARAMS.canvas_width*0.01 && this.game.hover.x < PARAMS.canvas_width*0.08) {
+                    if(this.game.hover.y >= PARAMS.canvas_height*0.77 && this.game.hover.y < PARAMS.canvas_height*0.83) {
+                        lvl2hover = true;
+                    }
+                }
+                if(this.game.hover.x >= PARAMS.canvas_width*0.01 && this.game.hover.x < PARAMS.canvas_width*0.08) {
+                    if(this.game.hover.y >= PARAMS.canvas_height*0.84 && this.game.hover.y < PARAMS.canvas_height*0.91) {
+                        lvl3hover = true;
+                    }
+                }
+                if(this.game.hover.x >= PARAMS.canvas_width*0.01 && this.game.hover.x < PARAMS.canvas_width*0.08) {
+                    if(this.game.hover.y >= PARAMS.canvas_height*0.91 && this.game.hover.y < PARAMS.canvas_height*0.98) {
+                        credits = true;
+                    }
+                }
             }
             ctx.lineWidth = 10;
             if(starthover)
@@ -601,6 +636,28 @@ class SceneManager {
                 ctx.fillStyle = "#ffffff";
             ctx.fillText("EXTRA", PARAMS.canvas_width*0.535, PARAMS.canvas_height*0.82);
             ctx.fillStyle = "#A9A9A9";
+
+            ctx.font = "BOLD 25px Comic Sans";
+            if(lvl1hover)
+                ctx.fillStyle = "#ffffff";
+            ctx.fillText("Level 1", PARAMS.canvas_width*0.01+5, PARAMS.canvas_height*0.745);
+            ctx.fillStyle = "#A9A9A9";
+
+            if(lvl2hover)
+                ctx.fillStyle = "#ffffff";
+            ctx.fillText("Level 2", PARAMS.canvas_width*0.01+5, PARAMS.canvas_height*0.815);
+            ctx.fillStyle = "#A9A9A9";
+
+            if(lvl3hover)
+                ctx.fillStyle = "#ffffff";
+            ctx.fillText("Level 3", PARAMS.canvas_width*0.01+5, PARAMS.canvas_height*0.885);
+            ctx.fillStyle = "#A9A9A9";
+
+            if(credits)
+                ctx.fillStyle = "#ffffff";
+            ctx.fillText("Credits", PARAMS.canvas_width*0.01+5, PARAMS.canvas_height*0.955);
+            ctx.fillStyle = "#A9A9A9";
+
 
             //If our mouse has clicked canvas
             if(this.game.click != null) {
@@ -617,10 +674,7 @@ class SceneManager {
                         this.game.started = true;
                         this.game.leftclick = false;
                         this.game.click = null;
-                        this.loadLevel3();
-                        
-                        
-                        
+                        this.loadLevel1();
                     }
                 } else if(this.game.click.x >= PARAMS.canvas_width*0.515 && this.game.click.x < PARAMS.canvas_width * 0.64) {
                     if(this.game.click.y >= PARAMS.canvas_height * 0.75 && this.game.click.y < PARAMS.canvas_height*0.91) {
@@ -629,7 +683,47 @@ class SceneManager {
                         this.game.click = null; //reset click
                         this.game.addEntity(new Extras(this.game, 0, 0));
                     }
-                }
+                } else if(this.game.click.x >= PARAMS.canvas_width*0.01 && this.game.click.x < PARAMS.canvas_width*0.08) {
+                    if(this.game.click.y >= PARAMS.canvas_height*0.7 && this.game.click.y < PARAMS.canvas_height*0.76) {
+                        // resize canvas when game start
+                        var canvas = document.getElementById("gameWorld");
+                        canvas.getContext('2d').imageSmoothingEnabled = true;
+                        canvas.height = 900;
+                        PARAMS.canvas_height = 900;
+                        canvas.getContext('2d').imageSmoothingEnabled = false;
+                                                
+                        this.game.started = true;
+                        this.game.leftclick = false;
+                        this.game.click = null;
+                        this.loadLevel1();
+                    } else if(this.game.click.y >= PARAMS.canvas_height*0.77 && this.game.click.y < PARAMS.canvas_height*0.83) {
+                        // resize canvas when game start
+                        var canvas = document.getElementById("gameWorld");
+                        canvas.getContext('2d').imageSmoothingEnabled = true;
+                        canvas.height = 900;
+                        PARAMS.canvas_height = 900;
+                        canvas.getContext('2d').imageSmoothingEnabled = false;
+                                                
+                        this.game.started = true;
+                        this.game.leftclick = false;
+                        this.game.click = null;
+                        this.loadLevel2();
+                    } else if(this.game.click.y >= PARAMS.canvas_height*0.84 && this.game.click.y < PARAMS.canvas_height*0.91) {
+                        // resize canvas when game start
+                        var canvas = document.getElementById("gameWorld");
+                        canvas.getContext('2d').imageSmoothingEnabled = true;
+                        canvas.height = 900;
+                        PARAMS.canvas_height = 900;
+                        canvas.getContext('2d').imageSmoothingEnabled = false;
+                                                
+                        this.game.started = true;
+                        this.game.leftclick = false;
+                        this.game.click = null;
+                        this.loadLevel3();
+                    } else if(this.game.click.y >= PARAMS.canvas_height*0.92 && this.game.click.y < PARAMS.canvas_height*0.99) {
+                        //CREDITS GO HERE
+                    }
+                } 
             }
         }
 
