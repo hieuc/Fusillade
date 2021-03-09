@@ -5,7 +5,7 @@ class Slime extends Enemy {
 
         this.state = 0; // 0 = idle, 1 = move, 2 = attack, 3 = split, 4 = death
         this.face = 0; // 0 = right, 1 = left
-        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/slime.png");
+        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/slimee.png");
         this.attackcd = 300;
         this.movecd = 300;
         this.triggerrange = 500;
