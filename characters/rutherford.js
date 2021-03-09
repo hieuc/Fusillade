@@ -126,7 +126,6 @@ class Rutherford {
     }
 
     update() {
-        console.log(this.speed);
         if(this.hasapet) {
             this.game.addEntity(new DineO(this.game, this.x-20, this.y));
             this.hasapet = false;
@@ -350,9 +349,17 @@ class Rutherford {
     }
 
     draw(ctx) {
+        // for running shadow
+        var offset = 0;
+        if (this.action === 1 && this.face === 0) {
+            offset += 5;
+        } else if (this.action === 1 && this.face === 1) {
+            offset -= 5;
+        }
+        
         //draw the shadow
         ctx.globalAlpha = 0.6; // change opacity
-        ctx.drawImage(this.shadow, 0, 0, 64, 32, this.x - this.game.camera.x + 11, this.y - this.game.camera.y + 37, 28, 14);
+        ctx.drawImage(this.shadow, 0, 0, 64, 32, this.x - this.game.camera.x + 11 + offset, this.y - this.game.camera.y + 38, 28, 14);
         ctx.globalAlpha = 1;
         
         //Draw hero

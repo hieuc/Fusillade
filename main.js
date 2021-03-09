@@ -51,6 +51,7 @@ ASSET_MANAGER.queueDownload("./sprites/mainmenu.png");
 ASSET_MANAGER.queueDownload("./sprites/Fusillade.png");
 ASSET_MANAGER.queueDownload("./sprites/Wols.png");
 ASSET_MANAGER.queueDownload("./sprites/mirror.png");
+ASSET_MANAGER.queueDownload("./sprites/background.png");
 
 
 // sounds
