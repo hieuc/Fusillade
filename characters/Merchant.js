@@ -735,5 +735,6 @@ var thirdEncounterStory =
     12: "See? That fired you up right! There you go",
     13: "Good luck Young Rutherford, the whole",
     14: "Kingdom's fate is in your hand. Don't fail",
-    15: "on us."
+    15: "on us. \"After talking to Polnariff, you are,",
+    16: "filled with determination\"."
 }
