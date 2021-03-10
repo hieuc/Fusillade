@@ -95,15 +95,22 @@ function fillEnemiesLevel1(rooms) {
  * @param {*} rooms 
  */
  function fillEnemiesLevel2(rooms) {
-    //var pool = [];
+    var pool = ["slimee", "slippey", "wormito"];
 
     rooms.forEach(e => {
-        if (e.key === "miniboss") {
-            e.enemies = [["cyclops", 1]];
-        } else if (e.key === "boss") {
-            e.enemies = [["buck", 1]];
+        if (e.key === "final") {
+            e.enemies = [["polnariff", 1]];
+        } else if (e.key === "miniboss") {
+            e.enemies = [["drumbuck", 1]];
+        } else if (e.key === "merchant") {
+            e.enemies = [["merchant", 1]];
+        } else if (e.key === "final") {
+            e.enemies = [["polnariff", 1]];
         } else if (e.key === "normal"){
-            e.enemies = [["fayere", randomInt(3)+1], ["ais", randomInt(3)+1], ["wormy", randomInt(3)]];
+            // pick pool
+            e.enemies = [[pool[randomInt(pool.length)], 1]];
+            // randomly pick wol
+
         } else {
             // empty room
             e.enemies = [];
@@ -280,21 +287,17 @@ function createLevel1(w, h) {
                     var v = (e.x2 - e.x1) / Math.abs(e.x2 - e.x1);
                     for (var a = 0; a < Math.abs(e.x2 - e.x1); a++) {
                         // width of path is 5
-                        //m[e.y1 - 2][e.x1 + a*v] = 1;
                         m[e.y1 - 1][e.x1 + a*v] = 1;
                         m[e.y1][e.x1 + a*v] = 1;
                         m[e.y1 + 1][e.x1 + a*v] = 1;
-                        //m[e.y1 + 2][e.x1 + a*v] = 1;
                     }
                 } else {
                     var v = (e.y2 - e.y1) / Math.abs(e.y2 - e.y1);
                     for (var a = 0; a < Math.abs(e.y2 - e.y1); a++) {
-                        // width of path is 5
-                        //m[e.y1 + a*v][e.x1 - 2] = 1;
+                        // width of path is 3
                         m[e.y1 + a*v][e.x1 - 1] = 1;
                         m[e.y1 + a*v][e.x1] = 1;
                         m[e.y1 + a*v][e.x1 + 1] = 1;
-                        //m[e.y1 + a*v][e.x1 + 2] = 1;
                     }
                 }
             });
@@ -346,29 +349,22 @@ function createLevel2(w, h) {
                 if (e.x2 - e.x1 !== 0) {
                     var v = (e.x2 - e.x1) / Math.abs(e.x2 - e.x1);
                     for (var a = 0; a < Math.abs(e.x2 - e.x1); a++) {
-                        // width of path is 5
-                        //m[e.y1 - 2][e.x1 + a*v] = 1;
-                        //m[e.y1 - 1][e.x1 + a*v] = 1;
+                        // width of path is 1
                         m[e.y1][e.x1 + a*v] = 1;
-                        //m[e.y1 + 1][e.x1 + a*v] = 1;
-                        //m[e.y1 + 2][e.x1 + a*v] = 1;
                     }
                 } else {
                     var v = (e.y2 - e.y1) / Math.abs(e.y2 - e.y1);
                     for (var a = 0; a < Math.abs(e.y2 - e.y1); a++) {
-                        // width of path is 5
-                        //m[e.y1 + a*v][e.x1 - 2] = 1;
-                        //m[e.y1 + a*v][e.x1 - 1] = 1;
+                        // width of path is 1
                         m[e.y1 + a*v][e.x1] = 1;
-                        //m[e.y1 + a*v][e.x1 + 1] = 1;
-                        //m[e.y1 + a*v][e.x1 + 2] = 1;
                     }
                 }
             });
     }
+    rooms[path[Math.floor(path.length/2)]].key = "miniboss";
+    rooms[path[Math.floor(path.length/2)+1]].key = "merchant";
 
-    fillEnemiesLevel1(rooms);
-
+    fillEnemiesLevel2(rooms);
     m = applyEdgePadding(m, rooms);
     
     return [m, rooms];
@@ -378,6 +374,9 @@ function createLevel2(w, h) {
 /**
  * Create a list of rooms for level 2.
  * Will connect rooms with paths.
+ * 
+ * Returns list of all rooms, and
+ * list of rooms in order of starting to final. 
  * 
  * @param {*} w 
  * @param {*} h 
@@ -423,8 +422,8 @@ function createRoomsLevel2(w, h) {
     end.room.w = end.w - 1;
     end.room.h = end.h - 1;
 
-    // randomly remove 30-40% of rooms
-    var totalRemove = randomInt(Math.floor(m.length*0.1)) + Math.floor(m.length*0.45);
+    // randomly remove 70-80% of rooms
+    var totalRemove = randomInt(Math.floor(m.length*0.05)) + Math.floor(m.length*0.75);
     for (var i = 0; i < totalRemove; i++) {
         var toRemove = randomInt(m.length-3)+1;
         if(m[toRemove].room.key !== "start" && m[toRemove].room.key !== "final")
@@ -470,7 +469,7 @@ function createRoomsLevel2(w, h) {
     }
     
     var path = findPathway(m, start.room, end.room);
-    
+
     return [m, path];
 }
 
@@ -626,49 +625,6 @@ function createPath(r1, r2, boss) {
             p.splice(j, 1);
         }
     }
-    /*
-    // trim the rest
-    for (var j = 0; j < p.length; j++) {
-        if (pathInBox(p[j], r1) || pathInBox(p[j], r2)) {
-            // if moving in x direction
-            if (p[j].x1 - p[j].x2 !== 0) {
-                // if path moving left to right
-                if (p[j].x2 - p[j].x1 >= 0) {
-                    if (pathInBox(p[j], r1) && p[j].x1 < r1.x + r1.w) {
-                        p[j].x1 = r1.x + r1.w;
-                    }
-                    if (pathInBox(p[j], r2) && p[j].x2 > r2.x) {
-                        p[j].x2 = r2.x;
-                    }
-                } else {
-                    if (pathInBox(p[j], r1) && p[j].x1 > r1.x) {
-                        p[j].x1 = r1.x;
-                    }
-                    if (pathInBox(p[j], r2) && p[j].x2 < r2.x + r2.w) {
-                        p[j].x2 = r2.x + r2.w;
-                    }
-                }
-            } else {
-                // if path moving top to bottom
-                if (p[j].y2 - p[j].y1 >= 0) {
-                    if (pathInBox(p[j], r1) && p[j].y1 < r1.y + r1.h) {
-                        p[j].y1 = r1.y + r1.h;
-                    }
-                    if (pathInBox(p[j], r2) && p[j].y2 > r2.y) {
-                        p[j].y2 = r2.y;
-                    }
-                } else {
-                    if (pathInBox(p[j], r1) && p[j].y1 > r1.y) {
-                        p[j].y1 = r1.y;
-                    }
-                    if (pathInBox(p[j], r2) && p[j].y2 < r2.y + r2.h) {
-                        p[j].y2 = r2.y + r2.h;
-                    }
-                }
-            }
-        }
-    }
-    */
 }
 
 
@@ -705,8 +661,10 @@ class Space {
 }
 
 /**
- * The Room object that contains location, size, enemies, loot.
+ * The Room object that contains location, size, enemies.
  * Representative of a location in game.
+ * 
+ * To find the actual x, y, w, h position value, multiply by 64 
  */
 class Room {
     constructor (x, y, w, h, key) {
