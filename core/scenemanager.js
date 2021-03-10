@@ -487,6 +487,7 @@ class SceneManager {
         ASSET_MANAGER.pauseBackgroundMusic();
         ASSET_MANAGER.playAsset("./sounds/music/Ignotus.mp3");
         ASSET_MANAGER.autoRepeat("./sounds/music/Ignotus.mp3");
+        ASSET_MANAGER.adjustBackgroundVolume(0.4);
 
     }
 
