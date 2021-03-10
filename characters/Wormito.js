@@ -174,7 +174,7 @@ class Wormito extends Enemy {
             this.game.entities.forEach(e => {
                 if (e.bound && this.bound.collide(e.bound)) {
                     if(e instanceof Projectiles && e.friendly) {
-                        encodeURIComponent.hit(that);
+                        e.hit(that);
                         ASSET_MANAGER.playAsset("./sounds/sfx/Hit.mp3");
                         if(that.hp.current <= 0) {
                             that.state = 3;

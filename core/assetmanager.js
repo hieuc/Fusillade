@@ -78,9 +78,19 @@ class AssetManager {
         return this.cache[path];
     };
 
+    /**
+     * 
+     * @param {*} path 
+     * @param {*} offset amplify multiplier
+     */
     playAsset(path, offset) {
         let audio = this.cache[path];
         audio.offset = offset;
+        if (audio.offset) {
+            audio.volume *= offset;
+            if (audio.volume > 1) audio.volume = 1;
+            else if (audio.volume < 0) audio.volume = 0;
+        }
         audio.currentTime = 0;
         audio.play();
     };
@@ -100,9 +110,9 @@ class AssetManager {
             if (asset instanceof Audio && key.includes("./sounds/music/")) {
                 asset.volume = volume;
                 if (asset.offset) {
-                    asset.volume += offset;
+                    asset.volume *= asset.offset;
                     if (asset.volume > 1) asset.volume = 1;
-                    else if (asset.volume < 1) asset.volume = 0;
+                    else if (asset.volume < 0) asset.volume = 0;
                 }
             }
         }
@@ -114,9 +124,9 @@ class AssetManager {
             if (asset instanceof Audio && key.includes("./sounds/sfx/")) {
                 asset.volume = volume;
                 if (asset.offset) {
-                    asset.volume += offset;
+                    asset.volume *= asset.offset;
                     if (asset.volume > 1) asset.volume = 1;
-                    else if (asset.volume < 1) asset.volume = 0;
+                    else if (asset.volume < 0) asset.volume = 0;
                 }
             }
         }
