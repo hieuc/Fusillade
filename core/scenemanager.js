@@ -381,7 +381,7 @@ class SceneManager {
         
         // 0 = none, 1 = block
         // ! = ground, $ = carpet 
-        // % = oryx logo, ^ = path intersection
+        // % = logo, ^ = path intersection
         // t = carpet edge top, b = carpet edge bottom
         // l = carpet edge left, r = carpet edge right
         // q = carpet tl corner, w = carpet tr corner
@@ -391,19 +391,21 @@ class SceneManager {
             "1" : {x: 0, y: 35},
             "!" : {x: 0, y: 74},
             "$" : {x: 1, y: 3},
-            "%" : {x: 1, y: 1},
+            "%" : [{x: 1, y: 1}, {x: 10, y: 1}, {x: 1, y: 10}, {x: 10, y: 10}, {x: 1, y: 15}],
             "^" : {x: 0, y: 72},
-            "t" : {x: 1, y: 0},
-            "b" : {x: 1, y: 4},
-            "l" : {x: 0, y: 1},
-            "r" : {x: 6, y: 1},
-            "q" : {x: 0, y: 0},
-            "w" : {x: 6, y: 0},
-            "e" : {x: 0, y: 4},
-            "a" : {x: 6, y: 4},
+            "t" : [{x: 1, y: 0}, {x: 10, y: 0}, {x: 1, y: 9}, {x: 10, y: 9}, {x: 1, y: 14}],
+            "b" : [{x: 1, y: 4}, {x: 10, y: 4}, {x: 1, y: 13}, {x: 10, y: 13}, {x: 1, y: 18}],
+            "l" : [{x: 0, y: 1}, {x: 9, y: 1}, {x: 0, y: 10}, {x: 9, y: 10}, {x: 0, y: 15}],
+            "r" : [{x: 6, y: 1}, {x: 15, y: 1}, {x: 6, y: 10}, {x: 15, y: 10}, {x: 6, y: 15}],
+            "q" : [{x: 0, y: 0}, {x: 9, y: 0}, {x: 0, y: 9}, {x: 9, y: 9},{x: 0, y: 14}],
+            "w" : [{x: 6, y: 0}, {x: 15, y: 0}, {x: 6, y: 9}, {x: 15, y: 9}, {x: 6, y: 14}],
+            "e" : [{x: 0, y: 4}, {x: 9, y: 4}, {x: 0, y: 13}, {x: 9, y: 13}, {x: 0, y: 18}],
+            "a" : [{x: 6, y: 4}, {x: 15, y: 4}, {x: 6, y: 13}, {x: 15, y: 13}, {x: 6, y: 18}],
             "d" : {x: 1, y: 72},
             "s" : {x: 8, y: 72}
         }
+
+        var logo = randomInt(5);
 
         var map = 
             "000000000000000111111111000000000000000" +
@@ -454,7 +456,7 @@ class SceneManager {
 
                 var bg = null;
                 if (ch === "%")
-                    bg = new Ground(this.game, j * b * scale, i * b * scale, {spritesheet: ss, sx: keys[ch].x * b, sy: keys[ch].y * b, width: b * 5, height: b * 3, scale: scale});
+                    bg = new Ground(this.game, j * b * scale, i * b * scale, {spritesheet: ss, sx: keys[ch][logo].x * b, sy: keys[ch][logo].y * b, width: b * 5, height: b * 3, scale: scale});
                 else if (ch === "!") {
                     var r = randomInt(26);
                     bg = new Ground(this.game, j * b * scale, i * b * scale, {spritesheet: ss, sx: (keys[ch].x + r % 15) * b, sy: (keys[ch].y + Math.floor(r / 15)) * b, width: b, height: b, scale: scale});
@@ -464,9 +466,12 @@ class SceneManager {
                 } else if (ch === "s" || ch === "d") {
                     var r = randomInt(7);
                     bg = new Ground(this.game, j * b * scale, i * b * scale, {spritesheet: ss, sx: (keys[ch].x + r) * b, sy: keys[ch].y * b, width: b, height: b, scale: scale});
-                } else     
+                } else   {
+                    if (keys[ch][logo])  
+                        bg = new Ground(this.game, j * b * scale, i * b * scale, {spritesheet: ss, sx: keys[ch][logo].x * b, sy: keys[ch][logo].y * b, width: b, height: b, scale: scale});
+                    else 
                     bg = new Ground(this.game, j * b * scale, i * b * scale, {spritesheet: ss, sx: keys[ch].x * b, sy: keys[ch].y * b, width: b, height: b, scale: scale});
-                
+                }
                 if (bg)
                     this.game.addBg(bg);
             }  
