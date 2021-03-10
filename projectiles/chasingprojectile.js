@@ -11,7 +11,7 @@ class Chasingprojectile extends Projectiles {
 
         this.floatspeed = 0.8;
 
-        let returnlifetime = this.lifetime/2.5;
+        this.returnlifetime = this.lifetime/2;
 
         this.resetonce = true;
 
