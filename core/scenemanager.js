@@ -358,7 +358,7 @@ class SceneManager {
                 }
             }
         } 
-        //this.game.addEntity(new Wormito(this.game, character.x, character.y));
+        //this.game.addEntity(new Fernight(this.game, character.x, character.y, start));
         this.game.addEntity(character);
 
         ASSET_MANAGER.pauseBackgroundMusic();
