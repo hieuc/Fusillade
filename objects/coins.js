@@ -64,3 +64,35 @@ class Threecoin {
 
 }
 
+class BunchofCoins {
+    constructor(game, x, y, value) {
+        Object.assign(this, {game, x, y, value});
+
+        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Meat.png");
+        
+        this.bound = new BoundingCircle(this.game, this.x+21, this.y+18, 15);
+
+        this.scale = 2.8;
+
+        this.animations = [];
+
+        this.loadAnimations();
+    }
+
+    loadAnimations() {
+        this.animations[0] = new Animator(this.spritesheet, 72, 140, 15, 10, 1, 1, 0, false, true);
+    }
+
+    update() {
+
+    }
+
+    draw(ctx) {
+        if (PARAMS.debug) {
+            this.bound.draw();
+        }
+        this.animations[0].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale);
+    }
+
+}
+

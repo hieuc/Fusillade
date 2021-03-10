@@ -12,6 +12,8 @@ class Drumbuck extends Enemy {
         
         this.removeFromWorld = false;
 
+        this.active = false;
+
         this.scale = 2.1; //Buck's size.
 
         this.state = 0; //0 = idle, 1 = move, 2 = attack SLASH, 3 = Summon, LATER(4 = Fury Attack, 5 = die)
@@ -141,8 +143,9 @@ class Drumbuck extends Enemy {
                    }
                } 
                this.removeFromWorld = true;
+               this.game.addEntity(new BunchofCoins(this.game, this.bound.x, this.bound.y, 30));
             }
-       } else if (Math.abs(this.enemyX - this.x) < 400 || Math.abs(this.enemyY - this.y) < 400){
+       } else if (this.active){
             if(Date.now() - this.createone > this.createonecd) {
                 this.game.addEntity(new Propportal(this.game, this.x * Math.random(), this.y *Math.random(), "Ais"));
                 this.createone = Date.now();

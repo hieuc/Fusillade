@@ -17,7 +17,7 @@ class Dividingprojectile extends Projectiles {
             for(var i = 0; i < partitions; i++) {
                 var pp = {sx: 98, sy: 144, size: 16};
                 var p = new Projectiles(this.game, false, this.x, this.y, {x :Math.cos(this.circularattackangle), y:Math.sin(this.circularattackangle)}, 
-                        5, 3000, 10, pp);
+                        5, 3000, 20, pp);
                 this.circularattackangle += 2*Math.PI/partitions;
                 this.game.entities.splice(this.game.entities.length - 1, 0, p);        
             }

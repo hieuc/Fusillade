@@ -52,12 +52,7 @@ class SceneManager {
      * @param {*} y starting point of main char
      */
     loadLevel1() {
-        this.game.entities = [];
-        this.game.background = [];
-        this.gameover = false;
-        this.stage = 1;
-        this.tempObstacles = null;
-        this.locked = false;
+        this.resetState();
         this.level = 1;
 
         var w = 100;
@@ -211,12 +206,7 @@ class SceneManager {
      * @param {*} y starting point of main char
      */
     loadLevel2() {
-        this.game.entities = [];
-        this.game.background = [];
-        this.gameover = false;
-        this.stage = 1;
-        this.tempObstacles = null;
-        this.locked = false;
+        this.resetState();
         this.level = 2;
 
         var w = 120;
@@ -306,7 +296,7 @@ class SceneManager {
 
         var character = new Rutherford(this.game, (start.x + start.w/2) * 32 * scale,  (start.y + start.h/2) * 32 * scale, false); 
         this.char = character;
-        console.log(rooms);
+
         // fill enemies
         rooms.forEach(r => {
             r.enemies.forEach(e => {
@@ -320,14 +310,18 @@ class SceneManager {
                     var enemy = new Wormito(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale);
                     this.game.addEntity(enemy);
                 } else if (e[0] === "drumbuck") {
-                    var enemy = new Drumbuck(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale);
+                    this.bossroom = r;
+                    this.boss = new Drumbuck(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale);
+                    this.game.addEntity(this.boss);
+                } else if (e[0] === "doublops") {
+                    var enemy = new Doublops(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale);
                     this.game.addEntity(enemy);
                 } else if (e[0] === "merchant") {
                     this.merchant = new Merchant(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale);
                     this.game.addEntity(this.merchant);
                 }  else if (e[0] === "polnariff") {
-                    var enemy = new Polnariff(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale, end);
-                    this.game.addEntity(enemy);
+                    this.boss2 = new Polnariff(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale, end);
+                    this.game.addEntity(this.boss2);
                 }
             });
         });
@@ -362,17 +356,12 @@ class SceneManager {
         this.game.addEntity(character);
 
         ASSET_MANAGER.pauseBackgroundMusic();
-        ASSET_MANAGER.playAsset("./sounds/music/greenpath-ambient.mp3");
-        ASSET_MANAGER.autoRepeat("./sounds/music/greenpath-ambient.mp3");
+        ASSET_MANAGER.playAsset("./sounds/music/level2-stage1.mp3");
+        ASSET_MANAGER.autoRepeat("./sounds/music/level2-stage1.mp3");
     }
 
     loadLevel3() {
-        this.game.entities = [];
-        this.game.background = [];
-        this.gameover = false;
-        this.stage = 1;
-        this.tempObstacles = null;
-        this.locked = false;
+        this.resetState();
         this.level = 3;
 
         var b = 8;  // unit size
@@ -484,10 +473,8 @@ class SceneManager {
         //this.game.addEntity(new Doublops(this.game, 575, 550));
         this.game.addEntity(character);
         ASSET_MANAGER.pauseBackgroundMusic();
-        ASSET_MANAGER.playAsset("./sounds/music/Ignotus.mp3");
+        ASSET_MANAGER.playAsset("./sounds/music/Ignotus.mp3", 0.8);
         ASSET_MANAGER.autoRepeat("./sounds/music/Ignotus.mp3");
-        ASSET_MANAGER.adjustBackgroundVolume(0.4);
-
     }
 
     update() {
@@ -542,6 +529,48 @@ class SceneManager {
                 }
             } else if (this.level === 2) {
                 // level 2 interaction here
+                
+                // check if rutherford enters miniboss room
+                if (this.stage === 1 && this.isInRoom(this.bossroom)) {
+                    ASSET_MANAGER.pauseBackgroundMusic();
+                    ASSET_MANAGER.playAsset("./sounds/music/drumbuck.mp3");
+                    ASSET_MANAGER.autoRepeat("./sounds/music/drumbuck.mp3");
+                    this.stage = 2;
+
+                    var p = { spritesheet: ASSET_MANAGER.getAsset("./sprites/background.png"), sx: 16, sy: 344, width: 8, height: 8, scale: 8, 
+                                bound: {x: 0, y: 0, w: 1, h: 1}};
+                    this.tempObstacles = lockRoom(this.game, this.bossroom, this.map, p);
+                    this.locked = true;
+                    this.boss.active = true;
+                }
+                // check if drumbuck is defeated 
+                else if (this.stage === 2 && this.boss.removeFromWorld && this.char.hp.current > 0) {
+                    this.releaseLock();
+                    this.stage = 3;
+
+                    ASSET_MANAGER.pauseBackgroundMusic();
+                    ASSET_MANAGER.playAsset("./sounds/music/level2-stage2.mp3");
+                    ASSET_MANAGER.autoRepeat("./sounds/music/level2-stage2.mp3");
+                }
+                // check if rutherford is in boss room
+                else if (this.stage === 3 && this.isInRoom(this.boss2.room)) {
+                    // sprite for tree
+                    var p = { spritesheet: ASSET_MANAGER.getAsset("./sprites/background.png"), sx: 16, sy: 344, width: 8, height: 8, scale: 8, 
+                                bound: {x: 0, y: 0, w: 1, h: 1}};
+                    this.tempObstacles = lockRoom(this.game, this.boss2.room, this.map, p);
+                    this.locked = true;
+                    this.stage = 4;
+
+                    this.boss2.active = true;
+                    this.boss2.generaltimestamp = Date.now();
+                    ASSET_MANAGER.pauseBackgroundMusic();
+                    ASSET_MANAGER.playAsset("./sounds/music/polnariff.mp3");
+                    ASSET_MANAGER.autoRepeat("./sounds/music/polnariff.mp3");
+                } else if (this.stage === 4 && this.boss2.hp.current <= 0 && this.char.hp.current > 0) {
+                    
+                    this.releaseLock();
+                    this.stage = 5;
+                }
             } 
         }  
     };
@@ -792,6 +821,18 @@ class SceneManager {
             this.char.x / 64 > room.x && this.char.x/64 < room.x + room.w &&
             this.char.y / 64 > room.y && this.char.y/64 < room.y + room.h &&
             !this.locked);
+    }
+
+    resetState() {
+        this.game.entities = [];
+        this.game.background = [];
+        this.gameover = false;
+        this.stage = 1;
+        this.boss = null;
+        this.bossroom = null;
+        this.boss2 = null;
+        this.tempObstacles = null;
+        this.locked = false;
     }
 };
 

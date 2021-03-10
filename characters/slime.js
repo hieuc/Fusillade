@@ -12,6 +12,7 @@ class Slime extends Enemy {
         this.pp = {sx: 176, sy: 80, size: 16, scale: 0.5*(this.scale-1)};
         this.speed = 1;
         this.velocity = {x: 0, y: 0};
+        this.damage = 15;
 
         this.bound = new BoundingBox(this.game, this.x + this.scale*12, this.y + this.scale*26, 8 * scale, 5 * scale);
         this.hp = new HealthMpBar(this.game, this.bound.x - this.scale, this.bound.y + 6 * this.scale, 10 * this.scale, 25*this.scale);
@@ -23,9 +24,9 @@ class Slime extends Enemy {
 
     update() {
         if (this.hp.current <= 0 ) {
-            if (this.state !== 3 && this.scale > 3)
+            if (this.state !== 3 && this.scale > 3.5)
                 this.state = 3;
-            else if (this.state !== 4 && this.scale <= 3) {
+            else if (this.state !== 4 && this.scale <= 3.5) {
                 this.state = 4;
             } 
         }
@@ -50,7 +51,7 @@ class Slime extends Enemy {
             var d = Math.sqrt(Math.pow(e.x - this.x, 2) + Math.pow(e.y - this.y, 2));
             // attack
             if (Date.now() - this.attackts >= this.attackcd && d <= this.triggerrange) {
-                this.game.addEntity(new Projectiles(this.game, false, this.bound.x, this.bound.y, this.calculateVel(), 4, 3000, 10*(this.scale-2), this.pp));
+                this.game.addEntity(new Projectiles(this.game, false, this.bound.x, this.bound.y, this.calculateVel(), 4, 3000, this.damage*(this.scale-2), this.pp));
 
                 this.attackcd = 300 + randomInt(5)*100;
                 this.attackts = Date.now();

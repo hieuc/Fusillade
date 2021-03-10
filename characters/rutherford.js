@@ -535,6 +535,10 @@ class Rutherford {
                 this.coins += 3;
                 ASSET_MANAGER.playAsset("./sounds/sfx/coin.mp3");
                 e.removeFromWorld = true;
+            } else if(e instanceof BunchofCoins && this.bound.collide(e.bound)) {
+                this.coins += e.value;
+                ASSET_MANAGER.playAsset("./sounds/sfx/coin.mp3");
+                e.removeFromWorld = true;
             }
         });
     }

@@ -9,7 +9,7 @@ class Doublops extends Enemy
         this.ss = 64;
 
         // damage for each shot 
-        this.damage = 70;
+        this.damage = 50;
         
         this.removeFromWorld = false;
 
@@ -37,7 +37,7 @@ class Doublops extends Enemy
 
         this.bound = new BoundingBox(this.game, this.x, this.y, this.ss / 2, this.ss);
 
-        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y , 34 * this.scale, 1000, 0);
+        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y , 34 * this.scale, 500, 0);
 
         this.animations = [];
 
@@ -117,7 +117,7 @@ class Doublops extends Enemy
         } 
         else 
         {
-            if(Math.abs(this.x - this.enemyX) < 800 && Math.abs(this.y - this.enemyY) < 800) {
+            if(Math.abs(this.bound.x + this.bound.w/2 - this.enemyX) < 550 && Math.abs(this.bound.y + this.bound.h/2 - this.enemyY) < 550) {
                 this.attackbehavior = Date.now() - this.attackpatterntime;
                 if(this.attackbehavior < 1500) 
                 {
@@ -208,7 +208,7 @@ class Doublops extends Enemy
         var velocity = this.calculateVel();
         var pp = { spritesheet: ASSET_MANAGER.getAsset("./sprites/Doublops.png"), sx: 256, sy: 1236, size: 35, scale : 1};
         var p = new Chasingprojectile(this.game, false, this.x + 55, this.y + 50, velocity, 
-        25, 600, 70, pp, false);
+        25, 600, this.damage, pp, false);
         p.bound.r = p.bound.r / 1.5;
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }
