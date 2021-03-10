@@ -9,7 +9,7 @@ class Cyclops extends Enemy
         this.ss = 64;
 
         // damage for each shot 
-        this.damage = 100;
+        this.damage = 70;
         
         this.removeFromWorld = false;
 
@@ -37,7 +37,7 @@ class Cyclops extends Enemy
 
         this.bound = new BoundingBox(this.game, this.x, this.y, this.ss / 2, this.ss);
 
-        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y , 34 * this.scale, 500, 0);
+        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y , 34 * this.scale, 700, 0);
 
         this.animations = [];
 

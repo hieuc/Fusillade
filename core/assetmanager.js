@@ -78,8 +78,9 @@ class AssetManager {
         return this.cache[path];
     };
 
-    playAsset(path) {
+    playAsset(path, offset) {
         let audio = this.cache[path];
+        audio.offset = offset;
         audio.currentTime = 0;
         audio.play();
     };
@@ -98,6 +99,11 @@ class AssetManager {
             let asset = this.cache[key];
             if (asset instanceof Audio && key.includes("./sounds/music/")) {
                 asset.volume = volume;
+                if (asset.offset) {
+                    asset.volume += offset;
+                    if (asset.volume > 1) asset.volume = 1;
+                    else if (asset.volume < 1) asset.volume = 0;
+                }
             }
         }
     };
@@ -107,6 +113,11 @@ class AssetManager {
             let asset = this.cache[key];
             if (asset instanceof Audio && key.includes("./sounds/sfx/")) {
                 asset.volume = volume;
+                if (asset.offset) {
+                    asset.volume += offset;
+                    if (asset.volume > 1) asset.volume = 1;
+                    else if (asset.volume < 1) asset.volume = 0;
+                }
             }
         }
     };

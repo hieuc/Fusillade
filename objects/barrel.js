@@ -4,6 +4,8 @@ class Barrel {
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Crate.png");
 
+        this.shadow = ASSET_MANAGER.getAsset("./sprites/shadow.png");
+
         this.animations = [];
 
         this.dead = false;
@@ -70,9 +72,13 @@ class Barrel {
     }
 
     draw(ctx) {
+        //draw the shadow
+        ctx.globalAlpha = 0.6; // change opacity
+        ctx.drawImage(this.shadow, 0, 0, 64, 32, this.x - this.game.camera.x + 12, this.y - this.game.camera.y + 44, 32, 16);
+        ctx.globalAlpha = 1;
         this.animations[this.state].drawFrame(this.game.clockTick, ctx, 
             this.x - this.offset - this.game.camera.x, this.y - this.offset - this.game.camera.y, this.scale);
-        this.hp.draw();
+        //this.hp.draw();
         if (PARAMS.debug) {
             this.bound.draw();
         }
