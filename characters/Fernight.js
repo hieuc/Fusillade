@@ -1,6 +1,9 @@
 class Fernight extends Enemy {
-    constructor(game, x, y) {
-        super(game,x,y);
+    constructor(game, x, y, room) {
+
+        super(game,x,y, room);
+
+        this.room = room; // the room Fernight spawns in
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Fernight.png");
 

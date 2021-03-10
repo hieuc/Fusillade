@@ -161,8 +161,6 @@ class Wormy extends Enemy {
             }
         }
 
-        //this.updateBound();
-
          //Collision Detection. Check if its fired by enemy or hero.
 
          if(this.state != 3) {
