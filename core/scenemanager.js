@@ -191,6 +191,10 @@ class SceneManager {
         this.game.addEntity(this.merchant);
         this.game.addEntity(character);
 
+        console.log(character.x + " " + character.y)
+        var fk = new Fernight(this.game, 6100, 7200);
+        this.game.addEntity(fk);
+
         // lock the boss room from the beginning
         this.tempObstacles = lockRoom(this.game, this.rooms[8], this.map, p);
         
@@ -227,7 +231,7 @@ class SceneManager {
         this.rooms = rooms;
         this.map = m;
         
-        // right now this is just an empty space
+        // scale from normal 32x32 sprite
         var scale = 2;
         
         // ground
@@ -295,50 +299,40 @@ class SceneManager {
         for (var i = 0; i < rooms.length; i++) {
             if (rooms[i].key === "start") {
                 start = rooms[i];
-            } else if (rooms[i].key === "end") {
+            } else if (rooms[i].key === "final") {
                 end = rooms[i];
             }
         }
 
         var character = new Rutherford(this.game, (start.x + start.w/2) * 32 * scale,  (start.y + start.h/2) * 32 * scale, false); 
         this.char = character;
-        
-
-        /*
+        console.log(rooms);
+        // fill enemies
         rooms.forEach(r => {
             r.enemies.forEach(e => {
-                if (e[0] === "ais") {
-                    for (var i = 0; i < e[1]; i ++) {
-                        var sx = 0;
-                        var sy = 0;
-                        while (m[sy][sx] === 0) {
-                            sx = r.x + randomInt(Math.floor(r.w * 0.6)) + Math.floor(r.w * 0.2);
-                            sy = r.y + randomInt(Math.floor(r.h * 0.6)) + Math.floor(r.h * 0.2);
-                        }
-                        this.game.addEntity(new Ais(this.game, sx * 32 * scale, sy * 32 * scale));
-                    }
-                } else if (e[0] === "fayere") {
-                    for (var i = 0; i < e[1]; i ++) {
-                        var sx = 0;
-                        var sy = 0;
-                        while (m[sy][sx] === 0) {
-                            sx = r.x + randomInt(Math.floor(r.w * 0.6)) + Math.floor(r.w * 0.2);
-                            sy = r.y + randomInt(Math.floor(r.h * 0.6)) + Math.floor(r.h * 0.2);
-                        }
-                        this.game.addEntity(new Fayere(this.game, sx * 32 * scale, sy * 32 * scale));
-                    }
-                } else if (e[0] === "cyclops") {
-                    var enemy = new Cyclops(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale);
+                if (e[0] === "slimee") {
+                    var enemy = new Slime(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale, 5);
                     this.game.addEntity(enemy);
-                    
-                } else if (e[0] === "buck") {
-                    this.boss = new Drumbuck(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale);
-                    this.game.addEntity(this.boss);
+                } else if (e[0] === "slippey") {
+                    var enemy = new Slippey(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale);
+                    this.game.addEntity(enemy);
+                } else if (e[0] === "wormito") {
+                    var enemy = new Wormito(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale);
+                    this.game.addEntity(enemy);
+                } else if (e[0] === "drumbuck") {
+                    var enemy = new Drumbuck(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale);
+                    this.game.addEntity(enemy);
+                } else if (e[0] === "merchant") {
+                    this.merchant = new Merchant(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale);
+                    this.game.addEntity(this.merchant);
+                }  else if (e[0] === "polnariff") {
+                    var enemy = new Polnariff(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale, end);
+                    this.game.addEntity(enemy);
                 }
             });
         });
 
-        */
+        
         // spawn barrels 
         // barrels will only spawn next to walls
         // the more trees, the higher chance
@@ -364,7 +358,7 @@ class SceneManager {
                 }
             }
         } 
-
+        //this.game.addEntity(new Wormito(this.game, character.x, character.y));
         this.game.addEntity(character);
 
         ASSET_MANAGER.pauseBackgroundMusic();
