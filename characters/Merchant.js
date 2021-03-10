@@ -14,13 +14,21 @@ class Merchant {
 
         this.ss = 80;
 
+        this.playonce = true;
+
+        this.playsoundtimer = Date.now();
+
+        this.playfirst = true;
+
+        this.playsecond = true;
+
         this.scale = 2;
 
         this.showTextTimer = Date.now();
 
         this.textIndex = 0;
 
-        this.dialoguenum = this.level == 1? firstEncounterStory: this.level == 2? secondEncounterStory: main;
+        this.dialoguenum = this.level == 1? firstEncounterStory: this.level == 2? secondEncounterStory: thirdEncounterStory;
 
         /**
          * ALL THE HOVERING CHECKS ARE HERE.
@@ -191,6 +199,7 @@ class Merchant {
             }
             ctx.fillText(this.currChoice[2], this.textlocation.textX, this.textlocation.textY+50); 
             ctx.fillStyle = "#ffffff"; 
+            ctx.fillText(this.currChoice[3], this.textlocation.textX, this.textlocation.textY+70); 
             this.showTextTimer = Date.now(); 
         //If we are inside the "buy" option.
         } else if(this.currChoice === itemsToSell) {
@@ -365,6 +374,25 @@ class Merchant {
             this.shop = false;
             //We show 3 sentences at a time for textappearDuration i.e. 7.5 seconds.
             if(Date.now() - this.showTextTimer < this.textappearDuration) {
+                if(this.level == 2 && Date.now() - this.playsoundtimer > this.textappearDuration*3+400) {
+                    if(this.playonce)
+                        ASSET_MANAGER.playAsset("./sounds/sfx/ohmygod.mp3", 4);
+                        this.playonce = false;
+                } 
+
+                if(this.playfirst) {
+                    if(this.level == 3 && Date.now() - this.playsoundtimer > this.textappearDuration) {
+                        ASSET_MANAGER.playAsset("./sounds/sfx/merchantpop.mp3", 4);
+                        this.playfirst = false;
+                    }
+                } 
+
+                if(this.playsecond) {
+                    if(this.level == 3 && Date.now() - this.playsoundtimer > this.textappearDuration + 5000) {
+                        ASSET_MANAGER.playAsset("./sounds/sfx/rutherfordpop.mp3", 4);
+                        this.playsecond = false;
+                    }
+                }
                 ctx.fillText(this.currChoice[this.textIndex], this.textlocation.textX+10, this.textlocation.textY+10);
                 if(this.currChoice[this.textIndex + 1] !== undefined)
                     ctx.fillText(this.currChoice[this.textIndex + 1], this.textlocation.textX+10, this.textlocation.textY+40);  
@@ -477,6 +505,10 @@ class Merchant {
             if(e.x >= PARAMS.canvas_width*0.55 && e.x < PARAMS.canvas_width*0.65) {
                 if(e.y >= PARAMS.canvas_height*0.52 && e.y < PARAMS.canvas_height*0.55) {
                     this.currChoice = this.dialoguenum;
+                    this.playsoundtimer = Date.now();
+                    this.playfirst = true;
+                    this.playsecond = true;
+                    this.playonce = true;
                 }
             }
             if(e.x >= PARAMS.canvas_width*0.55 && e.x < PARAMS.canvas_width*0.65) {
@@ -615,7 +647,8 @@ class Merchant {
 var main = {
     0: "Young Rutherford, What can I help you with?",
     1: "Buy",
-    2: "Talk to Me"
+    2: "Talk to Me",
+    3: "Proceed to the final room"
 }
 
 var itemsToSell = {
@@ -631,54 +664,76 @@ var itemsToSell = {
 
 var firstEncounterStory = 
 {
-    0: "Young Rutherford...After you left this place, this",
-    1: "strange man approached our King, and offered to work ",
-    2: "under him. However, slowly the King started to do", 
-    3: "questionable things. It started with an attempt to",
-    4: "conquer this Forest. However, he withdrew for some ",
-    5: "reason. He started fortifying his defences and ",
-    6: "becoming shrewd in his ways. Eventually, the spell",
-    7: "fell over everyone, and now everyone is acting weird.",
-    8: "Of course, as you can see, I am unaffected as I am an",
-    9: "Apparition, however, I have always served the King so",
-    10: "I cannot go against him. Hoho! Don't be sad. I'm not",
-    11: "necessarily against you Young Rutherford. I want our",
-    12: "old King to return as well. I will assist",
-    13: "you with information and what I have here to sell.",
-    14: "Of course I can't give them to you for free;",
-    15: "When I was alive I used to be a Prodigy in Business.",
-    16: "Just up ahead, you'll be facing Buck, the forest's",
-    17: "Protector. You should Buck-le up, Hoho, even after", 
-    18: "all these years, I haven't lost my sense of humor.",
-    19: "Let us talk more later."
+    0: "Young Rutherford...How happy I am to see you here!",
+    1: "Just a week ago, this strange cloaked man came ",
+    2: "to our King. The King fought valiantly but alas", 
+    3: "he could barely scratch the man. He called himself",
+    4: "Raven and he mentioned that he will change this",
+    5: "Kingdom to his liking before you even manage to",
+    6: "return. As you can see, he has poisoned the entire",
+    7: "Kingdom and made them his pawns. The only one",
+    8: "unaffected is me, Buck, and Drumbuck. Apparently I",
+    9: "was unaffected because I am an apparition. Buck",
+    10: "and Drumbuck's sheer fortitude resisted the effect.",
+    11: "When Raven found out, he took his army of Wols",
+    12: "and decided to destroy this forest. Drumbuck",
+    13: "fought with valor, but even he failed to stop them.",
+    14: "So he offered his unwavering loyalty to Raven,",
+    15: "in exchange for the Forest's peace. Drumbuck",
+    16: "now serves as his commander, while Buck became",
+    17: "the new Forest Protector engulfed in guilt that", 
+    18: "he wasn't able to save his brother. Well, I",
+    19: "don't wanna be you, because you'll face him",
+    20: "just up ahead Hohoho. Buy from me what you",
+    21: "Let us talk more later."
 }
 
 var secondEncounterStory = 
 {
     0: "Ah, so we meet again in this Eerie dungeon, Hoho.",
     1: "If you made it this far, then you beat both the ",
-    2: "Buck Aroo brothers. Incidentally, Drumbuck, who you", 
-    3: "just beat, wasn't under the spell as well. In fact,",
-    4: "he often tells me how he doesn't want to serve our",
-    5: "King. His actions and his words don't match up but",
-    6: "I suppose we all keep our secrets. .... Hm? You are",
-    7: "curious to know about me? Hoho, my identity is not",
-    8: "important. I am a mere cog in the machine, but,",
-    9: "even if I wanted to tell you, I can't because I",
-    10: "do not remember myself. The only thing I remember",
-    11: "from my life was the unwavering need to have gold.",
-    12: "Anyhow, as I mentioned, everyone in this Kingdom",
-    13: "has been placed under a spell, and all you have",
-    14: "to do is beat them up to knock them into senses.",
-    15: " It's a classic strategy but it works everytime.",
-    16: "Keep following this path, and you'll meet me again",
-    17: "but this time we will be foes. Yes.. I am the", 
-    18: "guardian of this Dungeon. Hoho, like I said, I am",
-    19: "not against you Young Rutherford, but I am a",
-    20: "loyal Apparition that serves our King. I cannot",
+    2: "Buck Aroo brothers. It really was painful to", 
+    3: "watch that fight. You could see Drumbuck really",
+    4: "wanted a savior such as yourself but he couldn't",
+    5: "go back on his promise of unwavering loyalty to",
+    6: "Raven. I would believe he will be happy that he",
+    7: "lost once he regains consciousness. Hm?........",
+    8: "You want to know more about me? Okay then, I was",
+    9: "summoned by the King 10 years ago and bound me in",
+    10: "a contract that stated that I must obey the King.",
+    11: "Unfortunately, that means that if the King changes,",
+    12: "my master changes too. Ever since our King was",
+    13: "dethroned, Raven has become my active master.",
+    14: "But, I don't really approve of him. I can't",
+    15: "directly help you due to my soul-contract, so",
+    16: "I decided to help you by selling improvements,",
+    17: "and providing information. Hoho I see you're glad", 
+    18: "to hear that. Oh and by the way, I am also",
+    19: "the Dungeon's Gatekeeper so you'll be facing me",
+    20: "eventually.......!! Don't be sad, I can't",
     21: "let you pass simply because our goals are the same.",
     22: "Think of it this way, if you cannot beat me, then",
-    23: "you definitely won't be able to beat the King.",
+    23: "you definitely won't be able to beat Raven.",
     24: "Buy from me what you want and be prepared for when",
     25: "we meet again."
+}
+
+var thirdEncounterStory = 
+{
+    0: "Alright that is enough! You win. I've done my",
+    1: "part of defending the King, so I will not perish",
+    2: "anymore by letting you pass. I must say you're",
+    3: "strong. Raven is looking forward to facing you.",
+    4: ".....? You're feeling nervous? At times like these",
+    5: "you have to encourage yourself loudly. Here:",
+    6: "                                              ",
+    7: "",
+    8: "",
+    9: "",
+    10: "",
+    11: "",
+    12: "See? That fired you up right! There you go",
+    13: "Good luck Young Rutherford, the whole",
+    14: "Kingdom's fate is in your hand. Don't fail",
+    15: "on us."
 }

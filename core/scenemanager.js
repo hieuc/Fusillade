@@ -187,7 +187,7 @@ class SceneManager {
             }
         } 
 
-        this.merchant = new Merchant(this.game, 840, 4100, 1);
+        this.merchant = new Merchant(this.game, 840, 4100, 3);
         this.game.addEntity(this.merchant);
         this.game.addEntity(character);
 
@@ -323,7 +323,7 @@ class SceneManager {
                     var enemy = new Drumbuck(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale);
                     this.game.addEntity(enemy);
                 } else if (e[0] === "merchant") {
-                    this.merchant = new Merchant(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale);
+                    this.merchant = new Merchant(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale, 2);
                     this.game.addEntity(this.merchant);
                 }  else if (e[0] === "polnariff") {
                     var enemy = new Polnariff(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale, end);

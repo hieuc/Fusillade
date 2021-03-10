@@ -68,6 +68,7 @@ ASSET_MANAGER.queueDownload("./sounds/sfx/Barrelbreak.mp3");
 ASSET_MANAGER.queueDownload("./sounds/sfx/health.mp3");
 ASSET_MANAGER.queueDownload("./sounds/sfx/Hit.mp3");
 ASSET_MANAGER.queueDownload("./sounds/sfx/no_potion.mp3");
+ASSET_MANAGER.queueDownload("./sounds/sfx/ohmygod.mp3");
 ASSET_MANAGER.queueDownload("./sounds/sfx/slam.mp3");
 ASSET_MANAGER.queueDownload("./sounds/sfx/slide.mp3");
 ASSET_MANAGER.queueDownload("./sounds/sfx/use_potion.mp3");
@@ -77,6 +78,10 @@ ASSET_MANAGER.queueDownload("./sounds/sfx/body-fall.mp3");
 ASSET_MANAGER.queueDownload("./sounds/sfx/coin.mp3");
 ASSET_MANAGER.queueDownload("./sounds/sfx/timestop.mp3");
 ASSET_MANAGER.queueDownload("./sounds/sfx/slimehit.mp3");
+ASSET_MANAGER.queueDownload("./sounds/sfx/merchantpop.mp3");
+ASSET_MANAGER.queueDownload("./sounds/sfx/rutherfordpop.mp3");
+
+
 
 
 
