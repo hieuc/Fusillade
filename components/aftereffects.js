@@ -409,7 +409,9 @@ class Jojoeffect {
     }
 
     update() {
-        if(Date.now() - this.timer > 13000) {
+        this.scale += 0.003;
+        this.y -= 1;
+        if(Date.now() - this.timer > 5000) {
             this.removeFromWorld = true;
         }
 
