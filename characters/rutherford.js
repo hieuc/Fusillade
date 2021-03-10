@@ -8,6 +8,8 @@ class Rutherford {
 
         this.scale = 2;
 
+        this.damage = 15;
+
         this.action = 0; // 0 = idle, 1 = run, 2 = attack, 3 = transform
 
         this.form = 0;
@@ -56,7 +58,7 @@ class Rutherford {
 
         this.bound = new BoundingBox(this.game, this.x, this.y, 16, 24);
 
-        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y, 22 * this.scale, 300, 400, true); //Has mana field too.
+        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y, 22 * this.scale, 3000, 400, true); //Has mana field too.
 
         this.animations = [];
 
@@ -166,7 +168,14 @@ class Rutherford {
 
         // when death animation finished
         if (this.action === 7 && this.animations[this.action][this.face][this.form].isAlmostDone(this.game.clockTick)) {
-            this.game.camera.loadLevel1();
+            if (this.game.camera.level === 1)
+                this.game.camera.loadLevel1();
+            else if (this.game.camera.level === 2) {
+                this.game.camera.loadLevel2();
+            } else if (this.game.camera.level === 3) {
+                this.game.camera.loadLevel3();
+            }
+
         } 
 
         // while not dead
@@ -473,10 +482,10 @@ class Rutherford {
             if (PARAMS.meme) {
                 pp = {sx: 0, sy: 0, size: 16, spritesheet: ASSET_MANAGER.getAsset("./sprites/p.png")};
                 p =  new Projectiles(this.game, true, this.x, this.y, velocity, 4, 
-                    1200, 15 + randomInt(10) + (f ? 0 : 5), pp, f ? "star" : "burn");;
+                    1200, this.damage + randomInt(10) + (f ? 0 : Math.floor(this.damage*0.4)), pp, f ? "star" : "burn");;
             } else {
                 p = new Projectiles(this.game, true, this.x, this.y, velocity, 7, 
-                    1200, 15 + randomInt(10) + (f ? 0 : 5), f ? undefined : pp, f ? "star" : "burn");
+                    1200, this.damage + randomInt(10) + (f ? 0 : Math.floor(this.damage*0.4)), f ? undefined : pp, f ? "star" : "burn");
             }
             this.game.entities.splice(this.game.entities.length - 1, 0, p);
             

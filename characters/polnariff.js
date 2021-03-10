@@ -9,9 +9,10 @@ class Polnariff extends Enemy {
         this.scale = 2;
         this.speed = 2;
 
-        this.hp = new HealthMpBar(this.game, this.x, this.y, 70, 1000);
+        this.hp = new HealthMpBar(this.game, this.x, this.y, 70, 3000);
         this.bound = new BoundingBox(this.game, this.x, this.y, 25 * this.scale, 50 * this.scale);
 
+        this.started = false;
         this.animations = [];
         this.knife = false;
         this.miasma = false;
@@ -95,44 +96,50 @@ class Polnariff extends Enemy {
     }
 
     update() {
-        
-        if ((this.hp.current <= 0 && this.state === 1) || (this.miasma === null && this.knife === null) ) {
-            // defeated 
-            this.x = (this.room.x + this.room.w/2)*64 - 40;
-            this.y = (this.room.y + this.room.h/2)*64 - 44;
-            this.state = 0;
-            this.despawnObjects();
+        if (!this.started) {
+            var enemy = this.game.camera.char;
+            var triggerrange = 200;
+            if (Math.abs(enemy.x - this.x) < triggerrange || Math.abs(enemy.y - this.y) < triggerrange)
+                this.started = true;
         } else {
-            // if attacking and got low enough
-            if (this.state === 1 && (this.lasthp - this.hp.current >= this.hp.maxHealth / 2 || this.hp.current <= 0)) {
+            if ((this.hp.current <= 0 && this.state === 1) || (this.miasma === null && this.knife === null) ) {
+                // defeated 
+                this.x = (this.room.x + this.room.w/2)*64 - 40;
+                this.y = (this.room.y + this.room.h/2)*64 - 44;
                 this.state = 0;
-                this.generaltimestamp = Date.now();
                 this.despawnObjects();
-                this.lasthp = this.hp.current;
-            } else if (this.state === 1) {
-                // if attacking
-                this.attack();
-            } 
-            // if not attacking and rest enough 
-            else if (this.state === 0 && Date.now() - this.generaltimestamp >= this.generaldelay && this.hp.current > 0) {
-                if (this.miasma !== null && this.knife !== null) {
-                    var rand = randomInt(2);
-                    if (rand === 1) {
+            } else {
+                // if attacking and got low enough
+                if (this.state === 1 && (this.lasthp - this.hp.current >= this.hp.maxHealth / 2 || this.hp.current <= 0)) {
+                    this.state = 0;
+                    this.generaltimestamp = Date.now();
+                    this.despawnObjects();
+                    this.lasthp = this.hp.current;
+                } else if (this.state === 1) {
+                    // if attacking
+                    this.attack();
+                } 
+                // if not attacking and rest enough 
+                else if (this.state === 0 && Date.now() - this.generaltimestamp >= this.generaldelay && this.hp.current > 0) {
+                    if (this.miasma !== null && this.knife !== null) {
+                        var rand = randomInt(2);
+                        if (rand === 1) {
+                            this.knife = true;
+                        } else {
+                            this.miasma = true;
+                        }
+                    } else if (this.knife !== null) {
                         this.knife = true;
                     } else {
                         this.miasma = true;
                     }
-                } else if (this.knife !== null) {
-                    this.knife = true;
-                } else {
-                    this.miasma = true;
+                    this.prepareAttack();
                 }
-                this.prepareAttack();
             }
+            if (this.state === 1)
+                this.checkCollision();
+            this.updateBound();
         }
-        if (this.state === 1)
-            this.checkCollision();
-        this.updateBound();
     }
 
     despawnObjects() {

@@ -5,6 +5,8 @@ class Drumbuck extends Enemy {
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Drumbuck.png");
 
         this.ss = 96;
+
+        this.damage = 40;
         
         this.projspeed = 5; //Buck's projectiles speed.
         
@@ -140,7 +142,7 @@ class Drumbuck extends Enemy {
                } 
                this.removeFromWorld = true;
             }
-       } else {
+       } else if (Math.abs(this.enemyX - this.x) < 400 || Math.abs(this.enemyY - this.y) < 400){
             if(Date.now() - this.createone > this.createonecd) {
                 this.game.addEntity(new Propportal(this.game, this.x * Math.random(), this.y *Math.random(), "Ais"));
                 this.createone = Date.now();
@@ -307,7 +309,7 @@ class Drumbuck extends Enemy {
         for(var i = 0; i < partitions; i++) {
             var pp = {sx: 96, sy: 160, size: 16};
             var p = new ScaleBoomerProjectiles(this.game, false, this.x+80, this.y+80, {x :Math.cos(this.blitz), y:Math.sin(this.blitz)}, 
-                        this.projspeed, 5500, 10, 0.012, true, pp);
+                        this.projspeed, 5500, this.damage, 0.012, true, pp);
             this.blitz += 2*Math.PI/partitions;
             this.game.entities.splice(this.game.entities.length - 1, 0, p);        
         }
@@ -321,14 +323,14 @@ class Drumbuck extends Enemy {
         var velocity = this.calculateVel();
         var offset = this.face == 0? 100: 0;
         var pp = {sx: 96, sy: 160, size: 16};
-        var p = new ScaleBoomerProjectiles(this.game, false, this.x+offset, this.y, velocity, this.projspeed, 2500, 10, 0.005, false, pp);
+        var p = new ScaleBoomerProjectiles(this.game, false, this.x+offset, this.y, velocity, this.projspeed, 2500, this.damage, 0.005, false, pp);
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }
 
     attackportal() {
         var pp = {sx: 96, sy: 160, size: 16};
-        var p = new Projectiles(this.game, false, this.x, this.y, {x: Math.cos(Math.PI), y:Math.sin(Math.PI)}, 4, 2000, 10, pp);
-        var p2 = new Projectiles(this.game, false, this.x, this.y, {x: Math.cos(0), y:Math.sin(0)}, 4, 2000, 10, pp);
+        var p = new Projectiles(this.game, false, this.x, this.y, {x: Math.cos(Math.PI), y:Math.sin(Math.PI)}, 4, 2000, this.damage, pp);
+        var p2 = new Projectiles(this.game, false, this.x, this.y, {x: Math.cos(0), y:Math.sin(0)}, 4, 2000, this.damage, pp);
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
         this.game.entities.splice(this.game.entities.length - 1, 0, p2);
     }
