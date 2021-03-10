@@ -17,7 +17,7 @@ class Raven extends Enemy {
         this.state = 0; 
 
         //The lifetime of projectiles for attackturn = 0.
-        this.projlifetime = 6500;
+        this.projlifetime = 2500;
 
         //Raven has 3 circular patterns, either it's a location swap, all-in barrage or 1-by-1 barrage.
         //0 - Location Swap, 1 - All-in Barrage, 2 - 1-by-1 Barrage 
@@ -146,7 +146,7 @@ class Raven extends Enemy {
                 }
 
                 //After it has been 0.3 seconds since projectiles started coming for you, do the slow-mo effect.
-                if(Date.now() - this.timeslow > 300) {
+                if(Date.now() - this.timeslow > 250) {
                     //Slow us down only ONCE because this case will happen many times, we want to do this check.
                     if(this.resetspeedonce) {
                         for(let i = 0; i < this.game.entities.length; i++) {
@@ -157,7 +157,7 @@ class Raven extends Enemy {
                 } 
 
                 //If it has been 1.7 seconds since slow-mo turn back to normal game speed.
-                if(Date.now() - this.timeslow > 2000) {
+                if(Date.now() - this.timeslow > 1900) {
                     //reset zerocounttimer so we don't hit that IF statement anymore.
                     this.countzerotimer = false;
                     //Reset speeds.
@@ -192,7 +192,7 @@ class Raven extends Enemy {
 
         //If it is a barrage type move, create the projectiles.
         if(this.attackturn == 1 || this.attackturn == 2) {
-            var pp = this.attackturn == 1? {sx: 17, sy: 336, size: 16}: {sx:16, sy:126, size:16};
+            var pp = this.attackturn == 1? {sx: 17, sy: 336, size: 16}: {sx:16, sy:128, size:16};
             for(var i = 0; i < partitions; i++) {
                 var p = new Chasingprojectile(this.game, false, this.x, this.y, {x :Math.cos(blitz), y:Math.sin(blitz)}, 
                         9, this.projlifetime + 100 * multiplier, 20, pp, true);
@@ -206,7 +206,7 @@ class Raven extends Enemy {
             for(var i = 0; i < partitions; i++) {
                 var pp = {sx: 128, sy: 400, size: 16};
                 var p = new Chasingprojectile(this.game, false, this.x, this.y, {x :Math.cos(this.circlearea), y:Math.sin(this.circlearea)}, 
-                        9, this.projlifetime + 100 * multiplier, 20, pp, true, {x: this.x, y:this.y});
+                        9, this.projlifetime, 20, pp, true, {x: this.x, y:this.y});
                 this.circlearea += 1.8*Math.PI/partitions;
                 this.game.entities.splice(this.game.entities.length - 1, 0, p);
             }
@@ -232,7 +232,7 @@ class Raven extends Enemy {
         if(this.attackturn == 2) {
             multiplier = 1;
         }
-        var pp = this.attackturn == 1? {sx: 17, sy: 336, size: 16}: {sx:16, sy:126, size:16};
+        var pp = this.attackturn == 1? {sx: 17, sy: 336, size: 16}: {sx:16, sy:128, size:16};
         for(var i = 0; i < partitions; i++) {
             var p = new Chasingprojectile(this.game, false, this.x, this.y, {x :Math.cos(xdirection), y:Math.sin(ydirection)}, 
                     9, this.projlifetime + 100 * multiplier, 20, pp, true);
@@ -260,7 +260,7 @@ class Raven extends Enemy {
         let xdirection = 0
         let ydirection = -1;
         let multiplier = 0;
-        var pp = this.attackturn == 1? {sx: 17, sy: 336, size: 16}: {sx:16, sy:126, size:16};
+        var pp = this.attackturn == 1? {sx: 17, sy: 336, size: 16}: {sx:16, sy:128, size:16};
         for(var i = 0; i < partitions; i++) {
             var p = new Chasingprojectile(this.game, false, this.x, this.y, {x :Math.cos(xdirection), y:Math.sin(ydirection)}, 
                     9, this.projlifetime + 100*multiplier, 20, pp, true);
