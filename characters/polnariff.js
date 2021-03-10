@@ -8,11 +8,11 @@ class Polnariff extends Enemy {
         this.face = 0; // 0 = right, 1 = left
         this.scale = 2;
         this.speed = 2;
+        this.active = false;
 
         this.hp = new HealthMpBar(this.game, this.x, this.y, 70, 3000);
         this.bound = new BoundingBox(this.game, this.x, this.y, 25 * this.scale, 50 * this.scale);
 
-        this.started = false;
         this.animations = [];
         this.knife = false;
         this.miasma = false;
@@ -96,12 +96,7 @@ class Polnariff extends Enemy {
     }
 
     update() {
-        if (!this.started) {
-            var enemy = this.game.camera.char;
-            var triggerrange = 200;
-            if (Math.abs(enemy.x - this.x) < triggerrange || Math.abs(enemy.y - this.y) < triggerrange)
-                this.started = true;
-        } else {
+        if (this.active) {
             if ((this.hp.current <= 0 && this.state === 1) || (this.miasma === null && this.knife === null) ) {
                 // defeated 
                 this.x = (this.room.x + this.room.w/2)*64 - 40;

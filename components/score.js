@@ -46,11 +46,11 @@ class Score {
         var size = this.getSize();
         ctx.font = `${size}px Comic Sans MS`;
         ctx.fillStyle = this.color;
-        ctx.fillText(`${this.healtype === undefined ? "-" : "+"} ${this.value}`, this.x - this.game.camera.x, this.y - this.game.camera.y);
+        ctx.fillText(`${this.healtype === undefined ? "-" : "+"} ${Math.round(this.value)}`, this.x - this.game.camera.x, this.y - this.game.camera.y);
         // draw border
         ctx.strokeStyle = "black";
         ctx.lineWidth = 0.5;
-        ctx.strokeText(`${this.healtype === undefined ? "-" : "+"} ${this.value}`, this.x - this.game.camera.x, this.y - this.game.camera.y);
+        ctx.strokeText(`${this.healtype === undefined ? "-" : "+"} ${Math.round(this.value)}`, this.x - this.game.camera.x, this.y - this.game.camera.y);
         ctx.lineWidth = 1;
     }
 

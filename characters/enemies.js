@@ -14,7 +14,7 @@ class Enemy {
             this.hp.draw();
         }
         
-        if (PARAMS.debug) {
+        if (PARAMS.debug && this.bound) {
             this.bound.draw();
         }
     }

@@ -95,7 +95,7 @@ function fillEnemiesLevel1(rooms) {
  * @param {*} rooms 
  */
  function fillEnemiesLevel2(rooms) {
-    var pool = ["slimee", "slippey", "wormito"];
+    var pool = ["slimee", "slippey", "wormito", "doublops"];
 
     rooms.forEach(e => {
         if (e.key === "final") {
@@ -361,8 +361,6 @@ function createLevel2(w, h) {
                 }
             });
     }
-    rooms[path[Math.floor(path.length/2)]].key = "miniboss";
-    rooms[path[Math.floor(path.length/2)+1]].key = "merchant";
 
     fillEnemiesLevel2(rooms);
     m = applyEdgePadding(m, rooms);
@@ -422,6 +420,9 @@ function createRoomsLevel2(w, h) {
     end.room.w = end.w - 1;
     end.room.h = end.h - 1;
 
+    if (end.room.w > 13) end.room.w = 13;
+    if (end.room.h > 13) end.room.h = 13;
+
     // randomly remove 70-80% of rooms
     var totalRemove = randomInt(Math.floor(m.length*0.05)) + Math.floor(m.length*0.75);
     for (var i = 0; i < totalRemove; i++) {
@@ -462,15 +463,25 @@ function createRoomsLevel2(w, h) {
             break;
         }
     }
-
+    var toReturn = [];
     for (var i = 0; i < m.length; i++) {
-        m[i] = m[i].room;
-        m[i].index = i;
+        toReturn[i] = m[i].room;
+        toReturn[i].index = i;
     }
     
-    var path = findPathway(m, start.room, end.room);
+    var path = findPathway(toReturn, start.room, end.room);
 
-    return [m, path];
+    m[path[Math.floor(path.length/2)+1]].key = "merchant";
+    
+    var mini = m[path[Math.floor(path.length/2)]];
+    // give miniboss room some room
+    mini.room.key = "miniboss";
+    mini.room.x = mini.x + 1;
+    mini.room.y = mini.y;
+    mini.room.w = mini.w - 1;
+    mini.room.h = mini.h - 1;
+
+    return [toReturn, path];
 }
 
 
