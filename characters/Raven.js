@@ -47,7 +47,7 @@ class Raven extends Enemy {
         //used to keep track of enemy postiions
         this.enemypos = { enemyX: this.game.camera.char.x, enemyY: this.game.camera.char.y};
 
-        this.specialcd = 14000; // Change this to buff or nerf Raven.
+        this.specialcd = 7000; // Change this to buff or nerf Raven.
 
         //Used to determine if it is time to use a special.
         this.specialtimer = Date.now();

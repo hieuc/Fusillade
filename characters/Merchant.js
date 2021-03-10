@@ -74,7 +74,7 @@ class Merchant {
 
         this.textlocation = {textX: PARAMS.canvas_width*0.557, textY: PARAMS.canvas_height*0.47};
 
-        this.textlocationbuy = {textX: PARAMS.canvas_width*0.57, textY: PARAMS.canvas_height*0.43};
+        this.textlocationbuy = {textX: PARAMS.canvas_width*0.57, textY: PARAMS.canvas_height*0.445};
 
         this.rutherpos = this.game.camera.char.x; //Don't need to know Y.
 
