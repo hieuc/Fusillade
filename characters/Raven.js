@@ -9,6 +9,8 @@ class Raven extends Enemy {
         //Keep is 2.2 or it is hard to tell
         this.scale = 2.2;
 
+        this.damage = 50;
+
         //This to see how long it's been since level started. We decide triggered on this.
         this.starttimer = Date.now();
 
@@ -194,7 +196,7 @@ class Raven extends Enemy {
             var pp = this.attackturn == 1? {sx: 17, sy: 336, size: 16}: {sx:16, sy:128, size:16};
             for(var i = 0; i < partitions; i++) {
                 var p = new Chasingprojectile(this.game, false, this.x, this.y, {x :Math.cos(blitz), y:Math.sin(blitz)}, 
-                        9, this.projlifetime + 100 * multiplier, 20, pp, true);
+                        9, this.projlifetime + 100 * multiplier, this.damage, pp, true);
                 blitz += 2*Math.PI/partitions;
                 this.game.entities.splice(this.game.entities.length - 1, 0, p);  
                 if(this.attackturn == 2) {
@@ -205,7 +207,7 @@ class Raven extends Enemy {
             for(var i = 0; i < partitions; i++) {
                 var pp = {sx: 128, sy: 400, size: 16};
                 var p = new Chasingprojectile(this.game, false, this.x, this.y, {x :Math.cos(this.circlearea), y:Math.sin(this.circlearea)}, 
-                        9, this.projlifetime, 20, pp, true, {x: this.x, y:this.y});
+                        9, this.projlifetime, this.damage, pp, true, {x: this.x, y:this.y});
                 this.circlearea += 1.8*Math.PI/partitions;
                 this.game.entities.splice(this.game.entities.length - 1, 0, p);
             }
@@ -234,7 +236,7 @@ class Raven extends Enemy {
         var pp = this.attackturn == 1? {sx: 17, sy: 336, size: 16}: {sx:16, sy:128, size:16};
         for(var i = 0; i < partitions; i++) {
             var p = new Chasingprojectile(this.game, false, this.x, this.y, {x :Math.cos(xdirection), y:Math.sin(ydirection)}, 
-                    9, this.projlifetime + 100 * multiplier, 20, pp, true);
+                    9, this.projlifetime + 100 * multiplier, this.damage, pp, true);
 
             ydirection += 20; //Assigning random values to cause a scatter effect.
             xdirection += 1;
@@ -262,7 +264,7 @@ class Raven extends Enemy {
         var pp = this.attackturn == 1? {sx: 17, sy: 336, size: 16}: {sx:16, sy:128, size:16};
         for(var i = 0; i < partitions; i++) {
             var p = new Chasingprojectile(this.game, false, this.x, this.y, {x :Math.cos(xdirection), y:Math.sin(ydirection)}, 
-                    9, this.projlifetime + 100*multiplier, 20, pp, true);
+                    9, this.projlifetime + 100*multiplier, this.damage, pp, true);
 
             if(i == partitions/4) {
                  ydirection = 1;
