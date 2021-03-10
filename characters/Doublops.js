@@ -207,7 +207,8 @@ class Doublops extends Enemy
     attack() {
         var velocity = this.calculateVel();
         var pp = { spritesheet: ASSET_MANAGER.getAsset("./sprites/Doublops.png"), sx: 256, sy: 1236, size: 35, scale : 1};
-        var p = new Chasingprojectile(this.game, false, this.x + 55, this.y + 50, velocity, 12, 600, this.damage, pp, "cyclopshit");
+        var p = new Chasingprojectile(this.game, false, this.x + 55, this.y + 50, velocity, 
+        25, 600, 70, pp, false);
         p.bound.r = p.bound.r / 1.5;
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }

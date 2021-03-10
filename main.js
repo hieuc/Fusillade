@@ -52,6 +52,8 @@ ASSET_MANAGER.queueDownload("./sprites/Fusillade.png");
 ASSET_MANAGER.queueDownload("./sprites/Wols.png");
 ASSET_MANAGER.queueDownload("./sprites/mirror.png");
 ASSET_MANAGER.queueDownload("./sprites/background.png");
+ASSET_MANAGER.queueDownload("./sprites/Raven.png");
+ASSET_MANAGER.queueDownload("./sprites/menacing.png");
 
 
 // sounds
@@ -59,6 +61,8 @@ ASSET_MANAGER.queueDownload("./sounds/music/buck.mp3");
 ASSET_MANAGER.queueDownload("./sounds/music/maintheme.mp3");
 ASSET_MANAGER.queueDownload("./sounds/music/greenpath-ambient.mp3");
 ASSET_MANAGER.queueDownload("./sounds/music/greenpath-action.mp3");
+ASSET_MANAGER.queueDownload("./sounds/music/tempboss.mp3");
+ASSET_MANAGER.queueDownload("./sounds/music/Ignotus.mp3");
 ASSET_MANAGER.queueDownload("./sounds/sfx/Ascend.mp3");
 ASSET_MANAGER.queueDownload("./sounds/sfx/Barrelbreak.mp3");
 ASSET_MANAGER.queueDownload("./sounds/sfx/health.mp3");
@@ -71,6 +75,7 @@ ASSET_MANAGER.queueDownload("./sounds/sfx/warpI.mp3");
 ASSET_MANAGER.queueDownload("./sounds/sfx/warpO.mp3");
 ASSET_MANAGER.queueDownload("./sounds/sfx/body-fall.mp3");
 ASSET_MANAGER.queueDownload("./sounds/sfx/coin.mp3");
+ASSET_MANAGER.queueDownload("./sounds/sfx/timestop.mp3");
 
 
 

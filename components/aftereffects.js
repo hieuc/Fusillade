@@ -384,3 +384,44 @@ class Mirror {
     }
 }
 
+class Jojoeffect {
+    constructor(game, x, y) {
+        Object.assign(this, {game, x, y});
+
+        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/menacing.png");
+
+        this.scale = 0.25;
+
+        this.timer = Date.now();
+
+        this.movetimer = Date.now();
+
+        this.xmove = 1;
+
+        this.animations = [];
+        this.loadAnimations();
+    }
+
+    loadAnimations() {
+
+        this.animations[0] = new Animator(this.spritesheet, 0, 0, 494, 505, 1, 0.05, 0, false, true);
+
+    }
+
+    update() {
+        if(Date.now() - this.timer > 13000) {
+            this.removeFromWorld = true;
+        }
+
+        if(Date.now() - this.movetimer > 100) {
+            this.xmove *= -1;
+            this.movetimer = Date.now();
+        }
+
+        this.x += this.xmove;
+    }
+
+    draw(ctx) {
+        this.animations[0].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale);
+    }
+}
