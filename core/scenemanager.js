@@ -193,6 +193,10 @@ class SceneManager {
         this.game.addEntity(this.merchant);
         this.game.addEntity(character);
 
+        console.log(character.x + " " + character.y)
+        var fk = new Fernight(this.game, 6100, 7200);
+        this.game.addEntity(fk);
+
         // lock the boss room from the beginning
         this.tempObstacles = lockRoom(this.game, this.rooms[8], this.map, p);
         
