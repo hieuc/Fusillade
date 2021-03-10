@@ -188,8 +188,6 @@ class SceneManager {
         } 
 
         this.merchant = new Merchant(this.game, 840, 4100, 1);
-        //this.game.addEntity(new Wormito(this.game, character.x, character.y));
-        //this.game.addEntity(new Wols(this.game, character.x - 200, character.y));
         this.game.addEntity(this.merchant);
         this.game.addEntity(character);
 
@@ -473,7 +471,14 @@ class SceneManager {
         var character = new Rutherford(this.game, 500,  500, false); 
 
         this.char = character;
+        this.game.addEntity(new Raven(this.game, 575, 550)); 
+        //this.game.addEntity(new Doublops(this.game, 575, 550));
         this.game.addEntity(character);
+        ASSET_MANAGER.pauseBackgroundMusic();
+        ASSET_MANAGER.playAsset("./sounds/music/Ignotus.mp3");
+        ASSET_MANAGER.autoRepeat("./sounds/music/Ignotus.mp3");
+        ASSET_MANAGER.adjustBackgroundVolume(0.4);
+
     }
 
     update() {
