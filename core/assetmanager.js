@@ -86,10 +86,12 @@ class AssetManager {
     playAsset(path, offset) {
         let audio = this.cache[path];
         audio.offset = offset;
-        if (audio.offset) {
-            audio.volume *= offset;
-            if (audio.volume > 1) audio.volume = 1;
-            else if (audio.volume < 0) audio.volume = 0;
+
+        if (offset && !audio.modified) {
+            if (audio.volume*offset > 1) audio.volume = 1;
+            else audio.volume *= offset;
+
+            audio.modified = true;
         }
         audio.currentTime = 0;
         audio.play();
@@ -110,9 +112,8 @@ class AssetManager {
             if (asset instanceof Audio && key.includes("./sounds/music/")) {
                 asset.volume = volume;
                 if (asset.offset) {
-                    asset.volume *= asset.offset;
-                    if (asset.volume > 1) asset.volume = 1;
-                    else if (asset.volume < 0) asset.volume = 0;
+                    if (asset.volume*asset.offset > 1) asset.volume = 1;
+                    else asset.volume *= asset.offset;
                 }
             }
         }
@@ -124,9 +125,8 @@ class AssetManager {
             if (asset instanceof Audio && key.includes("./sounds/sfx/")) {
                 asset.volume = volume;
                 if (asset.offset) {
-                    asset.volume *= asset.offset;
-                    if (asset.volume > 1) asset.volume = 1;
-                    else if (asset.volume < 0) asset.volume = 0;
+                    if (asset.volume*asset.offset > 1) asset.volume = 1;
+                    else asset.volume *= asset.offset;
                 }
             }
         }
