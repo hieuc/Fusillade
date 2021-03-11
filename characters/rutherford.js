@@ -8,7 +8,7 @@ class Rutherford {
 
         this.scale = 2;
 
-        this.damage = 150;
+        this.damage = 15;
 
         this.action = 0; // 0 = idle, 1 = run, 2 = attack, 3 = transform
 
@@ -58,7 +58,7 @@ class Rutherford {
 
         this.bound = new BoundingBox(this.game, this.x, this.y, 16, 24);
 
-        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y, 22 * this.scale, 20000, 400, true); //Has mana field too.
+        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y, 22 * this.scale, 300, 400, true); //Has mana field too.
 
         this.animations = [];
 
