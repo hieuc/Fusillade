@@ -182,25 +182,24 @@ class Rutherford {
 
         // when death animation finished
         if (this.action === 7 && this.animations[this.action][this.face][this.form].isAlmostDone(this.game.clockTick)) {
-            this.x = this.game.camera.checkpoint.x;
-            this.y = this.game.camera.checkpoint.y;
-            /*
-            if (this.game.camera.level === 1)
-                this.game.camera.loadLevel1();
-            else if (this.game.camera.level === 2) {
-                this.game.camera.loadLevel2();
-            } else if (this.game.camera.level === 3) {
+            if (this.game.camera.level === 3) {
+                this.animations[this.action][this.face][this.form].elapsedTime = 0;
+                this.hp.current = this.hp.maxHealth;
+                this.action = 0;
                 this.game.camera.loadLevel3();
             }
-            */
-            this.animations[this.action][this.face][this.form].elapsedTime = 0;
-            this.hp.current = this.hp.maxHealth;
-            this.game.entities = this.game.camera.entitiesbackup;
-            this.game.background = this.game.camera.bgbackup;
-            this.action = 0;
-            this.game.camera.gameover = false;
-            this.game.addEntity(this);
-            this.game.camera.restoreCheckpoint();
+            else {
+                this.x = this.game.camera.checkpoint.x;
+                this.y = this.game.camera.checkpoint.y;
+                this.animations[this.action][this.face][this.form].elapsedTime = 0;
+                this.hp.current = this.hp.maxHealth;
+                this.game.entities = this.game.camera.entitiesbackup;
+                this.game.background = this.game.camera.bgbackup;
+                this.action = 0;
+                this.game.camera.gameover = false;
+                this.game.addEntity(this);
+                this.game.camera.restoreCheckpoint();
+            }
         } 
 
         // while not dead
