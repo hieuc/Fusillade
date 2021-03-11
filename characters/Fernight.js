@@ -35,7 +35,7 @@ class Fernight extends Enemy {
         this.animations[0][0] = new Animator(this.spritesheet, 192, 574, 64, 64, 5, 0.3, 0, false, true);
 
         // facing left = 1
-        this.animations[0][1] = new Animator(this.spritesheet, 640, 574, 64, 64, 5, 0.3, 0, true, true);
+        this.animations[0][1] = new Animator(this.spritesheet, 768, 574, 64, 64, 5, 0.3, 0, true, true);
 
         //walk animation for state = 1
         this.animations[1][0] = new Animator(this.spritesheet, 64, 128, 64, 64, 2, 0.2, 0, false, true);
@@ -74,7 +74,7 @@ class Fernight extends Enemy {
         this.enemyY = this.game.camera.char.y;
         this.speed = 3.5;
 
-        // if Wormy dies
+        // if Fernight dies
         if(this.state == 4) 
         {
             if(this.animations[this.state][this.face].isDone()) 
@@ -83,10 +83,13 @@ class Fernight extends Enemy {
             }
         }
 
+        // taunt state
+        this.state = 5;
+
          // attack pattern
          else 
          {
-
+            
          }
 
           //Collision Detection. Check if its fired by enemy or hero.

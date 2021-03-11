@@ -352,6 +352,7 @@ class SceneManager {
                 }
             }
         } 
+        this.game.addEntity(new Fernight(this.game, character.x + 20, character.y + 100, this.room));
         //this.game.addEntity(new Fernight(this.game, character.x, character.y, start));
         this.game.addEntity(character);
 

@@ -178,8 +178,7 @@ class Raven extends Enemy {
         }
 
         //Collision Detection. Check if its fired by enemy or hero.
-
-        if(this.removeFromWorld != true) {
+        if(this.state != 1) {
             var that = this;
             this.game.entities.forEach(function (entity) {
                 if (entity.bound && that.bound.collide(entity.bound)) {
