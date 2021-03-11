@@ -72,7 +72,7 @@ class Merchant {
         
         this.failuretimer = Date.now();
 
-        this.textappearDuration = 15000;
+        this.textappearDuration = 14000;
 
         this.animations = [];
 
@@ -88,9 +88,13 @@ class Merchant {
 
         this.rutherpos = this.game.camera.char.x; //Don't need to know Y.
 
-        this.face = 0;
+        this.face = 0;  
 
-        this.bound = new BoundingBox(this.game, this.x-40, this.y-40, 240, 240);
+        this.boundsize = this.level == 3? 800: 240;
+
+        this.offsetbound = this.level == 3? 400:40;
+
+        this.bound = new BoundingBox(this.game, this.x-this.offsetbound, this.y-this.offsetbound, this.boundsize, this.boundsize);
 
         this.loadAnimations();
     }
@@ -190,7 +194,11 @@ class Merchant {
         if(this.currChoice === main) {
             //Lock down all the other things.
             this.shop = false;
-            ctx.fillText(this.currChoice[0], this.textlocation.textX, this.textlocation.textY);
+            if(this.level == 3) {
+                ctx.fillText("...   ........... .............", this.textlocation.textX, this.textlocation.textY);
+            } else {
+                ctx.fillText(this.currChoice[0], this.textlocation.textX, this.textlocation.textY);
+            }
             if(this.hoveredbuy) {
                 ctx.fillStyle = "#000000";
             }
@@ -402,6 +410,7 @@ class Merchant {
                         this.playsecond = false;
                     }
                 }
+
                 ctx.fillText(this.currChoice[this.textIndex], this.textlocation.textX+10, this.textlocation.textY+10);
                 if(this.currChoice[this.textIndex + 1] !== undefined)
                     ctx.fillText(this.currChoice[this.textIndex + 1], this.textlocation.textX+10, this.textlocation.textY+40);  
@@ -551,9 +560,9 @@ class Merchant {
             //INCREASE TOTAL HEALTH
             if(e.x >= this.textlocationbuy.textX+20 && e.x < this.textlocationbuy.textX+160) {
                 if(e.y >= this.textlocationbuy.textY-15 && e.y < this.textlocationbuy.textY+10) {
-                    if(this.game.camera.char.coins >= 10) {
-                        this.game.camera.char.coins -= 10;
-                        this.game.camera.char.hp.maxHealth += 70;
+                    if(this.game.camera.char.coins >= 25) {
+                        this.game.camera.char.coins -= 25;
+                        this.game.camera.char.hp.maxHealth += 100;
                         this.game.camera.char.hp.current = this.game.camera.char.hp.maxHealth;
                         this.success = true;
                         this.itemno = 0;
@@ -568,9 +577,9 @@ class Merchant {
             //INCREASE TOTAL MANA
             if(e.x >= this.textlocationbuy.textX+20 && e.x < this.textlocationbuy.textX+160) {
                 if(e.y >= this.textlocationbuy.textY+15 && e.y < this.textlocationbuy.textY+40) {
-                    if(this.game.camera.char.coins >= 10) {
-                        this.game.camera.char.coins -= 10;
-                        this.game.camera.char.hp.maxMana += 70;
+                    if(this.game.camera.char.coins >= 25) {
+                        this.game.camera.char.coins -= 25;
+                        this.game.camera.char.hp.maxMana += 100;
                         this.game.camera.char.hp.currMana = this.game.camera.char.hp.maxMana;
                         this.success = true;
                         this.itemno = 1;
@@ -585,8 +594,8 @@ class Merchant {
             //+5 Overall Damage
             if(e.x >= this.textlocationbuy.textX+20 && e.x < this.textlocationbuy.textX+160) {
                 if(e.y >= this.textlocationbuy.textY+45 && e.y < this.textlocationbuy.textY+70) {
-                    if(this.game.camera.char.coins >= 10) {
-                        this.game.camera.char.coins -= 10;
+                    if(this.game.camera.char.coins >= 20) {
+                        this.game.camera.char.coins -= 20;
                         this.game.camera.char.damage += 5;
                         this.success = true;
                         this.itemno = 2;
@@ -601,8 +610,8 @@ class Merchant {
             //Faster attack rate
             if(e.x >= this.textlocationbuy.textX+20 && e.x < this.textlocationbuy.textX+160) {
                 if(e.y >= this.textlocationbuy.textY+75 && e.y < this.textlocationbuy.textY+100) {
-                    if(this.game.camera.char.coins >= 10) {
-                        this.game.camera.char.coins -= 10;
+                    if(this.game.camera.char.coins >= 20) {
+                        this.game.camera.char.coins -= 20;
                         this.game.camera.char.attackcd -= 15;
                         this.success = true;
                         this.itemno = 3;
@@ -617,8 +626,8 @@ class Merchant {
             //BUY A SMALL RED VIAL
             if(e.x >= this.textlocationbuy.textX+20 && e.x < this.textlocationbuy.textX+160) {
                 if(e.y >= this.textlocationbuy.textY+105 && e.y < this.textlocationbuy.textY+130) {
-                    if(this.game.camera.char.coins >= 3) {
-                        this.game.camera.char.coins -= 3;
+                    if(this.game.camera.char.coins >= 5) {
+                        this.game.camera.char.coins -= 5;
                         this.game.camera.inventory.slots[1]++;
                         this.success = true;
                         this.itemno = 4;
@@ -633,8 +642,8 @@ class Merchant {
             //BUY A SMALL BLUE VIAL
             if(e.x >= this.textlocationbuy.textX+20 && e.x < this.textlocationbuy.textX+160) {
                 if(e.y >= this.textlocationbuy.textY+135 && e.y < this.textlocationbuy.textY+160) {
-                    if(this.game.camera.char.coins >= 3) {
-                        this.game.camera.char.coins -= 3;
+                    if(this.game.camera.char.coins >= 5) {
+                        this.game.camera.char.coins -= 5;
                         this.game.camera.inventory.slots[3]++;
                         this.success = true;
                         this.itemno = 5;
@@ -649,8 +658,8 @@ class Merchant {
             //BUY A PET
             if(e.x >= this.textlocationbuy.textX+20 && e.x < this.textlocationbuy.textX+260) {
                 if(e.y >= this.textlocationbuy.textY+165 && e.y < this.textlocationbuy.textY+190) {
-                    if(this.game.camera.char.coins >= 25 && !this.game.camera.char.pet) {
-                        this.game.camera.char.coins -= 25;
+                    if(this.game.camera.char.coins >= 50 && !this.game.camera.char.pet) {
+                        this.game.camera.char.coins -= 50;
                         this.game.camera.char.mpregen +=0.05;
                         this.game.camera.char.hasapet = true;
                         this.success = true;
@@ -682,13 +691,13 @@ var main = {
 }
 
 var itemsToSell = {
-    0: "+70 Total Health x 10",
-    1: "+70 Total Total Mana x 10",
-    2: "+5 Overall Damage x 10",
-    3: "Faster attack rate (-15 ms) x 10",
-    4: "Buy a Small Red Vial x 3",
-    5: "Buy a Small Blue Vial x 3",
-    6: "Buy Pet, x2 Mana regen and fights x 25",
+    0: "+100 Total Health x 25",
+    1: "+100 Total Total Mana x 25",
+    2: "+5 Overall Damage x 20",
+    3: "Faster attack rate (-15 ms) x 20",
+    4: "Buy a Small Red Vial x 5",
+    5: "Buy a Small Blue Vial x 5",
+    6: "Buy Pet, x2 Mana regen and fights x 50",
     7: "BACK"
 }
 
