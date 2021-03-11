@@ -593,6 +593,7 @@ class SceneManager {
                     this.game.addEntity(this.merchant);
                     this.boss2.removeFromWorld = true;
                     ASSET_MANAGER.pauseBackgroundMusic();
+                    this.char.coins+= 50;
                 }
             } 
         }  

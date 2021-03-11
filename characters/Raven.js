@@ -407,7 +407,7 @@ class Raven extends Enemy {
         if(Date.now() - this.zeroturntimer > this.projlifetime && this.countzerotimer) {
             //Only reset locations once.
             if(this.resetone) {
-                ASSET_MANAGER.playAsset("./sounds/sfx/timestop.mp3", 3.5);
+                ASSET_MANAGER.playAsset("./sounds/sfx/timestop.mp3", 2.5);
                 this.timeslow = Date.now();
                 this.resetone = false;
                 this.tempmylocation.myX = this.x;
