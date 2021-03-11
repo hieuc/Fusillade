@@ -182,14 +182,11 @@ class SceneManager {
             }
         } 
 
-        this.merchant = new Merchant(this.game, 840, 4100, 3);
+        //840, 4100
+        this.merchant = new Merchant(this.game, 840, 4100, 1);
         this.game.addEntity(this.merchant);
         this.game.addEntity(character);
 
-<<<<<<< HEAD
-        //console.log(character.x + " " + character.y)
-=======
->>>>>>> d088408dc95d647856b621480ae3d2ebdd0c4f07
         //var fk = new Fernight(this.game, 6100, 7200);
         //this.game.addEntity(fk);
 
@@ -354,9 +351,6 @@ class SceneManager {
                     }
                 }
             }
-        }
-        this.game.addEntity(new Fernight(this.game, character.x + 20, character.y + 100, this.room));
-        //this.game.addEntity(new Wormito(this.game, character.x, character.y));
         } 
         //this.game.addEntity(new Fernight(this.game, character.x, character.y, start));
         this.game.addEntity(character);
