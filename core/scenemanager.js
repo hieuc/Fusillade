@@ -592,6 +592,7 @@ class SceneManager {
                     this.merchant = new Merchant(this.game, this.boss2.x, this.boss2.y, 3);
                     this.game.addEntity(this.merchant);
                     this.boss2.removeFromWorld = true;
+                    ASSET_MANAGER.pauseBackgroundMusic();
                 }
             } 
         }  

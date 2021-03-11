@@ -14,7 +14,7 @@ class Rutherford {
 
         this.form = 0;
 
-        this.coins = 100;
+        this.coins = 0;
 
         this.face = 0; // 0 = right, 1 = left
 
@@ -58,7 +58,7 @@ class Rutherford {
 
         this.bound = new BoundingBox(this.game, this.x, this.y, 16, 24);
 
-        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y, 22 * this.scale, 300, 400, true); //Has mana field too.
+        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y, 22 * this.scale, 20000, 400, true); //Has mana field too.
 
         this.animations = [];
 
