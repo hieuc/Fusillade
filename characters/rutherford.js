@@ -8,7 +8,7 @@ class Rutherford {
 
         this.scale = 2;
 
-        this.damage = 15;
+        this.damage = 150;
 
         this.action = 0; // 0 = idle, 1 = run, 2 = attack, 3 = transform
 
@@ -504,28 +504,33 @@ class Rutherford {
                 } else {
                     e.hit(this);
                 }
-            } else if (e instanceof Obstacle && this.bound.collide(e.bound)) {
-                var changed = false;
-                // check horizontal
-                if (this.velocity.x > 0 && this.bound.left < e.bound.left & this.bound.right >= e.bound.left) {
-                    // revert the position change if bounds met
-                    this.x -= this.velocity.x * this.speed;
-                    this.velocity.x = 0;
-                } else if (this.velocity.x < 0 && this.bound.right > e.bound.right && this.bound.left <= e.bound.right) {
-                    this.x -= this.velocity.x * this.speed;
-                    this.velocity.x = 0;
-                }
-                // check vertical 
-                else if (this.velocity.y > 0 && this.bound.top < e.bound.top && this.bound.bottom >= this.bound.top) {
-                    this.y -= this.velocity.y * this.speed;
-                    this.velocity.y = 0;
-                } else if (this.velocity.y < 0 && this.bound.bottom > e.bound.bottom && this.bound.top <= e.bound.bottom) {
-                    this.y -= this.velocity.y * this.speed;
-                    this.velocity.y = 0;
-                }
-                if (changed) {
-                    // second bound update for collision update
-                    this.updateBound();
+            } else if (e instanceof Obstacle && this.bound.collide(e.bound) && false) {
+                if (e.callback) {
+                    // for level transition
+                    this.game.camera.loadLevel2();
+                } else {
+                    var changed = false;
+                    // check horizontal
+                    if (this.velocity.x > 0 && this.bound.left < e.bound.left & this.bound.right >= e.bound.left) {
+                        // revert the position change if bounds met
+                        this.x -= this.velocity.x * this.speed;
+                        this.velocity.x = 0;
+                    } else if (this.velocity.x < 0 && this.bound.right > e.bound.right && this.bound.left <= e.bound.right) {
+                        this.x -= this.velocity.x * this.speed;
+                        this.velocity.x = 0;
+                    }
+                    // check vertical 
+                    else if (this.velocity.y > 0 && this.bound.top < e.bound.top && this.bound.bottom >= this.bound.top) {
+                        this.y -= this.velocity.y * this.speed;
+                        this.velocity.y = 0;
+                    } else if (this.velocity.y < 0 && this.bound.bottom > e.bound.bottom && this.bound.top <= e.bound.bottom) {
+                        this.y -= this.velocity.y * this.speed;
+                        this.velocity.y = 0;
+                    }
+                    if (changed) {
+                        // second bound update for collision update
+                        this.updateBound();
+                    }
                 }
             } else if(e instanceof Onecoin && this.bound.collide(e.bound)) {
                 this.coins += 1;

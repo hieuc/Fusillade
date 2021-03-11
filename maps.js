@@ -471,7 +471,7 @@ function createRoomsLevel2(w, h) {
     
     var path = findPathway(toReturn, start.room, end.room);
 
-    m[path[Math.floor(path.length/2)+1]].key = "merchant";
+    toReturn[path[Math.floor(path.length/2)+1]].key = "merchant";
     
     var mini = m[path[Math.floor(path.length/2)]];
     // give miniboss room some room

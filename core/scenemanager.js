@@ -104,8 +104,11 @@ class SceneManager {
         }
         // spawn main character and enemiessss
         var startRoom = rooms[7];
-        var character = new Rutherford(this.game, (startRoom.x + startRoom.w/2) * 32 * scale,  (startRoom.y + startRoom.h/2) * 32 * scale, false); 
-        this.char = character;
+        if (!this.char)
+            this.char =  new Rutherford(this.game, (startRoom.x + startRoom.w/2) * 32 * scale,  (startRoom.y + startRoom.h/2) * 32 * scale, false); 
+        this.char.x = (startRoom.x + startRoom.w/2) * 32 * scale;
+        this.char.y = (startRoom.y + startRoom.h/2) * 32 * scale;
+        this.char.hp.current = this.char.hp.maxHealth;
 
         
         rooms.forEach(r => {
@@ -185,7 +188,7 @@ class SceneManager {
         //840, 4100
         this.merchant = new Merchant(this.game, 840, 4100, 1);
         this.game.addEntity(this.merchant);
-        this.game.addEntity(character);
+        this.game.addEntity(this.char);
 
         //var fk = new Fernight(this.game, 6100, 7200);
         //this.game.addEntity(fk);
@@ -293,9 +296,12 @@ class SceneManager {
                 end = rooms[i];
             }
         }
-
-        var character = new Rutherford(this.game, (start.x + start.w/2) * 32 * scale,  (start.y + start.h/2) * 32 * scale, false); 
-        this.char = character;
+        if (!this.char)
+            this.char = new Rutherford(this.game, (start.x + start.w/2) * 32 * scale,  (start.y + start.h/2) * 32 * scale, false); 
+        
+        this.char.x = (start.x + start.w/2) * 32 * scale;
+        this.char.y = (start.y + start.h/2) * 32 * scale;
+        this.char.hp.current = this.char.hp.maxHealth;
 
         // fill enemies
         rooms.forEach(r => {
@@ -353,7 +359,7 @@ class SceneManager {
             }
         } 
         //this.game.addEntity(new Fernight(this.game, character.x, character.y, start));
-        this.game.addEntity(character);
+        this.game.addEntity(this.char);
 
         ASSET_MANAGER.pauseBackgroundMusic();
         ASSET_MANAGER.playAsset("./sounds/music/level2-stage1.mp3");
@@ -465,13 +471,16 @@ class SceneManager {
                     this.game.addBg(bg);
             }  
         }
+        if (!this.char)
+            this.char = new Rutherford(this.game, 500,  500, false); 
 
-        var character = new Rutherford(this.game, 500,  500, false); 
+        this.char.x = 500;
+        this.char.y = 500;
+        this.char.hp.current = this.char.hp.maxHealth;
 
-        this.char = character;
         this.game.addEntity(new Raven(this.game, 575, 550)); 
         //this.game.addEntity(new Doublops(this.game, 575, 550));
-        this.game.addEntity(character);
+        this.game.addEntity(this.char);
         ASSET_MANAGER.pauseBackgroundMusic();
         ASSET_MANAGER.playAsset("./sounds/music/Ignotus.mp3", 0.8);
         ASSET_MANAGER.autoRepeat("./sounds/music/Ignotus.mp3");
@@ -519,13 +528,25 @@ class SceneManager {
                     ASSET_MANAGER.pauseBackgroundMusic();
                     ASSET_MANAGER.playAsset("./sounds/music/buck.mp3");
                     ASSET_MANAGER.autoRepeat("./sounds/music/buck.mp3");
-                } else if (this.boss && this.boss.removeFromWorld && this.char.hp.current > 0) {
-                    this.boss = null;
+                } else if (this.stage === 2 && this.boss && this.boss.removeFromWorld && this.char.hp.current > 0) {
                     ASSET_MANAGER.pauseBackgroundMusic();
                     ASSET_MANAGER.playAsset("./sounds/music/greenpath-ambient.mp3");
                     ASSET_MANAGER.autoRepeat("./sounds/music/greenpath-ambient.mp3");
                     this.releaseLock();
                     this.stage = 3;
+                    this.timestamp = Date.now();
+                } else if (this.stage === 3 && this.boss && Date.now() - this.timestamp >= 2000) {
+                    var x = this.boss.x +64;
+                    var y = this.boss.y;
+                    this.boss = null;
+                    var pp = {spritesheet: ASSET_MANAGER.getAsset("./sprites/forest_tiles.png"), sx: 32, sy: 96, width: 32, height: 32, scale: 2};
+                    for (var i = 0; i < 10; i++) {
+                        this.game.addBg(new Ground(this.game, x, y - 64*i, pp));
+                    }
+                    pp = { spritesheet: ASSET_MANAGER.getAsset("./sprites/dungeon.png"), sx: 64, sy: 128, width: 16, height: 16, scale: 4, 
+                                bound: {x: 0, y: 0, w: 1, h: 1}};
+                    this.game.addEntity(new Obstacle(this.game, x, y - 64*10, pp, "ye"));
+                    this.stage = 4;
                 }
             } else if (this.level === 2) {
                 // level 2 interaction here
@@ -566,10 +587,13 @@ class SceneManager {
                     ASSET_MANAGER.pauseBackgroundMusic();
                     ASSET_MANAGER.playAsset("./sounds/music/polnariff.mp3");
                     ASSET_MANAGER.autoRepeat("./sounds/music/polnariff.mp3");
-                } else if (this.stage === 4 && this.boss2.hp.current <= 0 && this.char.hp.current > 0) {
-                    
+                } else if (this.stage === 4 && this.boss2.hp.current <= 0 && this.boss2.state === 0 && this.char.hp.current > 0) {
                     this.releaseLock();
                     this.stage = 5;
+                    this.merchant.removeFromWorld = true;
+                    this.merchant = new Merchant(this.game, this.boss2.x, this.boss2.y, 3);
+                    this.game.addEntity(this.merchant);
+                    this.boss2.removeFromWorld = true;
                 }
             } 
         }  

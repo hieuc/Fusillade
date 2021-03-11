@@ -141,6 +141,7 @@ class Buck extends Enemy {
                    }
                } 
                this.removeFromWorld = true;
+               this.game.addEntity(new BunchofCoins(this.game, this.bound.x, this.bound.y, 20));
             }
        } else {
             if(Date.now() - this.createone > this.createonecd) {
