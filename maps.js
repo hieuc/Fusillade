@@ -364,6 +364,7 @@ function createLevel2(w, h) {
 
     fillEnemiesLevel2(rooms);
     m = applyEdgePadding(m, rooms);
+    rooms.path = path;
     
     return [m, rooms];
 }

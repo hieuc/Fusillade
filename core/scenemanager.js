@@ -34,6 +34,7 @@ class SceneManager {
         this.stage = 1; // stage 1 = start, stage 2 = miniboss, stage 3 = boss
         this.gameover = true;
         this.merchant = null;
+        this.checkpoint = null;
 
         if (this.debug) {
             var t = createLevel2(100, 100);
@@ -109,7 +110,7 @@ class SceneManager {
         this.char.x = (startRoom.x + startRoom.w/2) * 32 * scale;
         this.char.y = (startRoom.y + startRoom.h/2) * 32 * scale;
         this.char.hp.current = this.char.hp.maxHealth;
-
+        this.checkpoint = { x: this.char.x, y: this.char.y, audio: "./sounds/music/greenpath-ambient.mp3", stage: 1};
         
         rooms.forEach(r => {
             r.enemies.forEach(e => {
@@ -197,9 +198,7 @@ class SceneManager {
         this.tempObstacles = lockRoom(this.game, this.rooms[8], this.map, p);
         
         //this.game.addEntity(new Slippey(this.game, character.x- 500, character.y));
-        ASSET_MANAGER.pauseBackgroundMusic();
-        ASSET_MANAGER.playAsset("./sounds/music/greenpath-ambient.mp3");
-        ASSET_MANAGER.autoRepeat("./sounds/music/greenpath-ambient.mp3");
+        this.playTheme("./sounds/music/greenpath-ambient.mp3");
     };
 
     /**
@@ -302,6 +301,7 @@ class SceneManager {
         this.char.x = (start.x + start.w/2) * 32 * scale;
         this.char.y = (start.y + start.h/2) * 32 * scale;
         this.char.hp.current = this.char.hp.maxHealth;
+        this.checkpoint = { x: this.char.x, y: this.char.y, audio: "./sounds/music/level2-stage1.mp3", stage: 1};
 
         // fill enemies
         rooms.forEach(r => {
@@ -361,9 +361,7 @@ class SceneManager {
         //this.game.addEntity(new Fernight(this.game, character.x, character.y, start));
         this.game.addEntity(this.char);
 
-        ASSET_MANAGER.pauseBackgroundMusic();
-        ASSET_MANAGER.playAsset("./sounds/music/level2-stage1.mp3");
-        ASSET_MANAGER.autoRepeat("./sounds/music/level2-stage1.mp3");
+        this.playTheme("./sounds/music/level2-stage1.mp3");
     }
 
     loadLevel3() {
@@ -512,30 +510,27 @@ class SceneManager {
             if (this.level === 1) {
                 // check if rutherford enters miniboss room
                 if (this.stage === 1 && this.isInRoom(this.rooms[0])) {
-                    ASSET_MANAGER.pauseBackgroundMusic();
-                    ASSET_MANAGER.playAsset("./sounds/music/greenpath-action.mp3");
-                    ASSET_MANAGER.autoRepeat("./sounds/music/greenpath-action.mp3");
+                    this.playTheme("./sounds/music/greenpath-action.mp3");
                     this.stage = 2;
                     this.releaseLock();
                 }
                 // check if rutherford is in boss room
-                else if (this.stage === 2 && this.isInRoom(this.rooms[8])) {
+                else if (this.stage === 2 && this.boss && this.isInRoom(this.rooms[8])) {
+                    this.checkpoint = {x: this.merchant.x, y: this.merchant.y, audio: "./sounds/music/greenpath-action.mp3", stage: 2};
                     // sprite for tree
                     var p = { spritesheet: ASSET_MANAGER.getAsset("./sprites/forest_tiles.png"), sx: 0, sy: 192, width: 64, height: 64, scale: 1, 
                                 bound: {x: 0, y: 0, w: 1, h: 1}};
                     this.tempObstacles = lockRoom(this.game, this.rooms[8], this.map, p);
                     this.locked = true;
-                    ASSET_MANAGER.pauseBackgroundMusic();
-                    ASSET_MANAGER.playAsset("./sounds/music/buck.mp3");
-                    ASSET_MANAGER.autoRepeat("./sounds/music/buck.mp3");
+                    this.playTheme("./sounds/music/buck.mp3");
                 } else if (this.stage === 2 && this.boss && this.boss.removeFromWorld && this.char.hp.current > 0) {
-                    ASSET_MANAGER.pauseBackgroundMusic();
-                    ASSET_MANAGER.playAsset("./sounds/music/greenpath-ambient.mp3");
-                    ASSET_MANAGER.autoRepeat("./sounds/music/greenpath-ambient.mp3");
+                    // after defeating buck
+                    this.playTheme("./sounds/music/greenpath-ambient.mp3");
                     this.releaseLock();
                     this.stage = 3;
                     this.timestamp = Date.now();
                 } else if (this.stage === 3 && this.boss && Date.now() - this.timestamp >= 2000) {
+                    // spawn level 2 portal
                     var x = this.boss.x +64;
                     var y = this.boss.y;
                     this.boss = null;
@@ -553,9 +548,10 @@ class SceneManager {
                 
                 // check if rutherford enters miniboss room
                 if (this.stage === 1 && this.isInRoom(this.bossroom)) {
-                    ASSET_MANAGER.pauseBackgroundMusic();
-                    ASSET_MANAGER.playAsset("./sounds/music/drumbuck.mp3");
-                    ASSET_MANAGER.autoRepeat("./sounds/music/drumbuck.mp3");
+                    var b = this.rooms[this.rooms.path[Math.floor(this.rooms.path.length/2) - 1]];
+                    this.checkpoint = {x: (b.x + b.w/2)*64, y: (b.y + b.h/2)*64, audio: "./sounds/music/level2-stage1.mp3", stage: 1};
+
+                    this.playTheme("./sounds/music/drumbuck.mp3");
                     this.stage = 2;
 
                     var p = { spritesheet: ASSET_MANAGER.getAsset("./sprites/background.png"), sx: 16, sy: 344, width: 8, height: 8, scale: 8, 
@@ -566,16 +562,19 @@ class SceneManager {
                 }
                 // check if drumbuck is defeated 
                 else if (this.stage === 2 && this.boss.removeFromWorld && this.char.hp.current > 0) {
+                    this.checkpoint = {x: this.merchant.x, y: this.merchant.y, audio: "./sounds/music/level2-stage2.mp3", stage: 3};
                     this.releaseLock();
                     this.stage = 3;
 
-                    ASSET_MANAGER.pauseBackgroundMusic();
-                    ASSET_MANAGER.playAsset("./sounds/music/level2-stage2.mp3");
-                    ASSET_MANAGER.autoRepeat("./sounds/music/level2-stage2.mp3");
+                    this.playTheme("./sounds/music/level2-stage2.mp3");
                 }
                 // check if rutherford is in boss room
                 else if (this.stage === 3 && this.isInRoom(this.boss2.room)) {
-                    // sprite for tree
+                    // polnariff encounter
+                    var b = this.rooms[this.rooms.path[this.rooms.path.length - 2]];
+                    this.checkpoint = {x: (b.x + b.w/2)*64, y: (b.y + b.h/2)*64, audio: "./sounds/music/level2-stage2.mp3", stage: 3};
+
+                    // sprite for blocking block
                     var p = { spritesheet: ASSET_MANAGER.getAsset("./sprites/background.png"), sx: 16, sy: 344, width: 8, height: 8, scale: 8, 
                                 bound: {x: 0, y: 0, w: 1, h: 1}};
                     this.tempObstacles = lockRoom(this.game, this.boss2.room, this.map, p);
@@ -584,10 +583,9 @@ class SceneManager {
 
                     this.boss2.active = true;
                     this.boss2.generaltimestamp = Date.now();
-                    ASSET_MANAGER.pauseBackgroundMusic();
-                    ASSET_MANAGER.playAsset("./sounds/music/polnariff.mp3");
-                    ASSET_MANAGER.autoRepeat("./sounds/music/polnariff.mp3");
+                    this.playTheme("./sounds/music/polnariff.mp3");
                 } else if (this.stage === 4 && this.boss2.hp.current <= 0 && this.boss2.state === 0 && this.char.hp.current > 0) {
+                    // after polnariff defeated 
                     this.releaseLock();
                     this.stage = 5;
                     this.merchant.removeFromWorld = true;
@@ -623,10 +621,10 @@ class SceneManager {
             let lvl3hover = false;
             let credits = false;
 
-            if(this.playonce)
-                ASSET_MANAGER.playAsset("./sounds/music/maintheme.mp3");
-                ASSET_MANAGER.autoRepeat("./sounds/music/maintheme.mp3");
+            if(this.playonce) {
+                this.playTheme("./sounds/music/maintheme.mp3");
                 this.playonce = false;
+            }
             ctx.font = "BOLD 40px Comic Sans";
             this.animations.drawFrame(this.game.clockTick, this.game.ctx, 0, 0, 1);
             //Select Level Background
@@ -833,6 +831,12 @@ class SceneManager {
         }
     }
 
+    playTheme(path) {
+        ASSET_MANAGER.pauseBackgroundMusic();
+        ASSET_MANAGER.playAsset(path);
+        ASSET_MANAGER.autoRepeat(path);
+    }
+
     releaseLock() {
         this.tempObstacles.forEach(e => {
             e.removeFromWorld = true;
@@ -855,8 +859,29 @@ class SceneManager {
         this.boss = null;
         this.bossroom = null;
         this.boss2 = null;
-        this.tempObstacles = null;
+        this.tempObstacles = [];
+        this.checkpoint = null;
         this.locked = false;
+    }
+
+    restoreCheckpoint() {
+        this.char.x = this.checkpoint.x;
+        this.char.y = this.checkpoint.y;
+        this.releaseLock();
+        this.stage = this.checkpoint.stage;
+        this.playTheme(this.checkpoint.audio);
+        if (this.level === 2) {
+            if (this.stage === 1)
+                this.boss.active = false;
+            else if (this.stage === 3) {
+                this.boss2.active = false;
+                this.boss2.despawnObjects();
+                var r = this.boss2.room;
+                this.boss2.removeFromWorld = true;
+                this.boss2 = new Polnariff(this.game, Math.floor(r.x + r.w/2) * 64, Math.floor(r.y + r.h/2) * 64, r)
+                this.game.addEntity(this.boss2);
+            }
+        }
     }
 };
 
