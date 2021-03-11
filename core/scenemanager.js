@@ -182,7 +182,8 @@ class SceneManager {
             }
         } 
 
-        this.merchant = new Merchant(this.game, 840, 4100, 3);
+        //840, 4100
+        this.merchant = new Merchant(this.game, 840, 4100, 1);
         this.game.addEntity(this.merchant);
         this.game.addEntity(character);
 

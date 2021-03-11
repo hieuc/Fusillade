@@ -36,6 +36,8 @@ class Merchant {
 
         this.hoveredbuy = false;
 
+        this.hoveredproceed = false;
+
         this.hoveredtalk = false;
 
         this.hoveredbuy0 = false;
@@ -199,7 +201,14 @@ class Merchant {
             }
             ctx.fillText(this.currChoice[2], this.textlocation.textX, this.textlocation.textY+50); 
             ctx.fillStyle = "#ffffff"; 
-            ctx.fillText(this.currChoice[3], this.textlocation.textX, this.textlocation.textY+70); 
+
+            if(this.level == 3) {
+                if(this.hoveredproceed) {
+                    ctx.fillStyle = "#000000";
+                }
+                ctx.fillText(this.currChoice[3], this.textlocation.textX, this.textlocation.textY+70); 
+                ctx.fillStyle = "#ffffff"; 
+            }
             this.showTextTimer = Date.now(); 
         //If we are inside the "buy" option.
         } else if(this.currChoice === itemsToSell) {
@@ -220,7 +229,7 @@ class Merchant {
                 //Draw the small potion icon.
                 ctx.drawImage(this.potionsheet, 3, 160, 14, 16, this.textlocationbuy.textX, this.textlocationbuy.textY-15, 16, 16);
                 //Draw coin
-                ctx.drawImage(this.potionsheet, 160, 132, 33, 24, this.textlocationbuy.textX+197, this.textlocationbuy.textY-15, 24, 18);
+                ctx.drawImage(this.potionsheet, 160, 132, 33, 24, this.textlocationbuy.textX+172, this.textlocationbuy.textY-15, 24, 18);
                 //If the purchase was successful, and THIS item 0 was purchased and the user hasn't immediately tried to buy again and it failed
                 if(this.success && this.itemno == 0 && !this.failure) {
                     //Draw the tick to show it was successful.
@@ -244,7 +253,7 @@ class Merchant {
                     ctx.fillStyle = "#ffffff"; 
                     ctx.drawImage(this.potionsheet, 3, 160, 14, 16, this.textlocationbuy.textX, this.textlocationbuy.textY+15, 16, 16);
                     //coin image
-                    ctx.drawImage(this.potionsheet, 160, 132, 33, 24, this.textlocationbuy.textX+189, this.textlocationbuy.textY+15, 24, 18);
+                    ctx.drawImage(this.potionsheet, 160, 132, 33, 24, this.textlocationbuy.textX+194, this.textlocationbuy.textY+15, 24, 18);
                     if(this.success && this.itemno == 1 && !this.failure) {
                         ctx.drawImage(this.tickorxsheet, 160, 304, 16, 16, this.textlocationbuy.textX + 230, this.textlocationbuy.textY+15, 16, 16);
                         if(Date.now() - this.successtimer > 3000) {
@@ -263,9 +272,9 @@ class Merchant {
                     }
                     ctx.fillText(this.currChoice[this.textIndex + 2], this.textlocationbuy.textX+20, this.textlocationbuy.textY+60);
                     ctx.fillStyle = "#ffffff"; 
-                    ctx.drawImage(this.potionsheet, 34, 160, 16, 16, this.textlocationbuy.textX, this.textlocationbuy.textY+45, 16, 16);
+                    ctx.drawImage(this.potionsheet, 3, 160, 14, 16, this.textlocationbuy.textX, this.textlocationbuy.textY+45, 16, 16);
                     //coin image
-                    ctx.drawImage(this.potionsheet, 160, 132, 33, 24, this.textlocationbuy.textX+172, this.textlocationbuy.textY+45, 24, 18);
+                    ctx.drawImage(this.potionsheet, 160, 132, 33, 24, this.textlocationbuy.textX+185, this.textlocationbuy.textY+45, 24, 18);
                     if(this.success && this.itemno == 2 && !this.failure) {
                         ctx.drawImage(this.tickorxsheet, 160, 304, 16, 16, this.textlocationbuy.textX + 230, this.textlocationbuy.textY+45, 16, 16);
                         if(Date.now() - this.successtimer > 3000) {
@@ -284,16 +293,16 @@ class Merchant {
                     }
                     ctx.fillText(this.currChoice[this.textIndex + 3], this.textlocationbuy.textX+20, this.textlocationbuy.textY+90);
                     ctx.fillStyle = "#ffffff"; 
-                    ctx.drawImage(this.potionsheet, 66, 160, 16, 16, this.textlocationbuy.textX, this.textlocationbuy.textY+75, 16,16);
+                    ctx.drawImage(this.potionsheet, 3, 160, 14, 16, this.textlocationbuy.textX, this.textlocationbuy.textY+75, 16, 16);
                     //coin image
-                    ctx.drawImage(this.potionsheet, 160, 132, 33, 24, this.textlocationbuy.textX+187, this.textlocationbuy.textY+75, 24, 18);
+                    ctx.drawImage(this.potionsheet, 160, 132, 33, 24, this.textlocationbuy.textX+236, this.textlocationbuy.textY+75, 24, 18);
                     if(this.success && this.itemno == 3 && !this.failure) {
-                        ctx.drawImage(this.tickorxsheet, 160, 304, 16, 16, this.textlocationbuy.textX + 230, this.textlocationbuy.textY+75, 16, 16);
+                        ctx.drawImage(this.tickorxsheet, 160, 304, 16, 16, this.textlocationbuy.textX + 256, this.textlocationbuy.textY+75, 16, 16);
                         if(Date.now() - this.successtimer > 3000) {
                             this.success = false;
                         }
                     } else if(this.failure && this.itemno == 3) {
-                        ctx.drawImage(this.tickorxsheet, 176, 304, 16, 16, this.textlocationbuy.textX + 230, this.textlocationbuy.textY+75, 16, 16);
+                        ctx.drawImage(this.tickorxsheet, 176, 304, 16, 16, this.textlocationbuy.textX + 256, this.textlocationbuy.textY+75, 16, 16);
                         if(Date.now() - this.failuretimer > 3000) {
                             this.failure = false;
                             this.success = false;
@@ -305,7 +314,7 @@ class Merchant {
                     }
                     ctx.fillText(this.currChoice[this.textIndex + 4], this.textlocationbuy.textX+20, this.textlocationbuy.textY+120);
                     ctx.fillStyle = "#ffffff"; 
-                    ctx.drawImage(this.potionsheet, 50, 160, 16, 16, this.textlocationbuy.textX, this.textlocationbuy.textY+105, 16,16);
+                    ctx.drawImage(this.potionsheet, 3, 160, 14, 16, this.textlocationbuy.textX, this.textlocationbuy.textY+105, 16, 16);
                     //coin image
                     ctx.drawImage(this.potionsheet, 160, 132, 33, 24, this.textlocationbuy.textX+182, this.textlocationbuy.textY+105, 24, 18);
                     if(this.success && this.itemno == 4 && !this.failure) {
@@ -330,7 +339,7 @@ class Merchant {
                     //coin image
                     ctx.drawImage(this.potionsheet, 160, 132, 33, 24, this.textlocationbuy.textX+192, this.textlocationbuy.textY+135, 24, 18);
                     if(this.success && this.itemno == 5 && !this.failure) {
-                        ctx.drawImage(this.tickorxsheet, 160, 304, 16, 16, this.textlocationbuy.textX + 230, this.textlocationbuy.textY+135, 16, 16);
+                        ctx.drawImage(this.tickorxsheet, 160, 304, 16, 16, this.textlocationbuy.textX + 225, this.textlocationbuy.textY+135, 16, 16);
                         if(Date.now() - this.successtimer > 3000) {
                             this.success = false;
                         }
@@ -349,7 +358,7 @@ class Merchant {
                     ctx.fillStyle = "#ffffff"; 
                     ctx.drawImage(this.petsheet, 0, 0, 24, 24, this.textlocationbuy.textX-4, this.textlocationbuy.textY+165, 24,24);
                     //coi image
-                    ctx.drawImage(this.potionsheet, 160, 132, 33, 24, this.textlocationbuy.textX+310, this.textlocationbuy.textY+165, 24, 18);
+                    ctx.drawImage(this.potionsheet, 160, 132, 33, 24, this.textlocationbuy.textX+285, this.textlocationbuy.textY+165, 24, 18);
                     if(this.success && this.itemno == 6 && !this.failure) {
                         ctx.drawImage(this.tickorxsheet, 160, 304, 16, 16, this.textlocationbuy.textX + 340, this.textlocationbuy.textY+165, 16, 16);
                         if(Date.now() - this.successtimer > 3000) {
@@ -438,6 +447,18 @@ class Merchant {
                     this.hoveredbuy = true;
                 }
             }
+
+            if(this.level === 3) {
+                this.hoveredproceed = false;
+                if(e.x >= PARAMS.canvas_width*0.55 && e.x < PARAMS.canvas_width*0.65) {
+                    if(e.y >= PARAMS.canvas_height*0.55 && e.y < PARAMS.canvas_height*0.58) {
+                        this.hoveredproceed = true;
+                        for(let i = 0; i < this.game.camera.inventory.slots.length; i++) {
+                            this.game.camera.inventory.slots[i] = 2;
+                        }
+                    }
+                }
+            }
         }
 
         //If we're in the shop.
@@ -516,6 +537,14 @@ class Merchant {
                     this.currChoice = itemsToSell;
                 }
             }
+
+            if(this.level === 3) {
+                if(e.x >= PARAMS.canvas_width*0.55 && e.x < PARAMS.canvas_width*0.65) {
+                    if(e.y >= PARAMS.canvas_height*0.55 && e.y < PARAMS.canvas_height*0.58) {
+                        this.game.camera.loadLevel3();
+                    }
+                }
+            }
         }
 
         if(this.shop) {
@@ -541,8 +570,8 @@ class Merchant {
                 if(e.y >= this.textlocationbuy.textY+15 && e.y < this.textlocationbuy.textY+40) {
                     if(this.game.camera.char.coins >= 10) {
                         this.game.camera.char.coins -= 10;
-                        this.game.camera.char.hp.maxMana += 120;
-                        this.game.camera.char.hp.current = this.game.camera.char.hp.maxMana;
+                        this.game.camera.char.hp.maxMana += 70;
+                        this.game.camera.char.hp.currMana = this.game.camera.char.hp.maxMana;
                         this.success = true;
                         this.itemno = 1;
                         this.successtimer = Date.now();
@@ -553,12 +582,12 @@ class Merchant {
                     }
                 }
             }
-            //BUY A BIG RED VIAL
+            //+5 Overall Damage
             if(e.x >= this.textlocationbuy.textX+20 && e.x < this.textlocationbuy.textX+160) {
                 if(e.y >= this.textlocationbuy.textY+45 && e.y < this.textlocationbuy.textY+70) {
-                    if(this.game.camera.char.coins >= 5) {
-                        this.game.camera.char.coins -= 5;
-                        this.game.camera.inventory.slots[0]++;
+                    if(this.game.camera.char.coins >= 10) {
+                        this.game.camera.char.coins -= 10;
+                        this.game.camera.char.damage += 5;
                         this.success = true;
                         this.itemno = 2;
                         this.successtimer = Date.now();
@@ -569,12 +598,12 @@ class Merchant {
                     }
                 } 
             }
-            //BUY A SMALL RED VIAL
+            //Faster attack rate
             if(e.x >= this.textlocationbuy.textX+20 && e.x < this.textlocationbuy.textX+160) {
                 if(e.y >= this.textlocationbuy.textY+75 && e.y < this.textlocationbuy.textY+100) {
-                    if(this.game.camera.char.coins >= 3) {
-                        this.game.camera.char.coins -= 3;
-                        this.game.camera.inventory.slots[1]++;
+                    if(this.game.camera.char.coins >= 10) {
+                        this.game.camera.char.coins -= 10;
+                        this.game.camera.char.attackcd -= 15;
                         this.success = true;
                         this.itemno = 3;
                         this.successtimer = Date.now();
@@ -585,12 +614,12 @@ class Merchant {
                     }
                 }
             }
-            //BUY A BIG BLUE VIAL
+            //BUY A SMALL RED VIAL
             if(e.x >= this.textlocationbuy.textX+20 && e.x < this.textlocationbuy.textX+160) {
                 if(e.y >= this.textlocationbuy.textY+105 && e.y < this.textlocationbuy.textY+130) {
-                    if(this.game.camera.char.coins >= 5) {
-                        this.game.camera.char.coins -= 5;
-                        this.game.camera.inventory.slots[2]++;
+                    if(this.game.camera.char.coins >= 3) {
+                        this.game.camera.char.coins -= 3;
+                        this.game.camera.inventory.slots[1]++;
                         this.success = true;
                         this.itemno = 4;
                         this.successtimer = Date.now();
@@ -620,8 +649,9 @@ class Merchant {
             //BUY A PET
             if(e.x >= this.textlocationbuy.textX+20 && e.x < this.textlocationbuy.textX+260) {
                 if(e.y >= this.textlocationbuy.textY+165 && e.y < this.textlocationbuy.textY+190) {
-                    if(this.game.camera.char.coins >= 20 && !this.game.camera.char.pet) {
-                        this.game.camera.char.coins -= 20;
+                    if(this.game.camera.char.coins >= 25 && !this.game.camera.char.pet) {
+                        this.game.camera.char.coins -= 25;
+                        this.game.camera.char.mpregen +=0.05;
                         this.game.camera.char.hasapet = true;
                         this.success = true;
                         this.itemno = 6;
@@ -652,13 +682,13 @@ var main = {
 }
 
 var itemsToSell = {
-    0: "Increase Total Health x 10",
-    1: "Increase Total Mana x 10",
-    2: "Buy a Big Red Vial x 5",
-    3: "Buy a Small Red Vial x 3",
-    4: "Buy a Big Blue Vial x 5",
+    0: "+70 Total Health x 10",
+    1: "+70 Total Total Mana x 10",
+    2: "+5 Overall Damage x 10",
+    3: "Faster attack rate (-15 ms) x 10",
+    4: "Buy a Small Red Vial x 3",
     5: "Buy a Small Blue Vial x 3",
-    6: "Get a Pet (Fights and mana regen inc.) x 20",
+    6: "Buy Pet, x2 Mana regen and fights x 25",
     7: "BACK"
 }
 

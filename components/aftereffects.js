@@ -151,7 +151,7 @@ class Bluebeam {
 
         this.scale = 1.2;
 
-        this.damage = 2;
+        this.damage = Math.ceil(this.game.camera.char.damage/5);
 
         this.bound = new BoundingBox(this.game, this.x+30, this.y+230, 25, 45);
 
@@ -188,7 +188,7 @@ class Redbeam {
 
         this.scale = 1;
 
-        this.damage = 4;
+        this.damage = Math.ceil(this.game.camera.char.damage/4);
 
         this.bound = new BoundingBox(this.game, this.x+30, this.y+230, 25, 45);
 
