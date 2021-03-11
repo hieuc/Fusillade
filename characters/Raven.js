@@ -54,6 +54,10 @@ class Raven extends Enemy {
         //Used to determine if it is time to use a special.
         this.specialtimer = Date.now();
 
+        this.bound = new BoundingBox(this.game, this.x, this.y, 50, 37);
+
+        this.hp = new HealthMpBar(this.game, this.x + 2 * this.scale, this.y + 68 * this.scale, 22 * this.scale, 4000, 0);
+
         this.animations = [];
 
         this.loadAnimations();
@@ -171,6 +175,89 @@ class Raven extends Enemy {
                     this.resetspeedonce = true;
                 }   
             }
+        }
+
+        //Collision Detection. Check if its fired by enemy or hero.
+
+        if(this.removeFromWorld != true) {
+            var that = this;
+            this.game.entities.forEach(function (entity) {
+                if (entity.bound && that.bound.collide(entity.bound)) {
+                    if(entity instanceof Projectiles && entity.friendly) {
+                        entity.hit(that);
+                        ASSET_MANAGER.playAsset("./sounds/sfx/Hit.mp3");
+                        if(that.hp.current <= 0) {
+                            this.removeFromWorld = true;
+                        }
+                    } 
+                    else if(entity instanceof Bluebeam) {
+                        that.hp.current -= entity.damage;
+                        that.game.addEntity(new Star(that.game, entity.x, entity.y + 180));
+                        that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, entity.damage));
+                        //var audio = new Audio("./sounds/Hit.mp3");
+                        //audio.volume = PARAMS.hit_volume;
+                        //audio.play();
+                        if(that.hp.current <= 0) {
+                            this.removeFromWorld = true; 
+                        }
+                    } else if(entity instanceof Redbeam) {
+                        that.hp.current -= entity.damage;
+                        that.game.addEntity(new Burn(that.game, entity.x, entity.y + 180));
+                        that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, entity.damage));
+                        if(that.hp.current <= 0) {
+                            this.removeFromWorld = true;  
+                        }
+                        //var audio = new Audio("./sounds/Hit.mp3");
+                        //audio.volume = PARAMS.hit_volume;
+                        //audio.play();
+                    }
+                    else if(entity instanceof Obstacle) 
+                    {
+                        if(that.bound.left < entity.bound.left && that.bound.right >= entity.bound.left) 
+                        {
+                            that.state = 4;
+                            that.decideDir();
+                            that.x -= that.speed * 1.5;
+                        } else if(that.bound.right > entity.bound.right && that.bound.left <= entity.bound.right) 
+                        {
+                            that.state = 4;
+                            that.decideDir();
+                            that.x += that.speed * 1.5
+                        }
+                        if(that.bound.top  < entity.bound.top && that.bound.bottom >= entity.bound.top) 
+                        {
+                            that.state = 4;
+                            that.decideDir();
+                            that.y -= that.speed * 1.5;
+                        } else if(that.bound.bottom > entity.bound.bottom && that.bound.top <= entity.bound.bottom) 
+                        {
+                            that.state = 4;
+                            that.decideDir();
+                            that.y += that.speed * 1.5;
+                        }
+    
+                    }
+                }
+            })
+        }
+
+        this.updateBound();
+    }
+
+    updateBound() 
+    {
+        this.bound.update(this.x + 10, this.y + 5);
+
+        this.hp.x = this.x + 11.5 * this.scale;
+        this.hp.y = this.y + 40 * this.scale;
+    }
+
+    decideDir() 
+    {
+        if(this.x - this.enemyX> 0) {
+            this.face = 1;
+        } else {
+            this.face = 0;
         }
     }
 
