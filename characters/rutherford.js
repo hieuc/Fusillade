@@ -138,6 +138,8 @@ class Rutherford {
             this.action = 7;
             this.game.camera.gameover = true;
             ASSET_MANAGER.pauseBackgroundMusic();
+            this.game.camera.entitiesbackup = [];
+            this.game.camera.bgbackup = [];
         } 
 
         // slowly closing the screen when he dies
@@ -153,29 +155,51 @@ class Rutherford {
             var cx = (this.bound.x - this.bound.w/2) / 64;
             var cy = (this.bound.y - this.bound.h/2) / 64;
             
-            this.game.background.forEach(e => {
+            var bg = this.game.background;
+            for (var i = bg.length - 1; i >= 0; i--) {
+                var e = bg[i];
                 if (Math.abs(cx - e.x/64) > radius - frame || Math.abs(cy - e.y/64) > radius - frame) {
-                    e.removeFromWorld = true;
+                    this.game.camera.bgbackup.unshift(e);
+                    bg.splice(i, 1);
                 }
-            });
+            }
 
-            this.game.entities.forEach(e => {
+            var en = this.game.entities;
+            for (var i = en.length-1; i >= 0; i--) {
+                var e = en[i];
                 if (e !== this && (Math.abs(cx - e.x/64) > radius - frame || Math.abs(cy - e.y/64) > radius - frame)) {
-                    e.removeFromWorld = true;
+                    if (e instanceof Projectiles)
+                        e.removeFromWorld = true;
+                    else {
+                        if (e.hp)
+                            e.hp.current = e.hp.maxHealth;
+                        this.game.camera.entitiesbackup.push(e);
+                        en.splice(i, 1);
+                    }
                 }
-            });
+            }
         }
 
         // when death animation finished
         if (this.action === 7 && this.animations[this.action][this.face][this.form].isAlmostDone(this.game.clockTick)) {
-            if (this.game.camera.level === 1)
-                this.game.camera.loadLevel1();
-            else if (this.game.camera.level === 2) {
-                this.game.camera.loadLevel2();
-            } else if (this.game.camera.level === 3) {
+            if (this.game.camera.level === 3) {
+                this.animations[this.action][this.face][this.form].elapsedTime = 0;
+                this.hp.current = this.hp.maxHealth;
+                this.action = 0;
                 this.game.camera.loadLevel3();
             }
-
+            else {
+                this.x = this.game.camera.checkpoint.x;
+                this.y = this.game.camera.checkpoint.y;
+                this.animations[this.action][this.face][this.form].elapsedTime = 0;
+                this.hp.current = this.hp.maxHealth;
+                this.game.entities = this.game.camera.entitiesbackup;
+                this.game.background = this.game.camera.bgbackup;
+                this.action = 0;
+                this.game.camera.gameover = false;
+                this.game.addEntity(this);
+                this.game.camera.restoreCheckpoint();
+            }
         } 
 
         // while not dead
@@ -505,27 +529,32 @@ class Rutherford {
                     e.hit(this);
                 }
             } else if (e instanceof Obstacle && this.bound.collide(e.bound)) {
-                var changed = false;
-                // check horizontal
-                if (this.velocity.x > 0 && this.bound.left < e.bound.left & this.bound.right >= e.bound.left) {
-                    // revert the position change if bounds met
-                    this.x -= this.velocity.x * this.speed;
-                    this.velocity.x = 0;
-                } else if (this.velocity.x < 0 && this.bound.right > e.bound.right && this.bound.left <= e.bound.right) {
-                    this.x -= this.velocity.x * this.speed;
-                    this.velocity.x = 0;
-                }
-                // check vertical 
-                else if (this.velocity.y > 0 && this.bound.top < e.bound.top && this.bound.bottom >= this.bound.top) {
-                    this.y -= this.velocity.y * this.speed;
-                    this.velocity.y = 0;
-                } else if (this.velocity.y < 0 && this.bound.bottom > e.bound.bottom && this.bound.top <= e.bound.bottom) {
-                    this.y -= this.velocity.y * this.speed;
-                    this.velocity.y = 0;
-                }
-                if (changed) {
-                    // second bound update for collision update
-                    this.updateBound();
+                if (e.callback) {
+                    // for level transition
+                    this.game.camera.loadLevel2();
+                } else {
+                    var changed = false;
+                    // check horizontal
+                    if (this.velocity.x > 0 && this.bound.left < e.bound.left & this.bound.right >= e.bound.left) {
+                        // revert the position change if bounds met
+                        this.x -= this.velocity.x * this.speed;
+                        this.velocity.x = 0;
+                    } else if (this.velocity.x < 0 && this.bound.right > e.bound.right && this.bound.left <= e.bound.right) {
+                        this.x -= this.velocity.x * this.speed;
+                        this.velocity.x = 0;
+                    }
+                    // check vertical 
+                    else if (this.velocity.y > 0 && this.bound.top < e.bound.top && this.bound.bottom >= this.bound.top) {
+                        this.y -= this.velocity.y * this.speed;
+                        this.velocity.y = 0;
+                    } else if (this.velocity.y < 0 && this.bound.bottom > e.bound.bottom && this.bound.top <= e.bound.bottom) {
+                        this.y -= this.velocity.y * this.speed;
+                        this.velocity.y = 0;
+                    }
+                    if (changed) {
+                        // second bound update for collision update
+                        this.updateBound();
+                    }
                 }
             } else if(e instanceof Onecoin && this.bound.collide(e.bound)) {
                 this.coins += 1;

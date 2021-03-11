@@ -172,6 +172,7 @@ class Slippey extends Enemy {
                 if(this.state == 4 && !this.start) {
                     if(this.animations[this.state][this.face][this.transform].isAlmostDone(this.game.clockTick)) {
                         this.removeFromWorld = true;
+                        this.game.addEntity(new BunchofCoins(this.game, this.bound.x, this.bound.y, 10));
                     }
                 } else if(this.state == 4 && this.start){
                     if(this.animations[this.state][this.face][this.transform].isAlmostDone(this.game.clockTick)) {

@@ -10,8 +10,9 @@ class Polnariff extends Enemy {
         this.speed = 2;
         this.active = false;
 
-        this.hp = new HealthMpBar(this.game, this.x, this.y, 70, 3000);
+        
         this.bound = new BoundingBox(this.game, this.x, this.y, 25 * this.scale, 50 * this.scale);
+        this.hp = new HealthMpBar(this.game, this.bound.x - 4 * this.scale, this.bound.y + 52 * this.scale, 70, 3000);
 
         this.animations = [];
         this.knife = false;

@@ -32,6 +32,9 @@ class Slime extends Enemy {
         }
         if (this.state === 4 && this.animations[4][this.face].isAlmostDone(this.game.clockTick)) {
             this.removeFromWorld = true;
+            if (this.scale <= 3.5) {
+                this.game.addEntity(new Threecoin(this.game, this.bound.x, this.bound.y));
+            }
         }
         else if (this.state === 3 && this.animations[3][this.face].isAlmostDone(this.game.clockTick)) {
             // split: create 2 new slime with lower scale
