@@ -3,10 +3,6 @@ class Raven extends Enemy {
         super(game,x,y);
         Object.assign(this, {});
 
-        /**
-         * GENERAL VARIABLES
-         */
-
         //Get raven's spritesheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Raven.png");
         
@@ -15,11 +11,14 @@ class Raven extends Enemy {
 
         this.damage = 40;
 
-        this.speed = 5;
+        this.speed = 7;
 
-        this.face = 0; 
+        this.cooldowntimer = 0; //timer to keep track of cooldown duration.
 
-        this.createhealthbar = true;
+        this.cooldownduration = 1000; //duration of cooldown.
+
+        //If we collided, what was the last direction we were walking in?
+        this.lastdirection = {inX: 0, inY: 0};
 
         //This to see how long it's been since level started. We decide triggered on this.
         this.starttimer = Date.now();
@@ -27,19 +26,6 @@ class Raven extends Enemy {
         this.createdeffect = false;
 
         this.state = 0; 
-
-        //used to keep track of enemy postiions
-        this.enemypos = { enemyX: this.game.camera.char.x, enemyY: this.game.camera.char.y};
-
-        this.bound = new BoundingBox(this.game, this.x, this.y, 50, 70);
-
-        this.hp;
-
-        this.animations = [];
-
-        /** 
-         * THIS IS WHERE VARIABLES USED BY ALI ARE 
-        */
 
         //The lifetime of projectiles for attackturn = 0.
         this.projlifetime = 2500;
@@ -63,16 +49,25 @@ class Raven extends Enemy {
         //Calculate how long we've been in Slow-Mo.
         this.timeslow = Date.now();
 
-        this.circlearea = 0;
+        this.face = 0; 
 
+        this.circlearea = 0;
         //This is here so that we can keep a temporary location for our X and Y when we swap locations.
         this.tempmylocation = {myX: this.x, myY: this.y};
 
+        //used to keep track of enemy postiions
+        this.enemypos = { enemyX: this.game.camera.char.x, enemyY: this.game.camera.char.y};
 
         this.specialcd = 7000; // Change this to buff or nerf Raven.
 
         //Used to determine if it is time to use a special.
         this.specialtimer = Date.now();
+
+        this.bound = new BoundingBox(this.game, this.x, this.y, 50, 70);
+
+        this.hp = new HealthMpBar(this.game, this.x + 2 * this.scale, this.y + 68 * this.scale, 22 * this.scale, 4000, 0);
+
+        this.animations = [];
 
         this.loadAnimations();
     }
@@ -90,7 +85,7 @@ class Raven extends Enemy {
         this.animations[0][0] = new Animator(this.spritesheet, 0, 0, 50, 37, 4, 0.15, 0, false, true);
 
         // facing left = 1
-        this.animations[0][1] = new Animator(this.spritesheet, 300, 444, 50, 37, 4, 0.15, 0, true, true);
+        this.animations[0][1] = new Animator(this.spritesheet, 300, 37, 50, 37, 4, 0.15, 0, true, true);
 
         // walk animation for state = 1
         // facing right = 0
@@ -101,10 +96,10 @@ class Raven extends Enemy {
 
         // special animation for state = 2
         // facing right = 0
-        this.animations[2][0] = new Animator(this.spritesheet, 0, 111, 50, 37, 9, 0.15, 0, false, true);
+        this.animations[2][0] = new Animator(this.spritesheet, 0, 111, 50, 37, 9, 0.15, 0, false, false);
 
         // facing left = 1
-        this.animations[2][1] = new Animator(this.spritesheet, 50, 555, 50, 37, 9, 0.15, 0, true, true);
+        this.animations[2][1] = new Animator(this.spritesheet, 50, 555, 50, 37, 9, 0.15, 0, true, false);
 
         // slash animation for state = 3
         // facing right = 0
@@ -129,7 +124,7 @@ class Raven extends Enemy {
     }
 
     update() {
-        this.speed = 5;
+        this.speed = 7;
         this.enemyX = this.game.camera.char.x;
         this.enemyY = this.game.camera.char.y;
         if(Date.now() - this.starttimer < this.specialcd-1000) {
@@ -140,51 +135,92 @@ class Raven extends Enemy {
                 this.createdeffect = true;
             }
         } else {
-            if(this.createhealthbar) {
-                this.hp = new HealthMpBar(this.game, this.x + 2 * this.scale, this.y + 68 * this.scale, 22 * this.scale, 4000, 0);
-                this.createhealthbar = false;
+            if(this.cooldown) {
+                if(Date.now() - this.cooldowntimer < this.cooldownduration) {
+                    let dirX = this.lastdirection.inX > 0? -1: this.lastdirection.inX < 0? 1:0;
+                    this.x += this.speed * dirX;
+                    this.face = dirX == 1? 0:1;
+                    this.state = 4;
+                    let dirY = this.lastdirection.inY > 0? -1: this.lastdirection.inY < 0? 1:0;
+                    this.y += this.speed * dirY;
+    
+                } else {
+                    this.cooldowntimer = 0;
+                    this.state = 0;
+                    this.cooldown = false;
+                }
+            } else {
+                this.state = 1;
+                //HIGHEST PRIORITY TO THIS MINE ATTACK. Everything else takes second priority.
+                if(Date.now() - this.specialtimer > this.specialcd) {
+                    if(this.attackturn == 0) {
+                        this.areamine();    
+                    } else {
+                        let choose = Math.random();
+                        choose < 0.33? this.squaremine(): choose >= 0.33 && choose < 0.67? this.squarefillmine(): this.areamine();
+                    }
+                    this.specialtimer = Date.now();
+                } else {
+                    if(this.attackturn == 0) {
+                        if(Date.now() - this.specialtimer > this.specialcd/(3/2) && this.attackturn == 0) {
+                            if(this.x - 560 > 0) {
+                                this.x -= this.speed;
+                            } else {
+                                this.x += this.speed;
+                            }
+                        } else {
+                            this.x += this.speed;
+                        }
+                    }
+                }
+
+                //If our timer says that it is time for projectiles to return for this.attackturn = 0 case then do a swap.
+                if(Date.now() - this.zeroturntimer > this.projlifetime && this.countzerotimer) {
+                    //Only reset locations once.
+                    if(this.resetone) {
+                        ASSET_MANAGER.playAsset("./sounds/sfx/timestop.mp3", 3.5);
+                        this.timeslow = Date.now();
+                        this.resetone = false;
+                        this.tempmylocation.myX = this.x;
+                        this.tempmylocation.myY = this.y;
+                        this.x = this.game.camera.char.x;
+                        this.y = this.game.camera.char.y;
+                        this.game.camera.char.x = this.tempmylocation.myX;
+                        this.game.camera.char.y = this.tempmylocation.myY;
+                    }
+
+                    //After it has been 0.3 seconds since projectiles started coming for you, do the slow-mo effect.
+                    if(Date.now() - this.timeslow > 250) {
+                        //Slow us down only ONCE because this case will happen many times, we want to do this check.
+                        if(this.resetspeedonce) {
+                            for(let i = 0; i < this.game.entities.length; i++) {
+                                this.game.entities[i].speed *= 0.3;
+                            }
+                            this.resetspeedonce = false;
+                        }
+                    }    
+
+                    //If it has been 1.7 seconds since slow-mo turn back to normal game speed.
+                    if(Date.now() - this.timeslow > 1900) {
+                        //reset zerocounttimer so we don't hit that IF statement anymore.
+                        this.countzerotimer = false;
+                        //Reset speeds.
+                        for(let i = 0; i < this.game.entities.length; i++) {
+                            this.game.entities[i].speed /= 0.3;
+                        }
+                        //reset this back to true for next use.
+                        this.resetone = true;
+                        //Reset our speedincrease test to true for next use.
+                        this.resetspeedonce = true;
+                    }   
+                }
             }
 
-            this.aliattack();
             this.updateBound();
             this.checkCollisions();
         }
     }
 
-<<<<<<< HEAD
-        //Collision Detection. Check if its fired by enemy or hero.
-        if(this.state != 1) {
-            var that = this;
-            this.game.entities.forEach(function (entity) {
-                if (entity.bound && that.bound.collide(entity.bound)) {
-                    if(entity instanceof Projectiles && entity.friendly) {
-                        entity.hit(that);
-                        ASSET_MANAGER.playAsset("./sounds/sfx/Hit.mp3");
-                        if(that.hp.current <= 0) {
-                            this.removeFromWorld = true;
-                        }
-                    } 
-                    else if(entity instanceof Bluebeam) {
-                        that.hp.current -= entity.damage;
-                        that.game.addEntity(new Star(that.game, entity.x, entity.y + 180));
-                        that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, entity.damage));
-                        //var audio = new Audio("./sounds/Hit.mp3");
-                        //audio.volume = PARAMS.hit_volume;
-                        //audio.play();
-                        if(that.hp.current <= 0) {
-                            this.removeFromWorld = true; 
-                        }
-                    } else if(entity instanceof Redbeam) {
-                        that.hp.current -= entity.damage;
-                        that.game.addEntity(new Burn(that.game, entity.x, entity.y + 180));
-                        that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, entity.damage));
-                        if(that.hp.current <= 0) {
-                            this.removeFromWorld = true;  
-                        }
-                        //var audio = new Audio("./sounds/Hit.mp3");
-                        //audio.volume = PARAMS.hit_volume;
-                        //audio.play();
-=======
     checkCollisions() {
         var that = this;
         this.game.entities.forEach(function (entity) {
@@ -192,20 +228,25 @@ class Raven extends Enemy {
                 if(entity instanceof Obstacle) {
                     if(that.bound.left < entity.bound.left && that.bound.right >= entity.bound.left) {
                         that.x -= that.speed*1.2;
+                        that.lastdirection.inX = 1;
                         that.speed = 0;
                     } else if(that.bound.right > entity.bound.right && that.bound.left <= entity.bound.right) {
                         that.x += that.speed*1.2;
+                        that.lastdirection.inX = -1;
                         that.speed = 0;
->>>>>>> af8d867e0ed9ad01064a46f40b81ad9f27066e48
                     }
                     if(that.bound.top < entity.bound.top && that.bound.bottom >= entity.bound.top) {
                         that.y -= that.speed*1.2;
+                        that.lastdirection.inY = 1;
                         that.speed = 0;
                     } else if(that.bound.bottom > entity.bound.bottom && that.bound.top <= entity.bound.bottom) {
                         that.y += that.speed*1.2;
+                        that.lastdirection.inY = -1;
                         that.speed = 0;
                     }
                     
+                    that.cooldown = true;
+                    that.cooldowntimer = Date.now();
                 }
                 
             }
@@ -255,9 +296,6 @@ class Raven extends Enemy {
         }
     }
 
-    /**
-     * THIS IS THE START OF ALI'S SECTION OF ATTACK
-     */
     areamine() {
         //How many projectiles constitute the air space at 360 degrees.
         var partitions = 72;
@@ -280,7 +318,7 @@ class Raven extends Enemy {
             var pp = this.attackturn == 1? {sx: 17, sy: 336, size: 16}: {sx:16, sy:128, size:16};
             for(var i = 0; i < partitions; i++) {
                 var p = new Chasingprojectile(this.game, false, this.x, this.y, {x :Math.cos(blitz), y:Math.sin(blitz)}, 
-                        7, this.projlifetime + 50 * multiplier, this.damage, pp, true);
+                        7, this.projlifetime + 35 * multiplier, this.damage, pp, true);
                 blitz += 2*Math.PI/partitions;
                 this.game.entities.splice(this.game.entities.length - 1, 0, p);  
                 if(this.attackturn == 2) {
@@ -320,7 +358,7 @@ class Raven extends Enemy {
         var pp = this.attackturn == 1? {sx: 17, sy: 336, size: 16}: {sx:16, sy:128, size:16};
         for(var i = 0; i < partitions; i++) {
             var p = new Chasingprojectile(this.game, false, this.x, this.y, {x :Math.cos(xdirection), y:Math.sin(ydirection)}, 
-                    7, this.projlifetime + 50 * multiplier, this.damage, pp, true);
+                    7, this.projlifetime + 35 * multiplier, this.damage, pp, true);
 
             ydirection += 20; //Assigning random values to cause a scatter effect.
             xdirection += 1;
@@ -348,7 +386,7 @@ class Raven extends Enemy {
         var pp = this.attackturn == 1? {sx: 17, sy: 336, size: 16}: {sx:16, sy:128, size:16};
         for(var i = 0; i < partitions; i++) {
             var p = new Chasingprojectile(this.game, false, this.x, this.y, {x :Math.cos(xdirection), y:Math.sin(ydirection)}, 
-                    7, this.projlifetime + 50*multiplier, this.damage, pp, true);
+                    7, this.projlifetime + 35*multiplier, this.damage, pp, true);
 
             if(i == partitions/4) {
                  ydirection = 1;
@@ -382,107 +420,6 @@ class Raven extends Enemy {
 
         multiplier = 0;
     }
-
-    aliattack() {
-        this.state = 0;
-        this.decideDir();
-        //If it is almost time to do the area attack, do the pose.
-        if(Date.now() - this.specialtimer > this.specialcd - 1000) {
-            this.state = 2;
-            if(this.x - 560 > 20) {
-                this.x -= this.speed;
-                this.state = 1;
-            } else if(this.x - 560 < -20) {
-                this.x += this.speed;
-                this.state = 1;
-            }
-            if(this.y - 560 > 20) {
-                this.y -= this.speed;
-                this.state = 1;
-            } else if(this.y - 560 < -20){
-                this.y += this.speed;
-                this.state = 1;
-            }        
-        }
-
-        //If it is time to do special, do it.
-        if(Date.now() - this.specialtimer > this.specialcd) {
-            this.animations[2][0].elapsedTime = 0;
-            this.animations[2][1].elapsedTime = 0;
-            if(this.attackturn == 0) {
-                this.areamine();    
-            } else {
-                let choose = Math.random();
-                choose < 0.33? this.squaremine(): choose >= 0.33 && choose < 0.67? this.squarefillmine(): this.areamine();
-            }
-            this.specialtimer = Date.now();
-        } 
-
-        //If we are doing the slow-mo attack, go back to center before it comes back.
-        if(Date.now() - this.zeroturntimer > this.projlifetime /(3/2) && this.countzerotimer) {
-            this.state = 0;
-            this.decideDir();
-            if(this.x - 560 > 20) {
-                this.state = 1;
-                this.x -= this.speed;
-            } else if(this.x - 560 < -20) {
-                this.state = 1;
-                this.x += this.speed;
-            }
-            if(this.y - 560 > 20) {
-                this.state = 1;
-                this.y -= this.speed;
-            } else if(this.y - 560 < -20){
-                this.state = 1;
-                this.y += this.speed;
-            }                   
-        }
-
-        //If our timer says that it is time for projectiles to return for this.attackturn = 0 case then do a swap.
-        if(Date.now() - this.zeroturntimer > this.projlifetime && this.countzerotimer) {
-            //Only reset locations once.
-            if(this.resetone) {
-                ASSET_MANAGER.playAsset("./sounds/sfx/timestop.mp3", 2.5);
-                this.timeslow = Date.now();
-                this.resetone = false;
-                this.tempmylocation.myX = this.x;
-                this.tempmylocation.myY = this.y;
-                this.x = this.game.camera.char.x;
-                this.y = this.game.camera.char.y;
-                this.game.camera.char.x = this.tempmylocation.myX;
-                this.game.camera.char.y = this.tempmylocation.myY;
-            }
-
-            //After it has been 0.3 seconds since projectiles started coming for you, do the slow-mo effect.
-            if(Date.now() - this.timeslow > 50) {
-                //Slow us down only ONCE because this case will happen many times, we want to do this check.
-                if(this.resetspeedonce) {
-                    for(let i = 0; i < this.game.entities.length; i++) {
-                        this.game.entities[i].speed *= 0.3;
-                    }
-                    this.resetspeedonce = false;
-                }
-            }    
-
-            //If it has been 1.7 seconds since slow-mo turn back to normal game speed.
-            if(Date.now() - this.timeslow > 1600) {
-                //reset zerocounttimer so we don't hit that IF statement anymore.
-                this.countzerotimer = false;
-                //Reset speeds.
-                for(let i = 0; i < this.game.entities.length; i++) {
-                    this.game.entities[i].speed /= 0.3;
-                }
-                //reset this back to true for next use.
-                this.resetone = true;
-                //Reset our speedincrease test to true for next use.
-                this.resetspeedonce = true;
-            }   
-        }
-    }
-
-    /**
-     * THIS IS THE END OF ALI'S SECTION ON ATTACK.
-     */
 
 
 }
