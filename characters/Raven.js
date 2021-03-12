@@ -3,6 +3,10 @@ class Raven extends Enemy {
         super(game,x,y);
         Object.assign(this, {});
 
+        this.shaketimer  = Date.now();
+
+        this.move = -50;
+
         /**
          * GENERAL VARIABLES
          */
