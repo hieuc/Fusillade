@@ -544,7 +544,7 @@ class ExpO {
 
     loadAnimations() {
 
-        this.animations[0] = new Animator(this.spritesheet, 0, 0, 72, 86, 82, 0.05, 0, false, true);
+        this.animations[0] = new Animator(this.spritesheet, 0, 0, 72, 86, 82, 0.05, 0, false, false);
 
     }
 
