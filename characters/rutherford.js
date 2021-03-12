@@ -14,7 +14,7 @@ class Rutherford {
 
         this.form = 0;
 
-        this.coins = 10;
+        this.coins = 100;
 
         this.face = 0; // 0 = right, 1 = left
 
