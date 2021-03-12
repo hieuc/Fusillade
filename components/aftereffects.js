@@ -181,12 +181,10 @@ class Bluebeam {
 }
 
 class Redbeam {
-    constructor(game, x, y) {
-        Object.assign(this, {game, x, y});
+    constructor(game, x, y, scale) {
+        Object.assign(this, {game, x, y, scale});
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/RBeam.png");
-
-        this.scale = 1;
 
         this.damage = Math.ceil(this.game.camera.char.damage/4);
 

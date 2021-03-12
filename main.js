@@ -88,6 +88,7 @@ ASSET_MANAGER.queueDownload("./sounds/sfx/timestop.mp3");
 ASSET_MANAGER.queueDownload("./sounds/sfx/slimehit.mp3");
 ASSET_MANAGER.queueDownload("./sounds/sfx/merchantpop.mp3");
 ASSET_MANAGER.queueDownload("./sounds/sfx/rutherfordpop.mp3");
+ASSET_MANAGER.queueDownload("./sounds/sfx/Laff.mp3");
 
 
 

@@ -152,7 +152,7 @@ class Raven extends Enemy {
         } else {
             // after intro (stood up)
             if(this.createhealthbar) {
-                this.hp = new HealthMpBar(this.game, this.x + 2 * this.scale, this.y + 68 * this.scale, 22 * this.scale, 5000, 0);
+                this.hp = new HealthMpBar(this.game, this.x + 2 * this.scale, this.y + 68 * this.scale, 22 * this.scale, 8000, 0);
                 this.createhealthbar = false;
             }
             //IF WE ARE DEAD, do the celebration while raven sits down.
@@ -440,7 +440,7 @@ class Raven extends Enemy {
         if(Date.now() - this.zeroturntimer > this.projlifetime && this.countzerotimer) {
             //Only reset locations once.
             if(this.resetone) {
-                ASSET_MANAGER.playAsset("./sounds/sfx/timestop.mp3", 3.5);
+                ASSET_MANAGER.playAsset("./sounds/sfx/timestop.mp3", 2);
                 this.timeslow = Date.now();
                 this.resetone = false;
                 this.tempmylocation.myX = this.x;
