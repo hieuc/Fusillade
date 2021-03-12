@@ -152,7 +152,7 @@ class Raven extends Enemy {
         } else {
             // after intro (stood up)
             if(this.createhealthbar) {
-                this.hp = new HealthMpBar(this.game, this.x + 2 * this.scale, this.y + 68 * this.scale, 22 * this.scale, 80, 0);
+                this.hp = new HealthMpBar(this.game, this.x + 2 * this.scale, this.y + 68 * this.scale, 22 * this.scale, 8000, 0);
                 this.createhealthbar = false;
             }
             //IF WE ARE DEAD, do the celebration while raven sits down.
