@@ -54,6 +54,11 @@ ASSET_MANAGER.queueDownload("./sprites/mirror.png");
 ASSET_MANAGER.queueDownload("./sprites/background.png");
 ASSET_MANAGER.queueDownload("./sprites/Raven.png");
 ASSET_MANAGER.queueDownload("./sprites/menacing.png");
+ASSET_MANAGER.queueDownload("./sprites/CelebrationO.png");
+ASSET_MANAGER.queueDownload("./sprites/CelebrationB.png");
+ASSET_MANAGER.queueDownload("./sprites/expB.png");
+ASSET_MANAGER.queueDownload("./sprites/expO.png");
+
 
 
 // sounds
@@ -83,6 +88,7 @@ ASSET_MANAGER.queueDownload("./sounds/sfx/timestop.mp3");
 ASSET_MANAGER.queueDownload("./sounds/sfx/slimehit.mp3");
 ASSET_MANAGER.queueDownload("./sounds/sfx/merchantpop.mp3");
 ASSET_MANAGER.queueDownload("./sounds/sfx/rutherfordpop.mp3");
+ASSET_MANAGER.queueDownload("./sounds/sfx/Laff.mp3");
 
 
 

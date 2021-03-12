@@ -181,12 +181,10 @@ class Bluebeam {
 }
 
 class Redbeam {
-    constructor(game, x, y) {
-        Object.assign(this, {game, x, y});
+    constructor(game, x, y, scale) {
+        Object.assign(this, {game, x, y, scale});
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/RBeam.png");
-
-        this.scale = 1;
 
         this.damage = Math.ceil(this.game.camera.char.damage/4);
 
@@ -421,6 +419,140 @@ class Jojoeffect {
         }
 
         this.x += this.xmove;
+    }
+
+    draw(ctx) {
+        this.animations[0].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale);
+    }
+}
+
+class CelebrationO {
+    constructor(game, x, y) {
+        Object.assign(this, {game, x, y});
+
+        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/CelebrationO.png");
+
+        this.scale = 3;
+
+        this.timer = Date.now();
+
+        this.animations = [];
+        this.loadAnimations();
+    }
+
+    loadAnimations() {
+
+        this.animations[0] = new Animator(this.spritesheet, 0, 0, 7, 51, 40, 0.05, 0, false, true);
+
+    }
+
+    update() {
+
+        if(Date.now() - this.timer > 3000) {
+            this.removeFromWorld = true;
+            this.game.addEntity(new ExpO(this.game, this.x-160, this.y-160));
+        }
+
+        this.y -= 2;
+    }
+
+    draw(ctx) {
+        this.animations[0].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale);
+    }
+}
+
+class CelebrationB {
+    constructor(game, x, y) {
+        Object.assign(this, {game, x, y});
+
+        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/CelebrationB.png");
+
+        this.scale = 2;
+
+        this.timer = Date.now();
+
+        this.animations = [];
+        this.loadAnimations();
+    }
+
+    loadAnimations() {
+
+        this.animations[0] = new Animator(this.spritesheet, 0, 0, 7, 51, 40, 0.05, 0, false, true);
+
+    }
+
+    update() {
+
+        if(Date.now() - this.timer > 5000) {
+            this.removeFromWorld = true;
+            this.game.addEntity(new ExpB(this.game, this.x-160, this.y-160));
+        }
+
+        this.y -= 1.7;
+    }
+
+    draw(ctx) {
+        this.animations[0].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale);
+    }
+}
+
+class ExpB {
+    constructor(game, x, y) {
+        Object.assign(this, {game, x, y});
+
+        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/expB.png");
+
+        this.scale = 4;
+
+        this.timer = Date.now();
+
+        this.animations = [];
+        this.loadAnimations();
+    }
+
+    loadAnimations() {
+
+        this.animations[0] = new Animator(this.spritesheet, 0, 0, 88, 86, 82, 0.05, 0, false, false);
+
+    }
+
+    update() {
+
+        if(this.animations[0].isDone()) {
+            this.removeFromWorld = true;
+        }
+    }
+
+    draw(ctx) {
+        this.animations[0].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale);
+    }
+}
+
+class ExpO {
+    constructor(game, x, y) {
+        Object.assign(this, {game, x, y});
+
+        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/expO.png");
+
+        this.scale = 4;
+
+        this.timer = Date.now();
+
+        this.animations = [];
+        this.loadAnimations();
+    }
+
+    loadAnimations() {
+
+        this.animations[0] = new Animator(this.spritesheet, 0, 0, 72, 86, 82, 0.05, 0, false, false);
+
+    }
+
+    update() {
+
+        if(this.animations[0].isDone()) {
+            this.removeFromWorld = true;
+        }
     }
 
     draw(ctx) {

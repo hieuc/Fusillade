@@ -14,7 +14,7 @@ class Rutherford {
 
         this.form = 0;
 
-        this.coins = 0;
+        this.coins = 10;
 
         this.face = 0; // 0 = right, 1 = left
 
@@ -58,7 +58,11 @@ class Rutherford {
 
         this.bound = new BoundingBox(this.game, this.x, this.y, 16, 24);
 
+<<<<<<< HEAD
         this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y, 22 * this.scale, 3000, 400, true); //Has mana field too.
+=======
+        this.hp = new HealthMpBar(this.game, this.bound.x, this.bound.y, 22 * this.scale, 500, 400, true); //Has mana field too.
+>>>>>>> fca8686866772c262de1d0824cadf6039d8a53af
 
         this.animations = [];
 
@@ -429,25 +433,25 @@ class Rutherford {
 
     createRbeam() {
         for(let i = 1; i < 8; i++) {
-            this.game.addEntity(new Redbeam(this.game, this.x+50*i, this.y - 220));
-            this.game.addEntity(new Redbeam(this.game, this.x-50-(50*i), this.y - 220));
+            this.game.addEntity(new Redbeam(this.game, this.x+50*i, this.y - 220, 1));
+            this.game.addEntity(new Redbeam(this.game, this.x-50-(50*i), this.y - 220, 1));
         }
 
         //UpperLower
         for(let i = 1; i < 6; i++) {
-            this.game.addEntity(new Redbeam(this.game, this.x - 10, this.y - 470 + 50*i));
-            this.game.addEntity(new Redbeam(this.game, this.x - 10, this.y - 170 + 50*i));
+            this.game.addEntity(new Redbeam(this.game, this.x - 10, this.y - 470 + 50*i, 1));
+            this.game.addEntity(new Redbeam(this.game, this.x - 10, this.y - 170 + 50*i, 1));
         }
 
         //X Shape
         for(let i = 1; i < 8; i++) {
-            this.game.addEntity(new Redbeam(this.game, this.x+25*i, this.y - 220+(25*i)));
-            this.game.addEntity(new Redbeam(this.game, this.x-25-(25*i), this.y - 220-(25*i)));
+            this.game.addEntity(new Redbeam(this.game, this.x+25*i, this.y - 220+(25*i), 1));
+            this.game.addEntity(new Redbeam(this.game, this.x-25-(25*i), this.y - 220-(25*i), 1));
         }
 
         for(let i = 1; i < 8; i++) {
-            this.game.addEntity(new Redbeam(this.game, this.x + 25*i, this.y - 220 - 25*i));
-            this.game.addEntity(new Redbeam(this.game, this.x - 10 -25*i, this.y - 220 + 25*i));
+            this.game.addEntity(new Redbeam(this.game, this.x + 25*i, this.y - 220 - 25*i, 1));
+            this.game.addEntity(new Redbeam(this.game, this.x - 10 -25*i, this.y - 220 + 25*i, 1));
         }
     }
 

@@ -7,6 +7,8 @@ class Raven extends Enemy {
 
         this.move = -50;
 
+        this.celebrationTimer = Date.now();
+
         /**
          * GENERAL VARIABLES
          */
@@ -77,6 +79,8 @@ class Raven extends Enemy {
 
         //Used to determine if it is time to use a special.
         this.specialtimer = Date.now();
+        
+        //------------------------- end of ali variables
 
         this.loadAnimations();
     }
@@ -133,9 +137,11 @@ class Raven extends Enemy {
     }
 
     update() {
+        // enemy update
         this.speed = 5;
         this.enemyX = this.game.camera.char.x;
         this.enemyY = this.game.camera.char.y;
+        // introduction
         if(Date.now() - this.starttimer < this.specialcd-1000) {
             if(!this.createdeffect) {
                 this.state = 5;
@@ -144,14 +150,37 @@ class Raven extends Enemy {
                 this.createdeffect = true;
             }
         } else {
+            // after intro (stood up)
             if(this.createhealthbar) {
-                this.hp = new HealthMpBar(this.game, this.x + 2 * this.scale, this.y + 68 * this.scale, 22 * this.scale, 4000, 0);
+                this.hp = new HealthMpBar(this.game, this.x + 2 * this.scale, this.y + 68 * this.scale, 22 * this.scale, 8000, 0);
                 this.createhealthbar = false;
             }
-
-            this.aliattack();
-            this.updateBound();
-            this.checkCollisions();
+            //IF WE ARE DEAD, do the celebration while raven sits down.
+            if(this.hp.current <= 0) {
+                this.state = 5;
+                this.face = 0;
+                let xcele = 100;
+                let ycele = 100;
+                if(Date.now() - this.celebrationTimer > 6000) {
+                    for(let j = 0; j < 15; j++) {
+                        this.game.addEntity(new CelebrationO(this.game, xcele, 572));
+                        this.game.addEntity(new CelebrationB(this.game, 610, ycele));
+                        xcele += 70;
+                        ycele += 80;
+                    }
+                    for(let i = 100; i < 109; i++) {
+                        let sideX = Math.random() < 0.51? -1:1;
+                        let sideY = Math.random() < 0.51? -1:1;
+                        this.game.addEntity(new CelebrationO(this.game, this.x + (Math.random() * i * sideX), this.y + (Math.random() * i * sideY)));
+                        this.game.addEntity(new CelebrationB(this.game, this.x * Math.random() * i * sideX, this.y * Math.random() * i * sideY));
+                    }
+                    this.celebrationTimer = Date.now();
+                }
+            } else {
+                this.aliattack();
+                this.updateBound();
+                this.checkCollisions();
+            }
         }
     }
 
@@ -411,7 +440,7 @@ class Raven extends Enemy {
         if(Date.now() - this.zeroturntimer > this.projlifetime && this.countzerotimer) {
             //Only reset locations once.
             if(this.resetone) {
-                ASSET_MANAGER.playAsset("./sounds/sfx/timestop.mp3", 3.5);
+                ASSET_MANAGER.playAsset("./sounds/sfx/timestop.mp3", 2);
                 this.timeslow = Date.now();
                 this.resetone = false;
                 this.tempmylocation.myX = this.x;
