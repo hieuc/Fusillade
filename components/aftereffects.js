@@ -450,7 +450,7 @@ class CelebrationO {
 
         if(Date.now() - this.timer > 3000) {
             this.removeFromWorld = true;
-            this.game.addEntity(new ExpB(this.game, this.x-160, this.y-160));
+            this.game.addEntity(new ExpO(this.game, this.x-160, this.y-160));
         }
 
         this.y -= 2;
@@ -544,7 +544,7 @@ class ExpO {
 
     loadAnimations() {
 
-        this.animations[0] = new Animator(this.spritesheet, 0, 0, 88, 86, 82, 0.05, 0, false, true);
+        this.animations[0] = new Animator(this.spritesheet, 0, 0, 72, 86, 82, 0.05, 0, false, true);
 
     }
 
