@@ -358,8 +358,8 @@ class SceneManager {
                 }
             }
         } 
-        //this.game.addEntity(new Fernight(this.game, this.char.x + 20, this.char.y + 100, start));
-        //this.game.addEntity(new Fernight(this.game, character.x, character.y, start));
+        this.game.addEntity(new Fernight(this.game, start.x * 64 + 350, start.y * 64, start));
+        this.game.addEntity(new Fernight(this.game, start.x * 64, start.y * 64 + 725, start));
         this.game.addEntity(this.char);
 
         this.playTheme("./sounds/music/level2-stage1.mp3");

@@ -56,7 +56,7 @@ class Wormy extends Enemy {
         // facing left = 1
         this.animations[1][1] = new Animator(this.spritesheet, 1620, 90, 90, 90, 16, 0.1, 0, true, true);
 
-        // attack animation for state = 3
+        // attack animation for state = 2
         // facing right
         this.animations[2][0] = new Animator(this.spritesheet, 2160, 0, 90, 90, 11, 0.05, 0, false, true);
 
@@ -64,7 +64,7 @@ class Wormy extends Enemy {
         // facing left = 1
         this.animations[2][1] = new Animator(this.spritesheet, 630, 90, 90, 90, 11, 0.05, 0, true, true);
 
-        // Death animation for state = 4
+        // Death animation for state = 3
         // facing right
         this.animations[3][0] = new Animator(this.spritesheet, 3150, 0, 90, 90, 7, 0.1, 0, false, false);
 
