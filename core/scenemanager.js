@@ -303,9 +303,10 @@ class SceneManager {
         this.char.hp.current = this.char.hp.maxHealth;
         this.checkpoint = { x: this.char.x, y: this.char.y, audio: "./sounds/music/level2-stage1.mp3", stage: 1};
 
+        
         // fill enemies
         rooms.forEach(r => {
-            r.enemies.forEach(e => {
+            r.enemies.forEach(e => { 
                 if (e[0] === "slimee") {
                     var enemy = new Slime(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale, 5);
                     this.game.addEntity(enemy);
@@ -315,13 +316,16 @@ class SceneManager {
                 } else if (e[0] === "wormito") {
                     var enemy = new Wormito(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale);
                     this.game.addEntity(enemy);
+                }  else if (e[0] === "doublops") {
+                    var enemy = new Doublops(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale);
+                    this.game.addEntity(enemy);
+                } else if (e[0] === "fernight") {
+                    this.game.addEntity(new Fernight(this.game, r.x * 64, r.y * 64, r));
+                    this.game.addEntity(new Fernight(this.game, (r.x + randomInt(5)+1) * 64, r.y * 64 + (r.h -1.1)*64, r));
                 } else if (e[0] === "drumbuck") {
                     this.bossroom = r;
                     this.boss = new Drumbuck(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale);
                     this.game.addEntity(this.boss);
-                } else if (e[0] === "doublops") {
-                    var enemy = new Doublops(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale);
-                    this.game.addEntity(enemy);
                 } else if (e[0] === "merchant") {
                     this.merchant = new Merchant(this.game, Math.floor(r.x + r.w/2) * 32 * scale, Math.floor(r.y + r.h/2) * 32 * scale, 2);
                     this.game.addEntity(this.merchant);
@@ -358,9 +362,9 @@ class SceneManager {
                 }
             }
         } 
-        this.game.addEntity(new Fernight(this.game, start.x * 64 + 350, start.y * 64, start));
-        this.game.addEntity(new Fernight(this.game, start.x * 64, start.y * 64 + 725, start));
+
         this.game.addEntity(this.char);
+
 
         this.playTheme("./sounds/music/level2-stage1.mp3");
     }

@@ -95,7 +95,7 @@ function fillEnemiesLevel1(rooms) {
  * @param {*} rooms 
  */
  function fillEnemiesLevel2(rooms) {
-    var pool = ["slimee", "slippey", "wormito", "doublops"];
+    var pool = ["slimee", "slippey", "wormito", "doublops", "fernight"];
 
     rooms.forEach(e => {
         if (e.key === "final") {

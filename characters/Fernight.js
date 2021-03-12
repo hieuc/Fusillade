@@ -1,9 +1,9 @@
 class Fernight extends Enemy {
     constructor(game, x, y, room) {
 
-        super(game, x, y, room);
+        super(game, x, y);
 
-        this.room = room; // the room Fernight spawns in
+        this.room = room;
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/Fernight.png");
 
@@ -15,7 +15,9 @@ class Fernight extends Enemy {
 
         this.animations = [];
 
-        this.bound = new BoundingBox(this.game, this.x, this.y, 64, 64);
+        this.velocity = { x: 1, y: 0};
+
+        this.bound = new BoundingBox(this.game, this.x, this.y, 48, 64);
 
         this.hp = new HealthMpBar(this.game, this.x + 2 * this.scale, this.y + 68 * this.scale, 64 * this.scale, 270, 0);
 
@@ -84,8 +86,12 @@ class Fernight extends Enemy {
         this.enemyY = this.game.camera.char.y;
         this.speed = 3.3;
 
+        if(this.state !== 4 && this.hp.current <= 0) {
+            this.state = 4;   
+        }
+
         // if Wormy dies
-        if(this.state === 4) 
+        if (this.state === 4) 
         {
             if(this.animations[this.state][this.face].isDone()) 
             {
@@ -94,119 +100,101 @@ class Fernight extends Enemy {
         }
 
          // attack pattern
-         else 
-         {
+        else if (this.state !== 4 && this.game.camera.isInRoom(this.room))
+        {   
             this.howlong = Date.now() - this.toofarmovement;
-                // move to the right in a straight line
-                if(this.howlong < 3000)
-                {
-                    this.state = 2;
-                    this.decideDir();
-                    this.x += this.speed;
+            // move to the right in a straight line
+            if(this.howlong < 3000)
+            {
+                this.state = 2;
+                this.decideDir();
 
-                    var timepass = Date.now() - this.attackbuffer;
-                    this.decideDir();
-                    if(timepass > this.firerate)
+                var timepass = Date.now() - this.attackbuffer;
+                this.decideDir();
+                if(timepass > this.firerate)
+                {
+                    if(Date.now() - this.barrage > this.succession)
                     {
-                        if(Date.now() - this.barrage > this.succession)
-                        {
-                            this.attack();
-                            this.barrage = Date.now();
-                        }
-                        if(timepass > this.firerate + 250)
-                        {
-                            this.attackbuffer = Date.now();
-                        }
+                        this.attack();
+                        this.barrage = Date.now();
+                    }
+                    if(timepass > this.firerate + 250)
+                    {
+                        this.attackbuffer = Date.now();
                     }
                 }
-                else if(this.howlong >= 3000 && this.howlong < 5000)
-                {
-                    this.state = 5;
-                }
-                else if(this.howlong >= 5000 && this.howlong < 8000)
-                {
-                    this.state = 2;
-                    this.decideDir();
-                    this.x += -1 * this.speed;
-                    var timepass = Date.now() - this.attackbuffer;
-                    this.decideDir();
-                    if(timepass > this.firerate)
-                    {
-                        if(Date.now() - this.barrage > this.succession)
-                        {
-                            this.attack();
-                            this.barrage = Date.now();
-                        }
-                        if(timepass > this.firerate + 250)
-                        {
-                            this.attackbuffer = Date.now();
-                        }
-                    }
-                }
-                else
-                {
-                    this.toofarmovement = Date.now();
-                }
-         }
+            }
+            else if(this.howlong >= 3000 && this.howlong < 5000)
+            {
+                this.state = 5;
+            }
+            else if(this.howlong >= 5000)
+            {
+                this.toofarmovement = Date.now();
+            }
 
-         this.updateBound();
-
-          //Collision Detection. Check if its fired by enemy or hero.
-
-          if(this.state != 4) {
-            var that = this;
-            this.game.entities.forEach(function (entity) {
-                if (entity.bound && that.bound.collide(entity.bound)) {
-                    if(entity instanceof Projectiles && entity.friendly) {
-                        entity.hit(that);
-                        ASSET_MANAGER.playAsset("./sounds/sfx/Hit.mp3");
-                        if(that.hp.current <= 0) {
-                            that.state = 4;
-                        }
-                    } 
-                    else if(entity instanceof Bluebeam) {
-                        that.hp.current -= entity.damage;
-                        that.game.addEntity(new Star(that.game, entity.x, entity.y + 180));
-                        that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, entity.damage));
-                        //var audio = new Audio("./sounds/Hit.mp3");
-                        //audio.volume = PARAMS.hit_volume;
-                        //audio.play();
-                        if(that.hp.current <= 0) {
-                            that.state = 4;   
-                        }
-                    } else if(entity instanceof Redbeam) {
-                        that.hp.current -= entity.damage;
-                        that.game.addEntity(new Burn(that.game, entity.x, entity.y + 180));
-                        that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, entity.damage));
-                        if(that.hp.current <= 0) {
-                            that.state = 4;   
-                        }
-                        //var audio = new Audio("./sounds/Hit.mp3");
-                        //audio.volume = PARAMS.hit_volume;
-                        //audio.play();
-                    }
-                    else if(entity instanceof Obstacle) 
-                    {
-                        if(that.bound.left < entity.bound.left && that.bound.right >= entity.bound.left) {
-                            that.x -= that.speed;
-                            that.speed = 0;
-                        } else if(that.bound.right > entity.bound.right && that.bound.left <= entity.bound.right) {
-                            that.x += that.speed;
-                            that.speed = 0;
-                        }
-                        if(that.bound.top  < entity.bound.top && that.bound.bottom >= entity.bound.top) {
-                            that.y -= that.speed;
-                            that.speed = 0;
-                        } else if(that.bound.bottom > entity.bound.bottom && that.bound.top <= entity.bound.bottom) {
-                            that.y += that.speed;
-                            that.speed = 0;
-                        }
+            if (this.state !== 5) {
+                this.x += this.velocity.x * this.speed;
+                this.y += this.velocity.y * this.speed;
+            }
     
+            this.updateBound();
+    
+              //Collision Detection. Check if its fired by enemy or hero.
+    
+            if(this.state != 4) {
+                var that = this;
+                this.game.entities.forEach(e => {
+                    if (e.bound && that.bound.collide(e.bound)) {
+                        if(e instanceof Projectiles && e.friendly) {
+                            e.hit(that);
+                            ASSET_MANAGER.playAsset("./sounds/sfx/Hit.mp3");
+                        } 
+                        else if(e instanceof Bluebeam) {
+                            that.hp.current -= e.damage;
+                            that.game.addEntity(new Star(that.game, e.x, e.y + 180));
+                            that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, e.damage));
+                            //var audio = new Audio("./sounds/Hit.mp3");
+                            //audio.volume = PARAMS.hit_volume;
+                            //audio.play();
+                            
+                        } else if(e instanceof Redbeam) {
+                            that.hp.current -= e.damage;
+                            that.game.addEntity(new Burn(that.game, e.x, e.y + 180));
+                            that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, e.damage));
+                            //var audio = new Audio("./sounds/Hit.mp3");
+                            //audio.volume = PARAMS.hit_volume;
+                            //audio.play();
+                        }
+                        else if (e instanceof Obstacle && this.bound.collide(e.bound)) {
+                            var changed = false;
+                            // check horizontal
+                            if (this.velocity.x > 0 && this.bound.left < e.bound.left & this.bound.right >= e.bound.left) {
+                                // revert the position change if bounds met
+                                this.x -= this.velocity.x * this.speed;
+                                this.velocity.x = -this.velocity.x;
+                            } else if (this.velocity.x < 0 && this.bound.right > e.bound.right && this.bound.left <= e.bound.right) {
+                                this.x -= this.velocity.x * this.speed;
+                                this.velocity.x = -this.velocity.x;
+                            }
+                            // check vertical 
+                            else if (this.velocity.y > 0 && this.bound.top < e.bound.top && this.bound.bottom >= this.bound.top) {
+                                this.y -= this.velocity.y * this.speed;
+                                this.velocity.y = -this.velocity.y;
+                            } else if (this.velocity.y < 0 && this.bound.bottom > e.bound.bottom && this.bound.top <= e.bound.bottom) {
+                                this.y -= this.velocity.y * this.speed;
+                                this.velocity.y = -this.velocity.y;
+                            }
+                            if (changed) {
+                                // second bound update for collision update
+                                this.updateBounds();
+                            }
+                        }
                     }
-                }
-            })
-        }
+                });
+            }
 
+        }
     }   
 
     updateBound() {
@@ -226,7 +214,6 @@ class Fernight extends Enemy {
     }
 
     attack() {
-        var velocity = this.calculateVel();
         var pp = { sx: 144, sy: 432, size: 16};
         let yDir = 0;
         if(this.y - this.enemyY < 0)
@@ -237,7 +224,7 @@ class Fernight extends Enemy {
         {
             yDir = -1;
         }
-        var p = new Projectiles(this.game, false, this.x + 40, this.y + 10, {x: 0, y: yDir}, 7, 980, 49, pp);
+        var p = new Projectiles(this.game, false, this.x + 20, this.y + 10, {x: 0, y: yDir}, 7, 1500, 49, pp);
         p.bound.r = 10;
         this.game.entities.splice(this.game.entities.length - 1, 0, p);
     }
