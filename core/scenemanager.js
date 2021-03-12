@@ -358,6 +358,7 @@ class SceneManager {
                 }
             }
         } 
+        //this.game.addEntity(new Fernight(this.game, this.char.x + 20, this.char.y + 100, start));
         //this.game.addEntity(new Fernight(this.game, character.x, character.y, start));
         this.game.addEntity(this.char);
 
@@ -371,6 +372,14 @@ class SceneManager {
         var b = 8;  // unit size
         var scale = 4;
         var ss = ASSET_MANAGER.getAsset("./sprites/background.png");
+
+        // add pre background
+        for (var i = 0; i < 69; i++) {
+            for (var j = 0; j< 69; j++) {
+                if (Math.random() < 0.1)
+                    this.game.addBg(new Ground(this.game, (j-15) * b * scale, (i-15) * b * scale, {spritesheet: ss, sx: (6 + randomInt(5))*b, sy: 67 * b, width: b, height: b, scale: scale}));
+            }
+        }
         
         // 0 = none, 1 = block
         // ! = ground, $ = carpet 
@@ -477,7 +486,12 @@ class SceneManager {
         this.char.hp.current = this.char.hp.maxHealth;
 
         this.game.addEntity(new Raven(this.game, 575, 550)); 
-        //this.game.addEntity(new Doublops(this.game, 575, 550));
+
+        // add planets
+        for (var i = 0; i < 8; i++) {
+            this.game.addEntity(new Planet(this.game, 500, 500, 8-i, 700+i*50, i));
+        }
+
         this.game.addEntity(this.char);
         ASSET_MANAGER.pauseBackgroundMusic();
         ASSET_MANAGER.playAsset("./sounds/music/Ignotus.mp3", 0.8);
@@ -593,6 +607,7 @@ class SceneManager {
                     this.game.addEntity(this.merchant);
                     this.boss2.removeFromWorld = true;
                     ASSET_MANAGER.pauseBackgroundMusic();
+                    this.char.coins+= 50;
                 }
             } 
         }  

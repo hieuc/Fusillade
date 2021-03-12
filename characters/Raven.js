@@ -452,6 +452,4 @@ class Raven extends Enemy {
     /**
      * THIS IS THE END OF ALI'S SECTION ON ATTACK.
      */
-
-
 }

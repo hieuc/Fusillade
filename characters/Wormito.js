@@ -87,6 +87,7 @@ class Wormito extends Enemy {
             if(this.animations[this.state][this.face].isDone()) 
             {
                this.removeFromWorld = true;
+               this.game.addEntity(new BunchofCoins(this.game, this.bound.x, this.bound.y, 10));
             }
         }
 
