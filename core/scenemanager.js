@@ -485,11 +485,14 @@ class SceneManager {
         this.char.y = 500;
         this.char.hp.current = this.char.hp.maxHealth;
 
-        this.game.addEntity(new Raven(this.game, 575, 550)); 
+        this.boss = new Raven(this.game, 575, 550);
+        this.game.addEntity(this.boss); 
 
         // add planets
+        this.planets = [];
         for (var i = 0; i < 8; i++) {
-            this.game.addEntity(new Planet(this.game, 500, 500, 8-i, 700+i*50, i));
+            this.planets.push(new Planet(this.game, 500, 500, 8-i, 700+i*50, i));
+            this.game.addEntity(this.planets[i]);
         }
 
         this.game.addEntity(this.char);
@@ -609,7 +612,21 @@ class SceneManager {
                     ASSET_MANAGER.pauseBackgroundMusic();
                     this.char.coins+= 50;
                 }
-            } 
+            } else if (this.level === 3) {
+                // level 3 interactions
+                if (this.boss.hp)
+                    this.planets.forEach(e => {
+                        var mul;
+                        if (this.boss.hp.current > 0) {
+                            mul = 1/Math.sqrt(this.boss.hp.current/this.boss.hp.maxHealth);
+                            if (mul > 30) mul = 30;
+                            e.spdmul = mul;
+                        } else {
+                            e.spdmul = 1;
+                        }
+                        
+                    });
+            }
         }  
     };
 

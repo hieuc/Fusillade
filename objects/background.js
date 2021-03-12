@@ -24,6 +24,8 @@ class Planet {
         this.center = 624 - 16*this.scale/2;
         this.angle = 0;
 
+        this.spdmul = 1;
+
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/projectiles.png");
         this.p = [{ sx: 240, sy: 80},   // mercury
                 { sx: 224, sy: 80},     // venus
@@ -36,7 +38,7 @@ class Planet {
     }
 
     update() {
-        this.angle--;
+        this.angle -= this.spdmul;
         this.x = this.r*Math.cos(Math.PI*this.angle/3000*this.speed) + this.center;
         this.y = this.r*Math.sin(Math.PI*this.angle/3000*this.speed) + this.center;
     }
