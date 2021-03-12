@@ -36,7 +36,7 @@ class KnifePortal {
     }
 
     attack() {
-        var p = new Knife(this.game, false, this.x - 26, this.y, {x:0, y:1}, 2.5, 5000, 50, this.pp);
+        var p = new Knife(this.game, false, this.x - 26, this.y, {x:0, y:1}, 2.5, 5000, 60, this.pp);
 
         this.game.addEntity(p);
     }
@@ -159,7 +159,7 @@ class MiasmaPortal {
     }
 
     attack() {
-        var p = new Projectiles(this.game, false, this.x, this.y, this.calculateVel(), 1.5, 10000, 30, this.pp);
+        var p = new Projectiles(this.game, false, this.x, this.y, this.calculateVel(), 1.5, 10000, 50, this.pp);
         p.bound.r /= 1.5;
         this.game.addEntity(p);
     }
@@ -226,7 +226,7 @@ class SunPortal {
     attack() {
         var total = 9;
         for (var i = 0; i < total; i++) {
-            var p = new Projectiles(this.game, false, this.x+12, this.y+12, this.calculateVel(Math.PI / total * i * 2), 1, 1800, 30, this.pp);
+            var p = new Projectiles(this.game, false, this.x+12, this.y+12, this.calculateVel(Math.PI / total * i * 2), 1, 1800, 50, this.pp);
             p.bound.r /= 1.5;
             this.game.addEntity(p);
         }

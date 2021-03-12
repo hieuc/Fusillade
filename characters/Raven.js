@@ -79,6 +79,8 @@ class Raven extends Enemy {
 
         //Used to determine if it is time to use a special.
         this.specialtimer = Date.now();
+        
+        //------------------------- end of ali variables
 
         this.loadAnimations();
     }
@@ -135,9 +137,11 @@ class Raven extends Enemy {
     }
 
     update() {
+        // enemy update
         this.speed = 5;
         this.enemyX = this.game.camera.char.x;
         this.enemyY = this.game.camera.char.y;
+        // introduction
         if(Date.now() - this.starttimer < this.specialcd-1000) {
             if(!this.createdeffect) {
                 this.state = 5;
@@ -146,6 +150,7 @@ class Raven extends Enemy {
                 this.createdeffect = true;
             }
         } else {
+            // after intro (stood up)
             if(this.createhealthbar) {
                 this.hp = new HealthMpBar(this.game, this.x + 2 * this.scale, this.y + 68 * this.scale, 22 * this.scale, 5000, 0);
                 this.createhealthbar = false;
