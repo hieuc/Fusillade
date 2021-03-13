@@ -36,7 +36,7 @@ class KnifePortal {
     }
 
     attack() {
-        var p = new Knife(this.game, false, this.x - 26, this.y, {x:0, y:1}, 2.5, 5000, 60, this.pp);
+        var p = new Knife(this.game, false, this.x - 26, this.y, {x:0, y:1}, 2.5, 5000, 80, this.pp);
 
         this.game.addEntity(p);
     }
@@ -98,7 +98,7 @@ class MiasmaPortal {
         this.d = 0; // travelled distance
         this.animations = []; 
         this.loadAnimations();
-        this.delay = 2000 + randomInt(10) * 100;
+        this.delay = 1500 + randomInt(10) * 100;
         this.timestamp = Date.now();
         
         // projectile properties
