@@ -48,7 +48,7 @@ class Buck extends Enemy {
 
         this.bound = new BoundingBox(this.game, this.x, this.y, 50, 86);
 
-        this.hp = new HealthMpBar(this.game, this.x + 16 * this.scale, this.y + 44 * this.scale, 32 * this.scale, 2000, 0);
+        this.hp = new HealthMpBar(this.game, this.x + 16 * this.scale, this.y + 44 * this.scale, 32 * this.scale, 1800, 0);
 
         this.portal = true; //Should we create a Buckportal for Buck's special. False if it's already created.
 
@@ -191,14 +191,14 @@ class Buck extends Enemy {
                     var timer = Date.now() - this.patterntimer;
                     if(timer < this.patternduration) {
                         this.decideDir();
-                        if(this.whichattack >= 0 && this.whichattack < 0.35) { 
+                        if(this.whichattack >= 0 && this.whichattack < 0.5) { 
                             var timepassed = Date.now() - this.attackbuffer;
                             if(timepassed > this.fireRate) {
                                 this.state = 2;
                                 this.attack();
                                 this.attackbuffer = Date.now();
                             }
-                        } else if(this.whichattack >= 0.35 && this.whichattack < 0.45) {
+                        } else if(this.whichattack >= 0.5 && this.whichattack < 0.6) {
                             this.state = 6;
                             if(Date.now() - this.healtimer > this.healcd) {
                                 this.heal();

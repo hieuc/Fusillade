@@ -195,14 +195,14 @@ class Drumbuck extends Enemy {
                     var timer = Date.now() - this.patterntimer;
                     if(timer < this.patternduration) {
                         this.decideDir();
-                        if(this.whichattack >= 0 && this.whichattack < 0.35) { 
+                        if(this.whichattack >= 0 && this.whichattack < 0.5) { 
                             var timepassed = Date.now() - this.attackbuffer;
                             if(timepassed > this.fireRate) {
                                 this.state = 2;
                                 this.attack();
                                 this.attackbuffer = Date.now();
                             }
-                        } else if(this.whichattack >= 0.35 && this.whichattack < 0.45) {
+                        } else if(this.whichattack >= 0.5 && this.whichattack < 0.6) {
                             this.state = 6;
                             if(Date.now() - this.healtimer > this.healcd) {
                                 this.heal();
