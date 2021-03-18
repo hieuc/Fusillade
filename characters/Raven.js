@@ -43,6 +43,46 @@ class Raven extends Enemy {
 
         this.animations = [];
 
+        // attacks related
+        this.current = 0;
+        this.lastphase = 0;
+        this.inprogress = true;
+        this.attackDelayTimestamp = null;
+        this.betweenAttacksDelay = 7000;
+
+        /**
+         * VARIABLES USED BY VICTOR STARTS HERE ------------------------
+         */
+        // how many beams to create for each row to fill the room
+        this.beamCount = [7,9,11,13,15,17,19,19,19,19,19,19,19,17,15,13,11,9,7];
+
+        // delay between each beam
+        this.beamdelay = 400;
+
+        // count the progress of beam going thru the room
+        this.currentrow = 0;
+
+        // timestamp to ensure delay between beams
+        this.lastbeam = Date.now();
+
+        // square pattern on pattern beam phase, 
+        // the array is formatted as [x1, y1, x2, y2,...]
+        this.beampattern = [
+            [-1, -1, 0, -1, 0, 0, -1, 0],
+            [1, -1, 0, -1, 0, 0, 1, 0],
+            [0, 0, 0, -1, 1, -1, 1, 0],
+            [0, 0, 0, 1, 1, 1, 1, 0]
+        ];
+        // current square pattern in progress
+        this.currentpattern = 0;
+
+        // 0 = closing beams, 1 = pattern beams
+        this.beamphase = 0;
+
+        /**
+         * VARIABLES BY VICTOR ENDS HERE---------------------------------
+         */
+
         /** 
          * THIS IS WHERE VARIABLES USED BY ALI ARE 
         */
@@ -154,6 +194,7 @@ class Raven extends Enemy {
             if(this.createhealthbar) {
                 this.hp = new HealthMpBar(this.game, this.x + 2 * this.scale, this.y + 68 * this.scale, 22 * this.scale, 30000, 0);
                 this.createhealthbar = false;
+                this.state = 0;
             }
             //IF WE ARE DEAD, do the celebration while raven sits down.
             if(this.hp.current <= 0) {
@@ -177,7 +218,43 @@ class Raven extends Enemy {
                     this.celebrationTimer = Date.now();
                 }
             } else {
-                this.aliattack();
+                // choose attack from pool
+                if (!this.inprogress) {
+                    // start a delay after an attack is completed
+                    if (!this.attackDelayTimestamp) {
+                        this.attackDelayTimestamp = Date.now();
+                        this.lastphase = this.current;
+                        this.current = null;
+                    }
+
+                    // NOTE: this prepicking exists because the end of shuriken phase takes too long to transition to beams,
+                    // while other phase transitions only requires about 1/3 time 
+
+                    // choose a random attack at 1/3 of delay
+                    if (this.current === null && Date.now() - this.attackDelayTimestamp > this.betweenAttacksDelay/3) {
+                        var next = randomInt(2);
+                        this.current = next;
+
+                        // if this is not transition from shurikens to beam, then immediately start the attack
+                        if (this.lastphase - next !== 1) {
+                            this.attackDelayTimestamp -= this.betweenAttacksDelay;
+                        }
+                    }
+                    
+                    // choose a random attack
+                    if (Date.now() - this.attackDelayTimestamp > this.betweenAttacksDelay) {
+                        this.attackDelayTimestamp = null;
+                        this.inprogress = true;
+                    }
+                } else {
+                    // perform attack
+                    if (this.current === 0) {
+                        this.vicsattack();
+                    } else if (this.current === 1) {
+                        this.aliattack();
+                    }
+                }
+
                 this.updateBound();
                 this.checkCollisions();
             }
@@ -235,6 +312,72 @@ class Raven extends Enemy {
             }
         })
     }
+
+    /**
+     * BEGINNING OF VICTOR'S ATTACK -------------------------------------
+     */
+    vicsattack() {
+        if (Date.now() - this.lastbeam >= this.beamdelay) {
+            // this is after a beam phase is completed, pick a random one
+            if (this.currentrow === 0) {
+                this.beamphase = randomInt(2);
+            }
+
+            // closing beams phase
+            if (this.beamphase === 0) {
+                // left to right
+                for (var j = 0; j < this.beamCount[this.currentrow]; j++) {
+                    this.game.addEntity(new Beam(this.game, 48 + this.currentrow*64, 64*(j+6.75-(this.beamCount[this.currentrow]-7)/2)));
+                }
+                // right to left
+                for (var j = 0; j < this.beamCount[18-this.currentrow]; j++) {
+                    this.game.addEntity(new Beam(this.game, 48 + (18-this.currentrow)*64, 64*(j+6.75-(this.beamCount[18-this.currentrow]-7)/2)));
+                }
+                // top to bottom
+                for (var j = 0; j < this.beamCount[this.currentrow]; j++) {
+                    this.game.addEntity(new Beam(this.game, 64*(j+6.75-(this.beamCount[this.currentrow]-7)/2), 48 + this.currentrow*64));
+                }
+                // bottom to top
+                for (var j = 0; j < this.beamCount[18-this.currentrow]; j++) {
+                    this.game.addEntity(new Beam(this.game, 64*(j+6.75-(this.beamCount[18-this.currentrow]-7)/2), 48 + (18-this.currentrow)*64));
+                }
+            } 
+            // beam pattern phase
+            else {
+                // this is the beginning of the phase, pick a pattern
+                if (this.currentrow === 0)
+                    this.currentpattern = randomInt(this.beampattern.length);
+            
+                var xoffset = this.beampattern[this.currentpattern][this.currentrow*2];
+                var yoffset = this.beampattern[this.currentpattern][this.currentrow*2+1];
+            
+                for(var i = 0; i < this.beamCount.length; i+=2) {
+                    for (var j = 0; j < this.beamCount[i]; j+=2) {
+                        this.game.addEntity(new Beam(this.game, 48 + (i+xoffset) *64, 64*(j+6.75-(this.beamCount[i]-7)/2 + yoffset), 1500));
+                    }
+                }
+            }
+           
+
+            this.currentrow++;
+            // only for pattern beam phase, signal to end the phase when the pattern is done
+            if (this.beamphase === 1 && this.currentrow === this.beampattern[this.currentpattern].length/2)
+                this.currentrow = this.beamCount.length;
+            
+            // delay for the next beam
+            this.lastbeam = Date.now();
+        }
+
+        // end the beam attack
+        if (this.currentrow === this.beamCount.length) {
+            this.currentrow = 0;
+            this.inprogress = false;
+        }
+    }
+
+    /**
+     * END OF VICTOR'S ATTACK -------------------------------------------
+     */
 
     updateBound() 
     {
@@ -299,6 +442,8 @@ class Raven extends Enemy {
 
         if(this.attackturn == 2) {
             this.attackturn = 0;
+            // end of cycle
+            this.inprogress = false;
         } else {
             this.attackturn++;
         }
@@ -331,6 +476,8 @@ class Raven extends Enemy {
         
         if(this.attackturn == 2) {
             this.attackturn = 0;
+            // end of cycle
+            this.inprogress = false;
         } else {
             this.attackturn++;
         }
@@ -374,6 +521,8 @@ class Raven extends Enemy {
 
         if(this.attackturn == 2) {
             this.attackturn = 0;
+            // end of cycle
+            this.inprogress = false;
         } else {
             this.attackturn++;
         }
@@ -403,7 +552,7 @@ class Raven extends Enemy {
             }        
         }
 
-        //If it is time to do special, do it.
+        // If it is time to do special, do it.
         if(Date.now() - this.specialtimer > this.specialcd) {
             this.animations[2][0].elapsedTime = 0;
             this.animations[2][1].elapsedTime = 0;

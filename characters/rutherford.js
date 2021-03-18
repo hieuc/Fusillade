@@ -520,7 +520,7 @@ class Rutherford {
 
     checkCollision() {
         this.game.entities.forEach(e => {
-            if (e instanceof Projectiles && this.bound.collide(e.bound) && !e.friendly) {
+            if ((e instanceof Projectiles || e instanceof Beam) && e.bound && this.bound.collide(e.bound) && !e.friendly) {
                 //If ascended take 80% of the intended damage.
                 if(this.form == 1) {
                     e.hit(this);

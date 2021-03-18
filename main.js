@@ -58,6 +58,7 @@ ASSET_MANAGER.queueDownload("./sprites/CelebrationO.png");
 ASSET_MANAGER.queueDownload("./sprites/CelebrationB.png");
 ASSET_MANAGER.queueDownload("./sprites/expB.png");
 ASSET_MANAGER.queueDownload("./sprites/expO.png");
+ASSET_MANAGER.queueDownload("./sprites/beam.png");
 
 
 

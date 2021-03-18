@@ -488,9 +488,12 @@ class SceneManager {
         this.char.x = 500;
         this.char.y = 500;
         this.char.hp.current = this.char.hp.maxHealth;
-
+        
+        
         this.boss = new Raven(this.game, 575, 550);
         this.game.addEntity(this.boss); 
+        
+
 
         // add planets
         this.planets = [];
@@ -618,7 +621,7 @@ class SceneManager {
                 }
             } else if (this.level === 3) {
                 // level 3 interactions
-                if (this.boss.hp)
+                if (this.boss && this.boss.hp)
                     this.planets.forEach(e => {
                         var mul;
                         if (this.boss.hp.current > 0) {
