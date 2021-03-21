@@ -628,15 +628,18 @@ class SceneManager {
         this.shootphrase("ali", 0.5, 325, 5640, 9);
         this.shootphrase("victor", 0.5, 300, 5660, 11);
 
-        this.shootphrase("core functionaslities", 0.5, 190, 5900, 2);
+        this.shootphrase("core functionalities", 0.5, 190, 5900, 2);
         this.shootphrase("victor", 0.5, 310, 5930, 11);
         this.shootphrase("prof. chris marriot", 0.5, 205, 5955, 6);
 
-        this.shootphrase("music & art scouting", 0.5, 200, 6100, 2);  
-        this.shootphrase("ali", 0.5, 340, 6130, 9);
-        this.shootphrase("askhdeep", 0.5, 300, 6155, 10); 
+        this.shootphrase("maps implementation", 0.5, 200, 6120, 2);  
+        this.shootphrase("victor", 0.5, 310, 6150, 11);
+
+        this.shootphrase("music & art scouting", 0.5, 195, 6300, 2);  
+        this.shootphrase("ali", 0.5, 335, 6330, 9);
+        this.shootphrase("askhdeep", 0.5, 295, 6355, 10); 
         
-        this.shootphrase("thanks for playing!", 1, 100, 6300, 4); 
+        this.shootphrase("thanks for playing!", 1, 100, 6500, 4); 
 
         for (var i = 0; i < 20; i++) {
             this.game.addEntity(new Bunny(this.game, 220, 6900+420));
