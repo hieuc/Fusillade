@@ -14,7 +14,7 @@ class Wormy extends Enemy {
 
         this.animations = [];
 
-        this.bound = new BoundingBox(this.game, this.x, this.y, 60, 50);
+        this.bound = new BoundingBox(this.game, this.x + 65, this.y + 70, 60, 50);
 
         this.hp = new HealthMpBar(this.game, this.x * this.scale, this.y * this.scale, 50 * this.scale, 400, 0, false); //change this to fit Wormy
 
@@ -75,9 +75,14 @@ class Wormy extends Enemy {
     }
 
     update() {
+        
+        if (this.game.camera.level === 4)
+            this.speed = 0;
+        else
+            this.speed = 3.5;
+
         this.enemyX = this.game.camera.char.x;
         this.enemyY = this.game.camera.char.y;
-        this.speed = 3.5;
 
         // if Wormy dies
         if(this.state == 3) 

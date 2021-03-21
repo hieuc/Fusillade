@@ -59,6 +59,7 @@ ASSET_MANAGER.queueDownload("./sprites/CelebrationB.png");
 ASSET_MANAGER.queueDownload("./sprites/expB.png");
 ASSET_MANAGER.queueDownload("./sprites/expO.png");
 ASSET_MANAGER.queueDownload("./sprites/beam.png");
+ASSET_MANAGER.queueDownload("./sprites/skittles.png");
 
 
 
@@ -72,6 +73,7 @@ ASSET_MANAGER.queueDownload("./sounds/music/level2-stage1.mp3");
 ASSET_MANAGER.queueDownload("./sounds/music/level2-stage2.mp3");
 ASSET_MANAGER.queueDownload("./sounds/music/polnariff.mp3");
 ASSET_MANAGER.queueDownload("./sounds/music/drumbuck.mp3");
+ASSET_MANAGER.queueDownload("./sounds/music/fortnite.mp3");
 ASSET_MANAGER.queueDownload("./sounds/sfx/Ascend.mp3");
 ASSET_MANAGER.queueDownload("./sounds/sfx/Barrelbreak.mp3");
 ASSET_MANAGER.queueDownload("./sounds/sfx/health.mp3");
@@ -90,6 +92,7 @@ ASSET_MANAGER.queueDownload("./sounds/sfx/slimehit.mp3");
 ASSET_MANAGER.queueDownload("./sounds/sfx/merchantpop.mp3");
 ASSET_MANAGER.queueDownload("./sounds/sfx/rutherfordpop.mp3");
 ASSET_MANAGER.queueDownload("./sounds/sfx/Laff.mp3");
+
 
 
 

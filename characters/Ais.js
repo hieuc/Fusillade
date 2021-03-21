@@ -77,8 +77,12 @@ class Ais extends Enemy{
     }
 
     update() {
-        //Reset speed always in case we hit an obstacle.
-        this.speed = 2;
+        if (this.game.camera.level === 4) {
+            this.speed = 0;
+        } else {
+            //Reset speed always in case we hit an obstacle.
+            this.speed = 2;
+        }
         //Get newest position of Rutherford.
         this.enemyX = this.game.camera.char.x;
         this.enemyY = this.game.camera.char.y;

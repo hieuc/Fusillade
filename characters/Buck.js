@@ -60,6 +60,8 @@ class Buck extends Enemy {
 
         this.animations = [];
 
+        this.triggerrange = 900;
+
         this.loadAnimations();
     }
 
@@ -144,13 +146,13 @@ class Buck extends Enemy {
                this.game.addEntity(new BunchofCoins(this.game, this.bound.x, this.bound.y, 20));
             }
        } else {
-            if(Date.now() - this.createone > this.createonecd) {
+            if(Date.now() - this.createone > this.createonecd && this.triggered) {
                 this.game.addEntity(new Propportal(this.game, this.x * Math.random(), this.y *Math.random(), "Ais"));
                 this.createone = Date.now();
             }
 
             //First check if player triggered the enemy.
-            if((Math.abs(this.x - this.enemyX) < 900 && Math.abs(this.y - this.enemyY) < 900) && !this.triggered) {
+            if((Math.abs(this.x - this.enemyX) < this.triggerrange && Math.abs(this.y - this.enemyY) < this.triggerrange) && !this.triggered) {
                 this.triggered = true;
                 this.summontime = Date.now();
             }
@@ -231,7 +233,7 @@ class Buck extends Enemy {
 
     draw(ctx) {
         this.animations[this.state][this.face].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale);
-        if (this.hp) {
+        if (this.hp && this.game.camera.level !== 4) {
             this.hp.draw();
         }
         

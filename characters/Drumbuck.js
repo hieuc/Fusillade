@@ -13,6 +13,8 @@ class Drumbuck extends Enemy {
         this.removeFromWorld = false;
 
         this.active = false;
+        if (this.game.camera.level === 4)
+            this.active = true;
 
         this.scale = 2.1; //Buck's size.
 
@@ -21,6 +23,8 @@ class Drumbuck extends Enemy {
         this.face = 1; // 0 = right, 1 = left
 
         this.speed = 1.8;
+
+        this.triggerrange = 900;
 
         this.triggered = false; //Are you aggro-d/triggered?
 
@@ -146,13 +150,13 @@ class Drumbuck extends Enemy {
                this.game.addEntity(new BunchofCoins(this.game, this.bound.x, this.bound.y, 30));
             }
        } else if (this.active){
-            if(Date.now() - this.createone > this.createonecd) {
+            if(Date.now() - this.createone > this.createonecd && this.triggered) {
                 this.game.addEntity(new Propportal(this.game, this.x * Math.random(), this.y *Math.random(), "Ais"));
                 this.createone = Date.now();
             }
 
             //First check if player triggered the enemy.
-            if((Math.abs(this.x - this.enemyX) < 900 && Math.abs(this.y - this.enemyY) < 900) && !this.triggered) {
+            if((Math.abs(this.x - this.enemyX) < this.triggerrange && Math.abs(this.y - this.enemyY) < this.triggerrange) && !this.triggered) {
                 this.triggered = true;
                 this.summontime = Date.now();
             }

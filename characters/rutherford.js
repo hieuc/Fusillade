@@ -187,6 +187,11 @@ class Rutherford {
                 this.hp.current = this.hp.maxHealth;
                 this.action = 0;
                 this.game.camera.loadLevel3();
+            } else if (this.game.camera.level === 4) {
+                this.animations[this.action][this.face][this.form].elapsedTime = 0;
+                this.hp.current = this.hp.maxHealth;
+                this.action = 0;
+                this.game.camera.loadCredits();
             }
             else {
                 this.x = this.game.camera.checkpoint.x;
@@ -497,21 +502,27 @@ class Rutherford {
             else 
                 this.face = 0;
 
-            var velocity = this.calculateVel(this.game.mouse);
-            //In case we are ascended, we want to know fire projectile's coordinates.
-            var f = this.form === 0; // condition if form is default, change this to an int if we have more than 2 form
-            var pp = {sx: 96, sy: 336, size: 16};
-            var p;
+            if (this.game.camera.level !== 4) {
+                var velocity = this.calculateVel(this.game.mouse);
+            
+                //In case we are ascended, we want to know fire projectile's coordinates.
+                var f = this.form === 0; // condition if form is default, change this to an int if we have more than 2 form
+                var pp = {sx: 96, sy: 336, size: 16};
+                var p;
 
-            if (PARAMS.meme) {
-                pp = {sx: 0, sy: 0, size: 16, spritesheet: ASSET_MANAGER.getAsset("./sprites/p.png")};
-                p =  new Projectiles(this.game, true, this.x, this.y, velocity, 4, 
-                    1200, this.damage + randomInt(10) + (f ? 0 : Math.floor(this.damage*0.4)), pp, f ? "star" : "burn");;
+                if (PARAMS.meme) {
+                    pp = {sx: 0, sy: 0, size: 16, spritesheet: ASSET_MANAGER.getAsset("./sprites/p.png")};
+                    p =  new Projectiles(this.game, true, this.x, this.y, velocity, 4, 
+                        1200, this.damage + randomInt(10) + (f ? 0 : Math.floor(this.damage*0.4)), pp, f ? "star" : "burn");;
+                } else {
+                    p = new Projectiles(this.game, true, this.x, this.y, velocity, 7, 
+                        1200, this.damage + randomInt(10) + (f ? 0 : Math.floor(this.damage*0.4)), f ? undefined : pp, f ? "star" : "burn");
+                }
+                this.game.entities.splice(this.game.entities.length - 1, 0, p);
             } else {
-                p = new Projectiles(this.game, true, this.x, this.y, velocity, 7, 
-                    1200, this.damage + randomInt(10) + (f ? 0 : Math.floor(this.damage*0.4)), f ? undefined : pp, f ? "star" : "burn");
+                var pool = "abcdefghijklmnopqrstuvwxyz!()&.";
+                this.shootLetter(pool[randomInt(pool.length)]);
             }
-            this.game.entities.splice(this.game.entities.length - 1, 0, p);
             
             this.animations[this.action][this.face][this.form].elapsedTime = 0;
             this.lastAttack = Date.now();
@@ -566,6 +577,8 @@ class Rutherford {
                 e.removeFromWorld = true;
             } else if(e instanceof BunchofCoins && this.bound.collide(e.bound)) {
                 this.coins += e.value;
+                if (e.special)
+                    this.hasapet = true;
                 ASSET_MANAGER.playAsset("./sounds/sfx/coin.mp3");
                 e.removeFromWorld = true;
             }
@@ -592,5 +605,21 @@ class Rutherford {
             v.y *= -1;
         
         return v;
+    }
+
+    shootLetter(letter) {
+        
+        var velocity = this.calculateVel(this.game.mouse);
+        var pp = { spritesheet: ASSET_MANAGER.getAsset("./sprites/skittles.png"), 
+                    sx: randomInt(12)*8, sy: 0, size: 8, scale: 2};
+        
+        for (var i = 0; i < ALPHABET[letter].length; i++) {
+            var x = 4-ALPHABET[letter][i] % 5;  
+            var y = 4-Math.floor(ALPHABET[letter][i] / 5);
+            var p = new Chasingprojectile(this.game, true, this.x - (x*0.7-1)*pp.scale*pp.size, this.y - (y*0.7-1)*pp.scale*pp.size, // 0.7 is the spacing between pixels
+                velocity, 10, 800, this.damage + randomInt(10), pp);
+
+            this.game.addEntity(p);
+        }
     }
 }

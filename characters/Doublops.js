@@ -25,6 +25,8 @@ class Doublops extends Enemy
 
         this.isEnemy = true;
 
+        this.triggerrange = 550;
+
         this.toofarmovement = Date.now(); // We want to give a behavior pattern when enemy is too far.
 
         this.attackpatterntime = Date.now(); // When are in attack range, do time interval patterns.
@@ -118,7 +120,7 @@ class Doublops extends Enemy
         } 
         else 
         {
-            if(Math.abs(this.bound.x + this.bound.w/2 - this.enemyX) < 550 && Math.abs(this.bound.y + this.bound.h/2 - this.enemyY) < 550) {
+            if(Math.abs(this.bound.x + this.bound.w/2 - this.enemyX) < this.triggerrange && Math.abs(this.bound.y + this.bound.h/2 - this.enemyY) < this.triggerrange) {
                 this.attackbehavior = Date.now() - this.attackpatterntime;
                 if(this.attackbehavior < 1500) 
                 {

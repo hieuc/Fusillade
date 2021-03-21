@@ -19,7 +19,7 @@ class Beam {
         if (this.phase === 0 && Date.now() - this.timestamp >= this.pretime)
             this.phase = 1;
         else if (this.phase === 1) {
-            if (this.animation.isAlmostDone(this.game.clockTick)) {
+            if (this.animation.isDone()) {
                 this.removeFromWorld = true;
             } else if (this.animation.currentFrame() > 3) {
                 this.bound = null;

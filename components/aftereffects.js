@@ -407,18 +407,27 @@ class Jojoeffect {
     }
 
     update() {
-        this.scale += 0.003;
-        this.y -= 1;
-        if(Date.now() - this.timer > 5000) {
-            this.removeFromWorld = true;
+        if (this.game.camera.level !== 4) {
+            this.scale += 0.003;
+            this.y -= 1;
+            if(Date.now() - this.timer > 5000) {
+                this.removeFromWorld = true;
+            }
+    
+            if(Date.now() - this.movetimer > 100) {
+                this.xmove *= -1;
+                this.movetimer = Date.now();
+            }
+    
+            this.x += this.xmove;
         }
-
-        if(Date.now() - this.movetimer > 100) {
-            this.xmove *= -1;
-            this.movetimer = Date.now();
+        else {
+            if(Date.now() - this.movetimer > 100) {
+                this.xmove *= -1;
+                this.movetimer = Date.now();
+            }
+            this.x += this.xmove;
         }
-
-        this.x += this.xmove;
     }
 
     draw(ctx) {

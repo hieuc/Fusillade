@@ -43,6 +43,8 @@ class Raven extends Enemy {
 
         this.animations = [];
 
+        this.active = true;
+
         // attacks related
         this.current = 0;
         this.lastphase = 0;
@@ -177,86 +179,93 @@ class Raven extends Enemy {
     }
 
     update() {
-        // enemy update
-        this.speed = 5;
-        this.enemyX = this.game.camera.char.x;
-        this.enemyY = this.game.camera.char.y;
-        // introduction
-        if(Date.now() - this.starttimer < this.specialcd-1000) {
-            if(!this.createdeffect) {
-                this.state = 5;
-                this.game.addEntity(new Jojoeffect(this.game, this.x+50, this.y-60));
-                this.game.addEntity(new Jojoeffect(this.game, this.x-60, this.y-60));
-                this.createdeffect = true;
-            }
-        } else {
-            // after intro (stood up)
-            if(this.createhealthbar) {
-                this.hp = new HealthMpBar(this.game, this.x + 2 * this.scale, this.y + 68 * this.scale, 22 * this.scale, 30000, 0);
-                this.createhealthbar = false;
-                this.state = 0;
-            }
-            //IF WE ARE DEAD, do the celebration while raven sits down.
-            if(this.hp.current <= 0) {
-                this.state = 5;
-                this.face = 0;
-                let xcele = 100;
-                let ycele = 100;
-                if(Date.now() - this.celebrationTimer > 6000) {
-                    for(let j = 0; j < 15; j++) {
-                        this.game.addEntity(new CelebrationO(this.game, xcele, 572));
-                        this.game.addEntity(new CelebrationB(this.game, 610, ycele));
-                        xcele += 70;
-                        ycele += 80;
-                    }
-                    for(let i = 100; i < 109; i++) {
-                        let sideX = Math.random() < 0.51? -1:1;
-                        let sideY = Math.random() < 0.51? -1:1;
-                        this.game.addEntity(new CelebrationO(this.game, this.x + (Math.random() * i * sideX), this.y + (Math.random() * i * sideY)));
-                        this.game.addEntity(new CelebrationB(this.game, this.x * Math.random() * i * sideX, this.y * Math.random() * i * sideY));
-                    }
-                    this.celebrationTimer = Date.now();
+        if (this.active) {
+            // enemy update
+            if (this.game.camera === 4)
+                this.speed = 0;
+            else
+                this.speed = 5;
+
+            this.enemyX = this.game.camera.char.x;
+            this.enemyY = this.game.camera.char.y;
+
+            // introduction
+            if(Date.now() - this.starttimer < this.specialcd-1000) {
+                if(!this.createdeffect) {
+                    this.state = 5;
+                    this.game.addEntity(new Jojoeffect(this.game, this.x+50, this.y-60));
+                    this.game.addEntity(new Jojoeffect(this.game, this.x-60, this.y-60));
+                    this.createdeffect = true;
                 }
             } else {
-                // choose attack from pool
-                if (!this.inprogress) {
-                    // start a delay after an attack is completed
-                    if (!this.attackDelayTimestamp) {
-                        this.attackDelayTimestamp = Date.now();
-                        this.lastphase = this.current;
-                        this.current = null;
-                    }
-
-                    // NOTE: this prepicking exists because the end of shuriken phase takes too long to transition to beams,
-                    // while other phase transitions only requires about 1/3 time 
-
-                    // choose a random attack at 1/3 of delay
-                    if (this.current === null && Date.now() - this.attackDelayTimestamp > this.betweenAttacksDelay/3) {
-                        var next = randomInt(2);
-                        this.current = next;
-
-                        // if this is not transition from shurikens to beam, then immediately start the attack
-                        if (this.lastphase - next !== 1) {
-                            this.attackDelayTimestamp -= this.betweenAttacksDelay;
+                // after intro (stood up)
+                if(this.createhealthbar) {
+                    this.hp = new HealthMpBar(this.game, this.x + 2 * this.scale, this.y + 68 * this.scale, 22 * this.scale, 30000, 0);
+                    this.createhealthbar = false;
+                    this.state = 0;
+                }
+                //IF WE ARE DEAD, do the celebration while raven sits down.
+                if(this.hp.current <= 0) {
+                    this.state = 5;
+                    this.face = 0;
+                    let xcele = 100;
+                    let ycele = 100;
+                    if(Date.now() - this.celebrationTimer > 6000 && this.game.camera.level !== 4) {
+                        for(let j = 0; j < 15; j++) {
+                            this.game.addEntity(new CelebrationO(this.game, xcele, 572));
+                            this.game.addEntity(new CelebrationB(this.game, 610, ycele));
+                            xcele += 70;
+                            ycele += 80;
                         }
-                    }
-                    
-                    // choose a random attack
-                    if (Date.now() - this.attackDelayTimestamp > this.betweenAttacksDelay) {
-                        this.attackDelayTimestamp = null;
-                        this.inprogress = true;
+                        for(let i = 100; i < 109; i++) {
+                            let sideX = Math.random() < 0.51? -1:1;
+                            let sideY = Math.random() < 0.51? -1:1;
+                            this.game.addEntity(new CelebrationO(this.game, this.x + (Math.random() * i * sideX), this.y + (Math.random() * i * sideY)));
+                            this.game.addEntity(new CelebrationB(this.game, this.x * Math.random() * i * sideX, this.y * Math.random() * i * sideY));
+                        }
+                        this.celebrationTimer = Date.now();
                     }
                 } else {
-                    // perform attack
-                    if (this.current === 0) {
-                        this.vicsattack();
-                    } else if (this.current === 1) {
-                        this.aliattack();
-                    }
-                }
+                    // choose attack from pool
+                    if (!this.inprogress) {
+                        // start a delay after an attack is completed
+                        if (!this.attackDelayTimestamp) {
+                            this.attackDelayTimestamp = Date.now();
+                            this.lastphase = this.current;
+                            this.current = null;
+                        }
 
-                this.updateBound();
-                this.checkCollisions();
+                        // NOTE: this prepicking exists because the end of shuriken phase takes too long to transition to beams,
+                        // while other phase transitions only requires about 1/3 time 
+
+                        // choose a random attack at 1/3 of delay
+                        if (this.current === null && Date.now() - this.attackDelayTimestamp > this.betweenAttacksDelay/3) {
+                            var next = randomInt(2);
+                            this.current = next;
+
+                            // if this is not transition from shurikens to beam, then immediately start the attack
+                            if (this.lastphase - next !== 1) {
+                                this.attackDelayTimestamp -= this.betweenAttacksDelay;
+                            }
+                        }
+                        
+                        // choose a random attack
+                        if (Date.now() - this.attackDelayTimestamp > this.betweenAttacksDelay) {
+                            this.attackDelayTimestamp = null;
+                            this.inprogress = true;
+                        }
+                    } else {
+                        // perform attack
+                        if (this.current === 0) {
+                            this.vicsattack();
+                        } else if (this.current === 1) {
+                            this.aliattack();
+                        }
+                    }
+
+                    this.updateBound();
+                    this.checkCollisions();
+                }
             }
         }
     }
