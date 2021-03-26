@@ -8,7 +8,7 @@ class Rutherford {
 
         this.scale = 2;
 
-        this.damage = 15;
+        this.damage = 150;
 
         this.action = 0; // 0 = idle, 1 = run, 2 = attack, 3 = transform
 
@@ -539,7 +539,7 @@ class Rutherford {
                 } else {
                     e.hit(this);
                 }
-            } else if (e instanceof Obstacle && this.bound.collide(e.bound)) {
+            } else if (e instanceof Obstacle && this.bound.collide(e.bound) && false) {
                 if (e.callback) {
                     // for level transition
                     this.game.camera.loadLevel2();
