@@ -10,7 +10,7 @@ class Enemy {
 
     draw(ctx) {
         this.animations[this.state][this.face].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale);
-        if (this.hp) {
+        if (this.hp && this.game.camera.level !== 4) {
             this.hp.draw();
         }
         

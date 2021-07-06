@@ -19,6 +19,13 @@ class Chasingprojectile extends Projectiles {
     }
 
     update() {
+        // for credits level
+        if (this.game.camera.level === 4) {
+            if (this.game.camera.char.y - this.y > 400) {
+                this.timestamp -= this.lifetime;
+            }
+        }
+
         if (Date.now() - this.timestamp > this.lifetime) {
             this.removeFromWorld = true;
             let velocity = 0;

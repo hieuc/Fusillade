@@ -207,10 +207,16 @@ class GameEngine {
                 this.background[i].draw(this.ctx);
         }
 
-        for (var i = 0; i < this.entities.length; i++) {
-            if (this.isInWindow(this.entities[i]))
+        // only optimize for level 1 and 2, level 3 draw sync is important 
+        if(this.camera.level !== 3)
+            for (var i = 0; i < this.entities.length; i++) {
+                if (this.isInWindow(this.entities[i]))
+                    this.entities[i].draw(this.ctx);
+            }
+        else 
+            for (var i = 0; i < this.entities.length; i++) {
                 this.entities[i].draw(this.ctx);
-        }
+            }
         this.camera.draw(this.ctx);
     };
 

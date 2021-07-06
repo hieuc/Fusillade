@@ -22,7 +22,7 @@ class Bunny extends Enemy {
         this.moveDelay = 400;
         this.moveTime = 600;
 
-        this.detectRange = 450;
+        this.triggerrange = 450;
         this.closestRange = 125;
         this.attackRate = 200;
 
@@ -100,7 +100,7 @@ class Bunny extends Enemy {
 
             // if moving, try to head towards rutherford
             if (this.action === 1) {
-                if (d > this.closestRange && d < this.detectRange) {
+                if (d > this.closestRange && d < this.triggerrange) {
                     this.velocity = this.calculateVel();
                 } 
                 // if outside of range then pick a random direction.

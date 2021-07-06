@@ -80,7 +80,11 @@ class Fayere extends Enemy {
     }
 
     update() {
-        this.speed = 1.2;
+        if (this.game.camera.level === 4) {
+            this.speed = 0;
+        } else {
+            this.speed = 1.2;
+        }
         this.enemyX = this.game.camera.char.x;
         this.enemyY = this.game.camera.char.y;
         //As long as we don't trigger the enemy, do a pattern movement.

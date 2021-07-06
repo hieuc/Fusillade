@@ -21,6 +21,8 @@ class Cyclops extends Enemy
 
         //this.patterntimer = Date.now();
 
+        this.triggerrange = 800;
+
         this.speed = 1.2;
 
         this.isEnemy = true;
@@ -117,7 +119,7 @@ class Cyclops extends Enemy
         } 
         else 
         {
-            if(Math.abs(this.x - this.enemyX) < 800 && Math.abs(this.y - this.enemyY) < 800) {
+            if(Math.abs(this.x - this.enemyX) < this.triggerrange && Math.abs(this.y - this.enemyY) < this.triggerrange) {
                 this.attackbehavior = Date.now() - this.attackpatterntime;
                 if(this.attackbehavior < 1500) 
                 {

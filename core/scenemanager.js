@@ -488,9 +488,12 @@ class SceneManager {
         this.char.x = 500;
         this.char.y = 500;
         this.char.hp.current = this.char.hp.maxHealth;
-
+        
+        
         this.boss = new Raven(this.game, 575, 550);
         this.game.addEntity(this.boss); 
+        
+
 
         // add planets
         this.planets = [];
@@ -503,6 +506,147 @@ class SceneManager {
         ASSET_MANAGER.pauseBackgroundMusic();
         ASSET_MANAGER.playAsset("./sounds/music/Ignotus.mp3", 0.8);
         ASSET_MANAGER.autoRepeat("./sounds/music/Ignotus.mp3");
+    }
+
+    loadCredits() {
+        this.resetState();
+        this.level = 4;
+
+        var b = 8;  // unit size
+        var scale = 4;
+        var ss = ASSET_MANAGER.getAsset("./sprites/background.png");
+
+        // add pre background
+        for (var i = 0; i < 250; i++) {
+            for (var j = 0; j< 40; j++) {
+                if (Math.random() < 0.01)
+                    this.game.addBg(new Ground(this.game, 50+ (j-15) * b * scale, (i-15) * b * scale, {spritesheet: ss, sx: (6 + randomInt(5))*b, sy: 67 * b, width: b, height: b, scale: scale}));
+            }
+        }
+        
+
+        if (!this.char)
+            this.char = new Rutherford(this.game, 200, -700, false);
+        
+        this.char.x = 200;
+        this.char.y = -700;
+        this.char.hpregen = 5;
+        this.char.hp.maxHealth = 99999;
+        this.char.hp.maxMana = 99999;
+        this.char.hp.current = this.char.hp.maxHealth;
+        this.char.hp.currMana = this.char.hp.maxMana;
+
+        var models = [];
+        models.push(new Fayere(this.game, -50, 600));
+        models.push(new Bunny(this.game, 250, 600));
+        models.push(new Ais(this.game, 500, 600));
+
+        models.push(new Cyclops(this.game, -100, 1000));
+        models.push(new Doublops(this.game, 450, 1000));
+
+        models.push(new Wormy(this.game, -100, 1600));
+        models.push(new Wormito(this.game, 450, 1600));
+
+        models.push(new Slime(this.game, -50, 2200, 5));
+        models.push(new Slippey(this.game, 500, 2300));
+
+        models.push(new Buck(this.game, -50, 3200));
+        models.push(new Drumbuck(this.game, 500, 3200));
+
+        models.push(new Polnariff(this.game, 260, 4200));
+        models[models.length-1].state = 1;
+        models.push(new SunPortal(this.game, 570, 4250));
+        models.push(new KnifePortal(this.game, 420, 4220));
+        models.push(new MiasmaPortal(this.game, 420, 4300, {x:0, y:0}, 0, 0, 0));
+        models.push(new Barrel(this.game, -80, 4250, "sred"));
+        models.push(new Barrel(this.game, 120, 4250, "red"));
+        models.push(new Barrel(this.game, -30, 4200, "sblue"));
+        models.push(new Barrel(this.game, 70, 4200, "blue"));
+        models.push(new Barrel(this.game, -30, 4300, "fayere"));
+        models.push(new Barrel(this.game, 70, 4300, "threecoin"));
+        var coins = new BunchofCoins(this.game, 30, 4270, 100);
+        coins.special = true;
+        models.push(coins);
+
+        models.push(new Raven(this.game, 270, 5000));
+        models[models.length-1].active = false;
+        models.push(new Jojoeffect(this.game, 110, 4980));
+        models.push(new Jojoeffect(this.game, 170, 4980));
+        var beam = new Beam(this.game, 440, 5080);
+        beam.animation.loop = true;
+        models.push(beam);
+        
+
+        for (var i = 0; i < models.length; i++) {
+            models[i].speed = 0;
+            models[i].triggerrange = 350;
+            if (models[i] instanceof Buck || models[i] instanceof Drumbuck)
+                models[i].triggerrange = 200;
+
+            this.game.addEntity(models[i]);
+        }
+
+        this.shootphrase("fusillade", 3.5, -180, -350);
+        this.shootphrase("a game by", 1, 120, -250, 0);
+        this.shootphrase("hieu (victor) chau", 2, -275, -100, 11);
+        this.shootphrase("ali iftakhar", 2, -105, -10, 9);
+        this.shootphrase("askhdeep cheema", 2, -190, 80, 10);
+        this.shootphrase("fayere", 0.5, -70, 590, 2);
+        this.shootphrase("ali", 0.5, -50, 650, 9);
+        this.shootphrase("ais", 0.5, 505, 590, 2);
+        this.shootphrase("ali", 0.5, 505, 650, 9);
+        this.shootphrase("bunny", 0.5, 232, 590, 2);
+        this.shootphrase("victor", 0.5, 225, 650, 11);
+        this.shootphrase("cyclops", 0.5, -80, 1030, 2);
+        this.shootphrase("askhdeep", 0.5, -90, 1150, 10);
+        this.shootphrase("ali", 0.5, -50, 1170, 9);
+        this.shootphrase("victor", 0.5, -73, 1190, 11);
+        this.shootphrase("doublops", 0.5, 462, 1030, 2);
+        this.shootphrase("ali", 0.5, 505, 1150, 9);
+        this.shootphrase("wormy", 0.5, -35, 1620, 2);
+        this.shootphrase("askhdeep", 0.5, -60, 1745, 10);
+        this.shootphrase("ali", 0.5, -22, 1765, 9);
+        this.shootphrase("wormito", 0.5, 490, 1620, 2);
+        this.shootphrase("ali", 0.5, 525, 1745, 9);
+        this.shootphrase("slimee", 0.5, -8, 2305, 2);
+        this.shootphrase("victor", 0.5, -8, 2380, 11);
+        this.shootphrase("slippey", 0.5, 495, 2305, 2);
+        this.shootphrase("ali", 0.5, 525, 2390, 9);
+        this.shootphrase("buck", 0.5, 30, 3235, 2);
+        this.shootphrase("ali", 0.5, 38, 3355, 9);
+        this.shootphrase("drumbuck", 0.5, 550, 3235, 2);
+        this.shootphrase("ali", 0.5, 590, 3355, 9);
+        this.shootphrase("merchan", 0.5, 10, 4180, 2);
+        this.shootphrase("ali", 0.5, 40, 4380, 9);
+        this.shootphrase("polnariff", 0.5, 455, 4180, 2);
+        this.shootphrase("victor", 0.5, 480, 4380, 11);
+        this.shootphrase("raven", 0.5, 294, 4980, 2);
+        this.shootphrase("ali", 0.5, 185, 5150, 9);
+        this.shootphrase("victor", 0.5, 405, 5150, 11);
+
+        this.shootphrase("rutherford", 0.5, 270, 5500, 2);
+        this.shootphrase("ali", 0.5, 325, 5640, 9);
+        this.shootphrase("victor", 0.5, 300, 5660, 11);
+
+        this.shootphrase("core functionalities", 0.5, 190, 5900, 2);
+        this.shootphrase("victor", 0.5, 310, 5930, 11);
+        this.shootphrase("prof. chris marriot", 0.5, 205, 5955, 6);
+
+        this.shootphrase("maps implementation", 0.5, 200, 6120, 2);  
+        this.shootphrase("victor", 0.5, 310, 6150, 11);
+
+        this.shootphrase("music & art scouting", 0.5, 195, 6300, 2);  
+        this.shootphrase("ali", 0.5, 335, 6330, 9);
+        this.shootphrase("askhdeep", 0.5, 295, 6355, 10); 
+        
+        this.shootphrase("thanks for playing!", 1, 100, 6500, 4); 
+
+        for (var i = 0; i < 20; i++) {
+            this.game.addEntity(new Bunny(this.game, 220, 6900+420));
+        }
+
+        this.game.addEntity(this.char);
+        this.playTheme("./sounds/music/fortnite.mp3");
     }
 
     update() {
@@ -618,7 +762,7 @@ class SceneManager {
                 }
             } else if (this.level === 3) {
                 // level 3 interactions
-                if (this.boss.hp)
+                if (this.boss && this.boss.hp)
                     this.planets.forEach(e => {
                         var mul;
                         if (this.boss.hp.current > 0) {
@@ -630,6 +774,17 @@ class SceneManager {
                         }
                         
                     });
+            } else if (this.level === 4) {
+                // credits level interaction
+                if (this.char.bound.x >= 320 && this.char.bound.x <= 350
+                        && this.char.bound.y >= 5540 && this.char.bound.y <= 5580) {
+
+                    if (this.char.coins < 999) {
+                        this.char.coins++;
+                    } else {
+                        this.char.coins = 0;
+                    }
+                }
             }
         }  
     };
@@ -810,6 +965,17 @@ class SceneManager {
                         this.loadLevel3();
                     } else if(this.game.click.y >= PARAMS.canvas_height*0.92 && this.game.click.y < PARAMS.canvas_height*0.99) {
                         //CREDITS GO HERE
+                        // resize canvas when game start
+                        var canvas = document.getElementById("gameWorld");
+                        canvas.getContext('2d').imageSmoothingEnabled = true;
+                        canvas.height = 900;
+                        PARAMS.canvas_height = 900;
+                        canvas.getContext('2d').imageSmoothingEnabled = false;
+                                                
+                        this.game.started = true;
+                        this.game.leftclick = false;
+                        this.game.click = null;
+                        this.loadCredits();
                     }
                 } 
             }
@@ -917,6 +1083,31 @@ class SceneManager {
                 this.boss2.removeFromWorld = true;
                 this.boss2 = new Polnariff(this.game, Math.floor(r.x + r.w/2) * 64, Math.floor(r.y + r.h/2) * 64, r)
                 this.game.addEntity(this.boss2);
+            }
+        }
+    }
+
+    shootLetter(letter, scale, sx, sy, color) {
+        var pp = { spritesheet: ASSET_MANAGER.getAsset("./sprites/skittles.png"), 
+                    sx: 8*color, sy: 0, size: 8, scale: scale};
+        
+        for (var i = 0; i < ALPHABET[letter].length; i++) {
+            var x = 4-ALPHABET[letter][i] % 5;  
+            var y = 4-Math.floor(ALPHABET[letter][i] / 5);
+            var p = new Chasingprojectile(this.game, true, sx - (x*0.7)*pp.scale*pp.size, sy - (y*0.7)*pp.scale*pp.size, // 0.7 is the spacing between pixels
+                {x:0, y:0}, 10, 120000, 10 + randomInt(10), pp);
+
+            this.game.addEntity(p);
+        }
+    }
+
+    shootphrase(phrase, scale, sx, sy, color) {
+        for (var i = 0; i < phrase.length; i++) {
+            if (phrase[i] !== " ") {
+                if (color === undefined)
+                    this.shootLetter(phrase[i], scale, sx + scale*8*4*i, sy, randomInt(12));
+                else 
+                    this.shootLetter(phrase[i], scale, sx + scale*8*4*i, sy, color);
             }
         }
     }

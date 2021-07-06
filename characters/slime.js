@@ -9,8 +9,15 @@ class Slime extends Enemy {
         this.attackcd = 300;
         this.movecd = 300;
         this.triggerrange = 500;
-        this.pp = {sx: 176, sy: 80, size: 16, scale: 0.5*(this.scale-1)};
         this.speed = 1;
+
+        if (this.game.camera.level === 4) {
+            this.triggerrange = 350;
+            this.speed = 0;
+        }
+
+        this.pp = {sx: 176, sy: 80, size: 16, scale: 0.5*(this.scale-1)};
+        
         this.velocity = {x: 0, y: 0};
         this.damage = 15;
 
@@ -111,7 +118,7 @@ class Slime extends Enemy {
             this.animations[this.state][this.face].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale);
         }
         
-        if (this.hp && this.state !== 3) {
+        if (this.hp && this.state !== 3 && this.game.camera.level !== 4) {
             this.hp.draw();
         }
         

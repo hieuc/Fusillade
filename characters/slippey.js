@@ -48,6 +48,8 @@ class Slippey extends Enemy {
         
         this.morphcd = 6000;
 
+        this.triggerrange = 600;
+
         this.loadAnimations();
 
     }
@@ -128,8 +130,13 @@ class Slippey extends Enemy {
     }
 
     update() {
-        //Refresh our speed, in case we get hit. This formula makes sure the speed is adjusted according to form.
-        this.speed = this.transform*4 + 1
+        if (this.game.camera.level === 4) {
+            this.speed = 0;
+        } else {
+            //Refresh our speed, in case we get hit. This formula makes sure the speed is adjusted according to form.
+            this.speed = this.transform*4 + 1
+        }
+        
         this.enemyX = this.game.camera.char.x;
         this.enemyY = this.game.camera.char.y;
         //If we have collided to environemnt, go back and opposite to the direction you collided.
@@ -148,7 +155,7 @@ class Slippey extends Enemy {
                 this.cooldown = false;
             }
         //Otherwise, if we're triggered or within range.
-        } else if(Math.abs(this.x - this.enemyX) < 600 && Math.abs(this.y - this.enemyY) < 300 || (this.triggered)) {
+        } else if(Math.abs(this.x - this.enemyX) < this.triggerrange && Math.abs(this.y - this.enemyY) < this.triggerrange/2 || (this.triggered)) {
             this.triggered = true;
             //Check once in your existence if you should morph or stay as slime.
             if(Date.now() - this.morphtimer > this.morphcd) {
@@ -178,8 +185,10 @@ class Slippey extends Enemy {
                     if(this.animations[this.state][this.face][this.transform].isAlmostDone(this.game.clockTick)) {
                         this.state = 1;
                         this.start = false;
+                        /*
                         this.x -= 10;
                         this.y -= 20;
+                        */
                     }
                 } else if((Math.abs(this.x - this.enemyX) <= 300 && Math.abs(this.y - this.enemyY <= 300)) || this.attacking) {
                     this.attacking = true;
@@ -248,7 +257,7 @@ class Slippey extends Enemy {
 
     draw(ctx) {
         //Draw it only when we aren't transforming or dying in Slimeford form, (hp bar looks skewed)
-        if(this.state != 4 && this.start != true) {
+        if(this.state != 4 && this.start != true && this.game.camera.level !== 4) {
             this.hp.draw();
         }
         if (PARAMS.debug) {

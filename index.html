@@ -10,6 +10,7 @@
     <link rel="icon" href="data:;base64,=">
     
     <script type="text/javascript" src="./perlin.js"></script>
+    <script type="text/javascript" src="./alphabet.js"></script>
     <script type="text/javascript" src="./core/assetmanager.js"></script>
     <script type="text/javascript" src="./core/timer.js"></script>
     <script type="text/javascript" src="./core/gameengine.js"></script>
@@ -26,6 +27,7 @@
     <script type="text/javascript" src="./projectiles/ScaleBoomerProjectile.js"></script>
     <script type="text/javascript" src="./projectiles/chasingprojectile.js"></script>
     <script type="text/javascript" src="./projectiles/squareprojectile.js"></script>
+    <script type="text/javascript" src="./projectiles/beam.js"></script>
     <script type="text/javascript" src="./components/bounds.js"></script>
     <script type="text/javascript" src="./characters/enemies.js"></script>
     <script type="text/javascript" src="./characters/rutherford.js"></script>
@@ -110,6 +112,22 @@
         }
         
     </style>
+
+    <!-- Matomo -->
+    <script type="text/javascript">
+        var _paq = window._paq = window._paq || [];
+        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function () {
+        var u = "https://victorc.matomo.cloud/";
+        _paq.push(['setTrackerUrl', u + 'matomo.php']);
+        _paq.push(['setSiteId', '1']);
+        var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+        g.type = 'text/javascript'; g.async = true; g.src = '//cdn.matomo.cloud/victorc.matomo.cloud/matomo.js'; s.parentNode.insertBefore(g, s);
+        })();
+    </script>
+    <!-- End Matomo Code -->
 </head>
 <body>
 
