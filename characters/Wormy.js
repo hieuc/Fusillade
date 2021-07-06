@@ -56,7 +56,7 @@ class Wormy extends Enemy {
         // facing left = 1
         this.animations[1][1] = new Animator(this.spritesheet, 1620, 90, 90, 90, 16, 0.1, 0, true, true);
 
-        // attack animation for state = 2
+        // attack animation for state = 3
         // facing right
         this.animations[2][0] = new Animator(this.spritesheet, 2160, 0, 90, 90, 11, 0.05, 0, false, true);
 
@@ -64,7 +64,7 @@ class Wormy extends Enemy {
         // facing left = 1
         this.animations[2][1] = new Animator(this.spritesheet, 630, 90, 90, 90, 11, 0.05, 0, true, true);
 
-        // Death animation for state = 3
+        // Death animation for state = 4
         // facing right
         this.animations[3][0] = new Animator(this.spritesheet, 3150, 0, 90, 90, 7, 0.1, 0, false, false);
 
@@ -85,6 +85,7 @@ class Wormy extends Enemy {
             if(this.animations[this.state][this.face].isDone()) 
             {
                this.removeFromWorld = true;
+               this.game.addEntity(new BunchofCoins(this.game, this.bound.x, this.bound.y, 10));
             }
         }
 
@@ -92,7 +93,7 @@ class Wormy extends Enemy {
         else 
         {
             // movement pattern when Rutherford is not in trigger range
-            if(Math.abs(this.x - this.enemyX) > 400 || Math.abs(this.y - this.enemyY) > 400)
+            if(Math.abs(this.x - this.enemyX) > 350 || Math.abs(this.y - this.enemyY) > 350)
             {
                 this.howlong = Date.now() - this.toofarmovement;
                 // move to the right in a straight line
@@ -100,7 +101,7 @@ class Wormy extends Enemy {
                 {
                     this.state = 1;
                     this.decideDir();
-                    this.x += this.speed;
+                    this.velocity = {x: 1, y:0};
                 }
                 else if(this.howlong >= 2000 && this.howlong < 4000)
                 {
@@ -109,18 +110,18 @@ class Wormy extends Enemy {
                     let tf = this.decideYDir();
                     if(tf)
                     {
-                        this.y += 1 * this.speed;
+                        this.velocity = {x: 0, y:1};
                     }
                     else
                     {
-                        this.y += -1 * this.speed;
+                        this.velocity = {x: 0, y:-1};
                     }
                 }
                 else if(this.howlong >= 4000 && this.howlong < 6000)
                 {
                     this.state = 1;
                     this.decideDir();
-                    this.x += -1 * this.speed;
+                    this.velocity = {x: -1, y:0};
                 }
                 else if(this.howlong >= 6000 && this.howlong < 8000)
                 {
@@ -129,11 +130,11 @@ class Wormy extends Enemy {
                     let tf = this.decideYDir();
                     if(tf)
                     {
-                        this.y += 1 * this.speed;
+                        this.velocity = {x: 0, y:-1};
                     }
                     else
                     {
-                        this.y += -1 * this.speed;
+                        this.velocity = {x: 0, y:-1};
                     }
                 }
                 else
@@ -142,7 +143,7 @@ class Wormy extends Enemy {
                 }
             }
             // If Rutherford is in trigger range, then fire off attacks
-            else if(Math.abs(this.x - this.enemyX) < 300 || Math.abs(this.y - this.enemyY) < 100)
+            else if(Math.abs(this.x - this.enemyX) < 350 || Math.abs(this.y - this.enemyY) < 350)
             {
                 var timepass = Date.now() - this.attackbuffer;
                 this.decideDir();
@@ -150,6 +151,7 @@ class Wormy extends Enemy {
                 {
                     if(Date.now() - this.barrage > this.succession)
                     {
+                        this.state = 2;
                         this.attack();
                         this.barrage = Date.now();
                     }
@@ -159,35 +161,38 @@ class Wormy extends Enemy {
                     }
                 }
             }
+
+            this.x += this.velocity.x * this.speed;
+            this.y += this.velocity.y * this.speed;
         }
 
          //Collision Detection. Check if its fired by enemy or hero.
 
          if(this.state != 3) {
             var that = this;
-            this.game.entities.forEach(function (entity) {
-                if (entity.bound && that.bound.collide(entity.bound)) {
-                    if(entity instanceof Projectiles && entity.friendly) {
-                        entity.hit(that);
+            this.game.entities.forEach(e => {
+                if (e.bound && this.bound.collide(e.bound)) {
+                    if(e instanceof Projectiles && e.friendly) {
+                        e.hit(that);
                         ASSET_MANAGER.playAsset("./sounds/sfx/Hit.mp3");
                         if(that.hp.current <= 0) {
                             that.state = 3;
                         }
                     } 
-                    else if(entity instanceof Bluebeam) {
-                        that.hp.current -= entity.damage;
-                        that.game.addEntity(new Star(that.game, entity.x, entity.y + 180));
-                        that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, entity.damage));
+                    else if(e instanceof Bluebeam) {
+                        that.hp.current -= e.damage;
+                        that.game.addEntity(new Star(that.game, e.x, e.y + 180));
+                        that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, e.damage));
                         //var audio = new Audio("./sounds/Hit.mp3");
                         //audio.volume = PARAMS.hit_volume;
                         //audio.play();
                         if(that.hp.current <= 0) {
                             that.state = 3;   
                         }
-                    } else if(entity instanceof Redbeam) {
-                        that.hp.current -= entity.damage;
-                        that.game.addEntity(new Burn(that.game, entity.x, entity.y + 180));
-                        that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, entity.damage));
+                    } else if(e instanceof Redbeam) {
+                        that.hp.current -= e.damage;
+                        that.game.addEntity(new Burn(that.game, e.x, e.y + 180));
+                        that.game.addEntity(new Score(that.game, that.bound.x + that.bound.w/2, that.bound.y, e.damage));
                         if(that.hp.current <= 0) {
                             that.state = 3;   
                         }
@@ -195,23 +200,30 @@ class Wormy extends Enemy {
                         //audio.volume = PARAMS.hit_volume;
                         //audio.play();
                     }
-                    else if(entity instanceof Obstacle) 
+                    else if(e instanceof Obstacle) 
                     {
-                        if(that.bound.left < entity.bound.left && that.bound.right >= entity.bound.left) {
-                            that.x -= that.speed;
-                            that.speed = 0;
-                        } else if(that.bound.right > entity.bound.right && that.bound.left <= entity.bound.right) {
-                            that.x += that.speed;
-                            that.speed = 0;
+                        var changed = false;
+                        // check horizontal
+                        if (this.velocity.x > 0 && this.bound.left < e.bound.left & this.bound.right >= e.bound.left) {
+                            // revert the position change if bounds met
+                            this.x -= this.velocity.x * this.speed;
+                            this.velocity.x = 0;
+                        } else if (this.velocity.x < 0 && this.bound.right > e.bound.right && this.bound.left <= e.bound.right) {
+                            this.x -= this.velocity.x * this.speed;
+                            this.velocity.x = 0;
                         }
-                        if(that.bound.top  < entity.bound.top && that.bound.bottom >= entity.bound.top) {
-                            that.y -= that.speed;
-                            that.speed = 0;
-                        } else if(that.bound.bottom > entity.bound.bottom && that.bound.top <= entity.bound.bottom) {
-                            that.y += that.speed;
-                            that.speed = 0;
+                        // check vertical 
+                        else if (this.velocity.y > 0 && this.bound.top < e.bound.top && this.bound.bottom >= this.bound.top) {
+                            this.y -= this.velocity.y * this.speed;
+                            this.velocity.y = 0;
+                        } else if (this.velocity.y < 0 && this.bound.bottom > e.bound.bottom && this.bound.top <= e.bound.bottom) {
+                            this.y -= this.velocity.y * this.speed;
+                            this.velocity.y = 0;
                         }
-    
+                        if (changed) {
+                            // second bound update for collision update
+                            this.updateBounds();
+                        }
                     }
                 }
             })
